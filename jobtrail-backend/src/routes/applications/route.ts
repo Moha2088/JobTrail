@@ -3,13 +3,11 @@ import { postApplicationSchema, getApplicationSchema, putApplicationSchema } fro
 import { db } from "../../db/db";
 import { applicationsTable } from "../../db/schema";
 import { eq } from "drizzle-orm";
-import { emailExists } from "../../utils/users/emailExists";
+
 
 export const applicationRouter = new Elysia({ prefix: "/applications" })
     .post("/", async({ body, set }) => {
         const { companyName, email, applicationStatus } = body
-
-        const dto = body
 
         if(companyName == "" || email == "" || applicationStatus == "") {
             set.status = 400
@@ -17,13 +15,13 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         }
 
         const result = await db.insert(applicationsTable)
-            .values(dto)
+            .values(body)
             .returning()
 
         const name = result[0].companyName
 
         return `Application ${name} has been created`
-
+        
     }, postApplicationSchema)
 
 
@@ -54,15 +52,13 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
 
         const { companyName, email, applicationStatus } = body
 
-        const dto = body
-
         if(companyName == "" || email == "" || applicationStatus == "") {
             set.status = 400
             throw "All fields are required"
         }
         
         await db.update(applicationsTable)
-            .set(dto)
+            .set(body)
             .where(eq(applicationsTable.id, id))
 
         set.status = 204

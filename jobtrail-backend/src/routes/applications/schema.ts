@@ -7,6 +7,7 @@ export const postApplicationSchema = {
         companyName: t.String(),
         email: t.String(),
         applicationStatus: t.String(),
+        position: t.String()
     })
 }
 

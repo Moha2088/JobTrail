@@ -14,7 +14,7 @@ const app = new Elysia()
             exp: "1h"
         })
     )
-    .listen(3000);
+    .listen(3003);
 
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`

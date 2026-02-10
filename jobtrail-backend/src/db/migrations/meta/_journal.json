@@ -15,6 +15,13 @@
       "when": 1770672063078,
       "tag": "0001_add_position_field_to_application_table",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1770723970806,
+      "tag": "0002_remove_password_field_length",
+      "breakpoints": true
     }
   ]
 }

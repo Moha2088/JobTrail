@@ -27,7 +27,7 @@ export const usersTable = pgTable("users", {
     id: integer("Id").primaryKey().generatedAlwaysAsIdentity(),
     name: varchar("Name", { length: 30 }).notNull(),
     email: varchar("Email", { length: 30 }).notNull().unique(),
-    password: varchar("Password", { length: 100 }).notNull(),
+    password: varchar("Password").notNull(),
     createdAt: timestamp("CreatedAt").defaultNow(),
     applicationId: integer("ApplicationId").references(() => applicationsTable.id)
 })
