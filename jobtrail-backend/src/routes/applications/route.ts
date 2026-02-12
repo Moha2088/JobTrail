@@ -3,30 +3,49 @@ import { postApplicationSchema, getApplicationSchema, putApplicationSchema } fro
 import { db } from "../../db/db";
 import { applicationsTable } from "../../db/schema";
 import { eq } from "drizzle-orm";
+import { authMiddleware } from "../../middleware/auth.middleware";
 
 
 export const applicationRouter = new Elysia({ prefix: "/applications" })
-    .post("/", async({ body, set }) => {
-        const { companyName, email, applicationStatus } = body
-
-        if(companyName == "" || email == "" || applicationStatus == "") {
-            set.status = 400
-            throw "All fields are required"
+    // .use(authMiddleware)
+    .onBeforeHandle(async({jwt, cookie: { auth }, set}) => {
+        const claims: ClaimTypes = await jwt.verify(auth.value)
+        
+        if(!claims.sub) {
+            set.status = 401
+            return "No id was found in claims!"
         }
+    })
+    .post("/", async({ body, set, jwt, cookie: { auth } }) => {
+        const { companyName, email, applicationStatus, position } = body
+
+        const claims: ClaimTypes = await jwt.verify(auth.value)
+
+        const currentUser = claims.sub
 
         const result = await db.insert(applicationsTable)
-            .values(body)
+            .values({
+                companyName: companyName,
+                email: email,
+                applicationStatus: applicationStatus,
+                position: position,
+                userId: claims.sub
+            })
             .returning()
 
         const name = result[0].companyName
 
         return `Application ${name} has been created`
-        
+
     }, postApplicationSchema)
 
 
-    .get("/",async() => {
+    .get("/",async({jwt, cookie: { auth }}) => {
+        const claims: ClaimTypes = await jwt.verify(auth.value)
+
         const results = await db.select().from(applicationsTable)
+            .where(eq(applicationsTable.id, claims.sub))
+
         return results
     })
 
@@ -50,13 +69,6 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     .put("/:id", async({ params, body, set }) => {
         const id = Number(params.id)
 
-        const { companyName, email, applicationStatus } = body
-
-        if(companyName == "" || email == "" || applicationStatus == "") {
-            set.status = 400
-            throw "All fields are required"
-        }
-        
         await db.update(applicationsTable)
             .set(body)
             .where(eq(applicationsTable.id, id))
