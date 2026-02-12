@@ -8,6 +8,12 @@ export const createUserSchema = {
     })
 }
 
+export const getUserSchema = {
+    params: t.Object({
+        id: t.Number()
+    })
+}
+
 export const putUserSchema = {
     params: t.Object({
         id: t.Number()
@@ -17,5 +23,11 @@ export const putUserSchema = {
         name: t.String(),
         email: t.String(),
         password: t.String()
+    })
+}
+
+export const deleteUserSchema = {
+    params: t.Object({
+        id: t.Number()
     })
 }

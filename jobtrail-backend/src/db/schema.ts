@@ -15,7 +15,8 @@ export const applicationsTable = pgTable("applications", {
     companyName: varchar("CompanyName", { length: 30 }).notNull(),
     email: varchar("Email", { length: 30 }).notNull(),
     applicationStatus: varchar("ApplicationStatus").notNull(),
-    position: varchar("Position", { length: 40 }).notNull()
+    position: varchar("Position", { length: 40 }).notNull(),
+    userId: integer("UserId").references(() => usersTable.id)
 }, (table => [
         index("CompanyName_idx").on(table.companyName),
         index("Email_idx").on(table.email),
@@ -28,6 +29,5 @@ export const usersTable = pgTable("users", {
     name: varchar("Name", { length: 30 }).notNull(),
     email: varchar("Email", { length: 30 }).notNull().unique(),
     password: varchar("Password").notNull(),
-    createdAt: timestamp("CreatedAt").defaultNow(),
-    applicationId: integer("ApplicationId").references(() => applicationsTable.id)
+    createdAt: timestamp("CreatedAt").defaultNow()
 })
