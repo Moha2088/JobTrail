@@ -28,3 +28,9 @@ export const putApplicationSchema = {
         applicationStatus: t.String(),
     })
 }
+
+export const deleteApplicationsSchema = {
+    params: t.Object({
+        id: t.Number()
+    })
+}

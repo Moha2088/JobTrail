@@ -1,5 +1,5 @@
 import Elysia from "elysia";
-import { createUserSchema, putUserSchema } from "./schema";
+import { createUserSchema, deleteUserSchema, getUserSchema, putUserSchema } from "./schema";
 import { db } from "../../db/db";
 import { applicationsTable, usersTable } from "../../db/schema";
 import { eq } from "drizzle-orm"
@@ -35,7 +35,7 @@ export const userRouter = new Elysia({ prefix: "/users" })
             .leftJoin(applicationsTable, eq(applicationsTable.userId, usersTable.id))
 
         if (result.length == 0) {
-            set.status = 404    
+            set.status = 404
             return
         }
 
@@ -47,7 +47,7 @@ export const userRouter = new Elysia({ prefix: "/users" })
                 result.map(s => s.applications)
             ]
         }
-    })
+    }, getUserSchema)
 
     .put("/:id", async({params, body, set}) => {
         const id = Number(params.id)
@@ -74,4 +74,4 @@ export const userRouter = new Elysia({ prefix: "/users" })
             .where(eq(usersTable.id, id))
 
         set.status = 204
-    })
+    }, deleteUserSchema)

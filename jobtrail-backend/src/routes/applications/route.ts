@@ -1,10 +1,8 @@
 import Elysia from "elysia";
-import { postApplicationSchema, getApplicationSchema, putApplicationSchema } from "./schema";
+import { postApplicationSchema, getApplicationSchema, putApplicationSchema, deleteApplicationsSchema } from "./schema";
 import { db } from "../../db/db";
 import { applicationsTable } from "../../db/schema";
 import { eq } from "drizzle-orm";
-import { authMiddleware } from "../../middleware/auth.middleware";
-
 
 export const applicationRouter = new Elysia({ prefix: "/applications" })
     // .use(authMiddleware)
@@ -20,8 +18,6 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         const { companyName, email, applicationStatus, position } = body
 
         const claims: ClaimTypes = await jwt.verify(auth.value)
-
-        const currentUser = claims.sub
 
         const result = await db.insert(applicationsTable)
             .values({
@@ -84,4 +80,4 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         await db.delete(applicationsTable).where(eq(applicationsTable.id, id))
 
         set.status = 204
-    })
+    }, deleteApplicationsSchema)
