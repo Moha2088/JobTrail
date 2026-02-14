@@ -3,11 +3,16 @@ import { jwt } from "@elysiajs/jwt"
 import { applicationRouter, userRouter } from "./routes";
 import { authRouter } from "./routes/auth/route";
 import openapi from "@elysiajs/openapi";
-import { authMiddleware } from "./middleware/auth.middleware";
 import { cors } from "@elysiajs/cors"
 
 const app = new Elysia()
-.use(openapi({
+    .use(
+        cors({
+            "origin": true,
+            "methods": ["POST", "PUT", "GET", "DELETE"],
+        })
+    )
+    .use(openapi({
         path: "/docs"}
     ))
     .group("/api", (app) => app  
@@ -20,12 +25,6 @@ const app = new Elysia()
             name: "jwt",
             secret: Bun.env.JWT_SECRET!,
             exp: "1h"
-        })
-    )
-    .use(
-        cors({
-            "methods": "*",
-            "origin": "*",
         })
     )
     .listen(3003);

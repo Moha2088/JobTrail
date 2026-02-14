@@ -1,14 +1,12 @@
-import { useQuery, UseQueryOptions, UseQueryResult } from "@tanstack/react-query";
-import { Application } from "./types";
-import { elysiaApi } from "@/app/api/elysiaApi";
+import { useQuery } from "@tanstack/react-query"
+import { elysiaApi } from "@/app/api/elysiaApi"
 
-type Options = UseQueryOptions<Application>
 
-export function useApplication(applicationId: number, options: Options): UseQueryResult {
+export function useApplication(applicationId: number) {
     return useQuery({
         queryKey: ["applications", applicationId],
         queryFn: async() => {
-            const { data } = await elysiaApi.api.applications({ id: applicationId}).get()
+            const { data } = await elysiaApi.api.applications({ id: applicationId }).get()
             return data
         }
     })

@@ -1,6 +1,6 @@
 
-import { cva, VariantProps } from "class-variance-authority";
-import { ButtonHTMLAttributes } from "react";
+import { cva, VariantProps } from "class-variance-authority"
+import { ButtonHTMLAttributes } from "react"
 
 
 const buttonStyles = cva(
@@ -32,7 +32,7 @@ interface ButtonProps extends VariantProps<typeof buttonStyles>, ButtonHTMLAttri
 
 export function Button({ variant, size, children, disabled, ...props }: ButtonProps) {
     return (
-        <button className={(buttonStyles({variant, size, disabled}))} {...props}>
+        <button className={(buttonStyles({ variant, size, disabled }))} {...props}>
             {children}
         </button>
     )
