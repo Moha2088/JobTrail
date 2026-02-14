@@ -27,11 +27,8 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
                 position: position,
                 userId: claims.sub
             })
-            .returning()
 
-        const name = result[0].companyName
-
-        return `Application ${name} has been created`
+            set.status = 201
 
     }, postApplicationSchema)
 
@@ -40,7 +37,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         const claims: ClaimTypes = await jwt.verify(auth.value)
 
         const results = await db.select().from(applicationsTable)
-            .where(eq(applicationsTable.id, claims.sub))
+            .where(eq(applicationsTable.userId, claims.sub))
 
         return results
     })
@@ -58,7 +55,13 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
             throw `Application with id: ${id} not found`
         }
 
-        return result[0]
+        return {
+            id: result[0].id,
+            companyName: result[0].companyName,
+            email: result[0].email,
+            applicationStatus: result[0].applicationStatus,
+            position: result[0].position,
+        }
 
     }, getApplicationSchema)
 
