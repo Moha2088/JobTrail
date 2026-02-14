@@ -1,0 +1,30 @@
+name: Frontend test
+
+env:
+    PATH: jobtrail-frontend
+
+on:
+  pull_request:
+    types: [ opened, synchronize ]
+  workflow_dispatch:
+
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+      
+      - name: Install dependencies
+        run: cd ${{ env.PATH }} && bun install
+      
+      - name: Build app
+        run: cd ${{ env.PATH }} && bun run build
+
+      - name: Test lint
+        run: cd ${{ env.PATH }} && bun lint
