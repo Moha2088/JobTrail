@@ -1,7 +1,7 @@
 name: Frontend test
 
 env:
-    PATH: jobtrail-frontend
+    NEXT-PATH: jobtrail-frontend
 
 on:
   pull_request:
@@ -21,10 +21,10 @@ jobs:
         uses: oven-sh/setup-bun@v2
       
       - name: Install dependencies
-        run: cd ${{ env.PATH }} && bun install
+        run: cd ${{ env.NEXT-PATH }} && bun install
       
       - name: Build app
-        run: cd ${{ env.PATH }} && bun run build
+        run: cd ${{ env.NEXT-PATH }} && bun run build
 
       - name: Test lint
-        run: cd ${{ env.PATH }} && bun lint
+        run: cd ${{ env.NEXT-PATH }} && bun lint
