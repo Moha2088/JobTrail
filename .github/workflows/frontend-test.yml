@@ -2,6 +2,7 @@ name: Frontend test
 
 env:
     NEXT-PATH: jobtrail-frontend
+    SERVER-PATH: jobtrail-backend
 
 on:
   pull_request:
@@ -22,6 +23,9 @@ jobs:
       
       - name: Install dependencies
         run: cd ${{ env.NEXT-PATH }} && bun install
+
+      - name: Install Backend dpendencies
+        run: cd ${{ env.SERVER-PATH }} && bun install
       
       - name: Build app
         run: cd ${{ env.NEXT-PATH }} && bun run build

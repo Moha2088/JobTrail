@@ -31,7 +31,6 @@
     "**/*.mts"
   ],
   "exclude": [
-    "node_modules",
-    "../jobtrail-backend"
+    "node_modules"
 ]
 }
