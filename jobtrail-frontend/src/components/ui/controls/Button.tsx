@@ -10,11 +10,11 @@ const buttonStyles = cva(
             variant:{
                 dark: "bg-stone-800 text-white font-bold hover:bg-stone-500",
                 light: "border-2 font-bold border-transparent shadow-md hover:bg-zinc-200",
-                destructive: "bg-red-400 hover:bg-red-500"
+                destructive: "bg-red-400 text-white hover:bg-red-500"
             },
             size: {
                 large: "w-25 h-13",
-                small: "w-20 h-10"
+                small: "w-17 h-10"
             },
             disabled: {
                 true: "pointer-events-none opacity-50"

@@ -3,6 +3,7 @@ import { postApplicationSchema, getApplicationSchema, putApplicationSchema, dele
 import { db } from "../../db/db";
 import { applicationsTable } from "../../db/schema";
 import { eq } from "drizzle-orm";
+import { Application } from "./types";
 
 export const applicationRouter = new Elysia({ prefix: "/applications" })
     // .use(authMiddleware)
@@ -39,7 +40,13 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         const results = await db.select().from(applicationsTable)
             .where(eq(applicationsTable.userId, claims.sub))
 
-        return results
+        return results.map(app => {
+            app.id,
+            app.companyName,
+            app.email,
+            app.applicationStatus,
+            app.position
+        })
     })
 
 

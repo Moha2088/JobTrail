@@ -1,10 +1,13 @@
 import type { Metadata } from "next"
-import { Outfit } from "next/font/google"
+import { Roboto_Slab} from "next/font/google"
 import "./globals.css"
 import { Provider } from "@/providers/Provider"
 
-const outFit =  Outfit()
-
+const robotoSlab = Roboto_Slab({
+    subsets: ["latin"],
+    weight: ["400", "500", "700"],
+    variable: "--font-roboto-slab",
+})
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -19,7 +22,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${outFit.className} antialiased`}
+                className={`${robotoSlab.variable} antialiased`}
             >
                 <Provider>
                     {children}
