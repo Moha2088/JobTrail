@@ -62,5 +62,5 @@ export function ApplicationTable(props: ApplicationTableProps) {
                 ))}
             </TableBody>
         </Table>
-)
+    )
 }
