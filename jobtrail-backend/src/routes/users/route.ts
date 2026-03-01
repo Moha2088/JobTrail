@@ -7,7 +7,9 @@ import { eq } from "drizzle-orm"
 
 export const userRouter = new Elysia({ prefix: "/users" })
     .post("/", async({ body, set }) => {
-        body.password = await Bun.password.hash(body.password)
+        body.password = await Bun.password.hash(body.password, {
+            algorithm: "argon2d"
+        })
 
         const result = await db.insert(usersTable)
             .values(body)
@@ -69,6 +71,10 @@ export const userRouter = new Elysia({ prefix: "/users" })
             set.status = 404
             return
         }
+
+        body.password = await Bun.password.hash(body.password, {
+            algorithm: "argon2d"
+        })
 
         await db.update(usersTable)
             .set(body)

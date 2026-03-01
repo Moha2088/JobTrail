@@ -36,7 +36,9 @@ export const authRouter = new Elysia({ prefix :"/auth" })
             maxAge: 3600
         })
         
-        return value
+        return {
+            token: value
+        }
 
     }, loginSchema)
 

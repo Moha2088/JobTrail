@@ -5,7 +5,7 @@ import {
     TableCell,
     TableHead,
     TableHeader,
-    TableRow,
+    TableRow
 } from "@/components/ui/table"
 import { Application } from "@/services/applications/types"
 import { Button } from "../controls/Button"
@@ -14,7 +14,7 @@ import { IconArrowNarrowRight, IconTrash } from "@tabler/icons-react"
 
 
 interface ApplicationTableProps {
-    applications: Application[]
+    applications?: Application[]
     deleteApplication: (id: number) => void
 }
 
@@ -26,8 +26,8 @@ export function ApplicationTable(props: ApplicationTableProps) {
     return (
 
         <Table className="w-170 mr-auto ml-auto rounded-2xl" >
-            <TableCaption>{applications.length != 0 
-                ? `You have ${applications.length}`
+            <TableCaption>{applications && applications.length != 0
+                ? `You have ${applications.length} applications`
                 : "You have no applications. Click the button to create one"
             }
 
@@ -40,8 +40,8 @@ export function ApplicationTable(props: ApplicationTableProps) {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {applications.map(app => (
-                    <TableRow key={app.id}>
+                {applications?.map(app => (
+                    <TableRow key={app?.id}>
                         <TableCell className="cursor-pointer">{app.companyName}</TableCell>
                         <TableCell>{app.position}</TableCell>
                         <TableCell>{app.applicationStatus}</TableCell>

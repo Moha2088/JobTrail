@@ -4,11 +4,21 @@ import { Button } from "@/components/ui/controls/Button"
 import { ApplicationTable } from "@/components/ui/view/ApplicationTable"
 import { Application } from "@/services/applications/types"
 import { useApplications } from "@/services/applications/useApplications"
+import { useDeleteApplication } from "@/services/applications/useDeleteApplication"
+import { useGetMe } from "@/services/auth/useGetMe"
 import { useState } from "react"
 
 
 export default function Page() {
-    const applications = useApplications()
+    const applications = useApplications().data
+
+    const me = useGetMe().data
+
+
+    const [applicationToDelete, setApplicationToDelete] = useState<number | null>(null)
+
+    const deleteApplication = useDeleteApplication(applicationToDelete!)
+
 
     const [mockApplications, setMockApplications] = useState<Application[]>([
         {
@@ -39,11 +49,18 @@ export default function Page() {
             applicationStatus: "OFFER",
             email: "example@microsoft.com"
         }
-
     ])
 
-    const deleteApplication = (id: number) => {
-        setMockApplications(mockApplications.filter(app => app.id != id))
+    const getApplicationid = (id: number) => {
+        setApplicationToDelete(id)
+        deleteApplication.mutate(undefined, {
+            onSuccess: () => {
+                console.log("Application deleted successfully")
+            },
+            onError: () => {
+                console.log("Error deleting application")
+            }
+        })
     }
 
     return (
@@ -56,12 +73,28 @@ export default function Page() {
                 </p>
             </div>
 
+            <div className="p-5" />
+
+            <div className="flex justify-center flex-row gap-3">
+                <div className="border-2 p-2 w-fit rounded-xl shadow-2xl font-bold">
+                    test
+                </div>
+
+                <div className="border-2 p-2 w-fit rounded-xl shadow-2xl font-bold">
+                    test
+                </div>
+
+                <div className="border-2 p-2 w-fit rounded-xl shadow-2xl font-bold">
+                    test
+                </div>    
+            </div>
+            
 
             <div className="p-5" />
 
             <ApplicationTable
-                deleteApplication={deleteApplication}
-                applications={mockApplications} />
+                deleteApplication={getApplicationid}
+                applications={applications ?? mockApplications} />
         </div>
     )
 }

@@ -12,7 +12,7 @@ type LoginInput = {
     password: string
 }
 
-type PasswordState = "text" | "password"
+export type PasswordState = "text" | "password"
 
 
 export function LoginForm(){
@@ -34,7 +34,9 @@ export function LoginForm(){
             email: data.email,
             password: data.password
         }, {
-            onSuccess:() => {
+            onSuccess:(data) => {
+                localStorage.setItem("token", data.token)
+                console.log("Token: ", data.token)
                 router.push("/applications")
             },
 
@@ -51,7 +53,7 @@ export function LoginForm(){
 
             <form className="flex flex-col justify-center" onSubmit={handleSubmit(onSubmit)}>
 
-                <div className="flex flex-col justify-center items-center gap-10 border-stone-300 border-3 w-150 h-100 ml-auto mr-auto rounded-xl">
+                <div className="flex flex-col justify-center items-center gap-10 border-stone-300 border-3 w-130 h-120 ml-auto mr-auto rounded-xl">
                     <div>
                         <input
                             className="w-100 border-3 p-2 rounded-lg"

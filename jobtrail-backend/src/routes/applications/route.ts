@@ -41,11 +41,13 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
             .where(eq(applicationsTable.userId, claims.sub))
 
         return results.map(app => {
-            app.id,
-            app.companyName,
-            app.email,
-            app.applicationStatus,
-            app.position
+            return {
+                id: app.id,
+                companyName: app.companyName,
+                email: app.email,
+                applicationStatus: app.applicationStatus,
+                position: app.position
+            }
         })
     })
 

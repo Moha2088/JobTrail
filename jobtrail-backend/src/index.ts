@@ -6,7 +6,10 @@ import { cors } from "@elysiajs/cors"
 import { jwtConfig } from "./utils/auth/jwt";
 
 const app = new Elysia()
-    .use(cors())
+    .use(cors({
+        origin: "http://localhost:3000",
+        credentials: true,
+    }))
     .use(openapi({
         path: "/docs"}
     ))
