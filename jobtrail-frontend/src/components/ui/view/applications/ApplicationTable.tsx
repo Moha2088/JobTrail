@@ -7,8 +7,7 @@ import {
     TableHeader,
     TableRow
 } from "@/components/ui/table"
-import { Application } from "@/services/applications/types"
-import { Button } from "../controls/Button"
+import { Application } from "@/services/applications"
 import { useRouter } from "next/navigation"
 import { IconArrowNarrowRight, IconTrash } from "@tabler/icons-react"
 

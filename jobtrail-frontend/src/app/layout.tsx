@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import { Roboto_Slab } from "next/font/google"
 import "./globals.css"
+import "@radix-ui/themes/styles.css"
+import { Theme } from "@radix-ui/themes"
 import { Provider } from "@/providers/Provider"
 
 const robotoSlab = Roboto_Slab({
@@ -21,13 +23,15 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body
-                className={`${robotoSlab.variable} antialiased`}
-            >
-                <Provider>
-                    {children}
-                </Provider>
-            </body>
+            <Theme>
+                <body
+                    className={`${robotoSlab.variable} antialiased`}
+                >
+                    <Provider>
+                        {children}
+                    </Provider>
+                </body>
+            </Theme>
         </html>
     )
 }

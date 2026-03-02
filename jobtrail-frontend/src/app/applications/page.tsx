@@ -1,55 +1,21 @@
 "use client"
 
+import { CreateApplicationDialog } from "@/components/ui/controls/application/CreateApplicationDialog"
 import { Button } from "@/components/ui/controls/Button"
-import { ApplicationTable } from "@/components/ui/view/ApplicationTable"
-import { Application } from "@/services/applications/types"
-import { useApplications } from "@/services/applications/useApplications"
-import { useDeleteApplication } from "@/services/applications/useDeleteApplication"
-import { useGetMe } from "@/services/auth/useGetMe"
+import { ApplicationTable } from "@/components/ui/view/applications/ApplicationTable"
+import { useApplications } from "@/services/applications"
+import { useDeleteApplication } from "@/services/applications"
 import { useState } from "react"
 
 
 export default function Page() {
-    const applications = useApplications().data
-
-    const me = useGetMe().data
-
-
     const [applicationToDelete, setApplicationToDelete] = useState<number | null>(null)
+    const [isCreateApplicationDialogOpen, setIsCreateApplicationDialogOpen] = useState<boolean>(false)
+
 
     const deleteApplication = useDeleteApplication(applicationToDelete!)
 
-
-    const [mockApplications, setMockApplications] = useState<Application[]>([
-        {
-            id: 1,
-            companyName: "Google",
-            position: "Software Engineer",
-            applicationStatus: "PENDING",
-            email: "example@google.com"
-        },
-        {
-            id: 2,
-            companyName: "Meta",
-            position: "UI/UX Designer",
-            applicationStatus: "INTERVIEWING",
-            email: "example@meta.com"
-        },
-        {
-            id: 3,
-            companyName: "Amazon",
-            position: "Data Scientist",
-            applicationStatus: "REJECTED",
-            email: "example@amazon.com"
-        },
-        {
-            id: 4,
-            companyName: "Microsoft",
-            position: "Product Manager",
-            applicationStatus: "OFFER",
-            email: "example@microsoft.com"
-        }
-    ])
+    const applications = useApplications().data
 
     const getApplicationid = (id: number) => {
         setApplicationToDelete(id)
@@ -64,7 +30,20 @@ export default function Page() {
     }
 
     return (
-        <div>
+        <>
+            <div className="p-5" />
+
+            <div className="flex justify-end mr-5">
+                <Button onClick={() => setIsCreateApplicationDialogOpen(true)}>
+                    Create application
+                </Button>
+            </div>
+
+            <CreateApplicationDialog 
+                isOpen={isCreateApplicationDialogOpen} 
+                onOpenChange={setIsCreateApplicationDialogOpen} 
+            />
+
             <div className="p-10" />
 
             <div>
@@ -94,7 +73,7 @@ export default function Page() {
 
             <ApplicationTable
                 deleteApplication={getApplicationid}
-                applications={applications ?? mockApplications} />
-        </div>
+                applications={applications } />
+        </>
     )
 }

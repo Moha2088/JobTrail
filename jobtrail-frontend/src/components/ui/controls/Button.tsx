@@ -14,7 +14,7 @@ const buttonStyles = cva(
             },
             size: {
                 large: "w-25 h-13",
-                small: "w-17 h-10"
+                small: "w-20 h-10 text-xs"
             },
             disabled: {
                 true: "pointer-events-none opacity-50"
