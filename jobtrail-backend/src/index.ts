@@ -1,35 +1,29 @@
 import { Elysia } from "elysia";
-import { jwt } from "@elysiajs/jwt"
 import { applicationRouter, userRouter } from "./routes";
 import { authRouter } from "./routes/auth/route";
 import openapi from "@elysiajs/openapi";
-import { authMiddleware } from "./middleware/auth.middleware";
 import { cors } from "@elysiajs/cors"
+import { jwtConfig } from "./utils/auth/jwt";
 
 const app = new Elysia()
-.use(openapi({
+    .use(cors({
+        origin: "http://localhost:3000",
+        credentials: true,
+    }))
+    .use(openapi({
         path: "/docs"}
     ))
-    .group("/api", (app) => app  
+    .group("/api", (app) => app
+        .use(jwtConfig)
         .use(applicationRouter)
         .use(userRouter)
         .use(authRouter)
-    )
-    .use(
-        jwt({
-            name: "jwt",
-            secret: Bun.env.JWT_SECRET!,
-            exp: "1h"
-        })
-    )
-    .use(
-        cors({
-            "methods": "*",
-            "origin": "*",
-        })
     )
     .listen(3003);
 
 console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
 );
+
+
+export type App = typeof app

@@ -7,7 +7,9 @@ import { eq } from "drizzle-orm"
 
 export const userRouter = new Elysia({ prefix: "/users" })
     .post("/", async({ body, set }) => {
-        body.password = await Bun.password.hash(body.password)
+        body.password = await Bun.password.hash(body.password, {
+            algorithm: "argon2d"
+        })
 
         const result = await db.insert(usersTable)
             .values(body)
@@ -15,13 +17,22 @@ export const userRouter = new Elysia({ prefix: "/users" })
 
         set.status = 201
         
-        return {
-            id: result[0].id,
-            name: result[0].name,
-            email: result[0].email,
-        }
+        // return {
+        //     id: result[0].id,
+        //     name: result[0].name,
+        //     email: result[0].email,
+        // }
 
     }, createUserSchema)
+
+    .onBeforeHandle(async({jwt, set, cookie: { auth } }) =>{
+        const claims: ClaimTypes = await jwt.verify(auth.value)
+
+        if(!claims.sub) {
+            set.status = 401
+            return "No id was found in claims!"
+        }
+    })
 
 
     .get("/:id", async({ params, set, jwt, cookie: { auth } }) => {
@@ -60,6 +71,10 @@ export const userRouter = new Elysia({ prefix: "/users" })
             set.status = 404
             return
         }
+
+        body.password = await Bun.password.hash(body.password, {
+            algorithm: "argon2d"
+        })
 
         await db.update(usersTable)
             .set(body)
