@@ -1,6 +1,6 @@
-import { elysiaApi } from "@/app/api/elysiaApi";
-import { useMutation } from "@tanstack/react-query";
-import { useUserCache } from "./useUserCache";
+import { elysiaApi } from "@/app/api/elysiaApi"
+import { useMutation } from "@tanstack/react-query"
+import { useUserCache } from "./useUserCache"
 
 
 export function useDeleteUser(userId: number) {
