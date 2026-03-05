@@ -29,6 +29,9 @@ jobs:
       - name: Test lint
         run: cd ${{ env.NEXT_PATH }} && bun lint
 
+      - name: Install Cypress
+        run: cd ${{ env.NEXT_PATH }} && npm install cypress
+
       - name: Run E2E
         uses: cypress-io/github-action@v7.1.5
         with:
