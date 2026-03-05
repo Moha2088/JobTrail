@@ -4,6 +4,7 @@ import "./globals.css"
 import "@radix-ui/themes/styles.css"
 import { Theme } from "@radix-ui/themes"
 import { Provider } from "@/providers/Provider"
+import { Toaster } from "sonner"
 
 const robotoSlab = Roboto_Slab({
     subsets: ["latin"],
@@ -27,6 +28,7 @@ export default function RootLayout({
                 <body
                     className={`${robotoSlab.variable} antialiased`}
                 >
+                    <Toaster />
                     <Provider>
                         {children}
                     </Provider>

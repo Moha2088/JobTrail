@@ -28,3 +28,12 @@ jobs:
 
       - name: Test lint
         run: cd ${{ env.NEXT-PATH }} && bun lint
+
+      - name: Run E2E
+        uses: cypress-io/github-action@v7.1.5
+        with:
+            wait-on: http://localhost:3000
+            parallel: true
+            browser: chrome
+            build: npm run build
+            start: npm start

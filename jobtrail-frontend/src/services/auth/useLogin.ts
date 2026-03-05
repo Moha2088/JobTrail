@@ -3,6 +3,7 @@
 import { elysiaApi } from "@/app/api/elysiaApi"
 import { useMutation, UseMutationResult } from "@tanstack/react-query"
 import axios from "axios"
+import { toast } from "sonner"
 
 
 interface LoginParams {
@@ -30,7 +31,13 @@ export function useLogin() : UseMutationResult<LoginData, Error, LoginParams> {
         },
 
         onError: (err) => {
-            console.log(err.message)
+            toast.error("Email or password is incorrect!", {
+                position: "top-right",
+                action: {
+                    label: "Cancel",
+                    onClick: () => { }
+                }
+            })
         },
 
         onSettled: () => {
