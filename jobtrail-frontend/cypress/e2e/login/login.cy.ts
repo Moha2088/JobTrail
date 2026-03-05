@@ -1,3 +1,4 @@
+import { appUrl } from "../../fixtures/constants"
 
 interface LoginData {
     email: string
@@ -9,7 +10,8 @@ describe('Login page', () => {
 
     beforeEach(() => {
         cy.fixture("../fixtures/loginData.json").then((data) => loginData = data)
-        cy.visit("http://localhost:3000/login")
+        cy.visit(`${appUrl}/login`)
+        cy.get('h1').contains("Login").should("be.visible")
     })
 
 

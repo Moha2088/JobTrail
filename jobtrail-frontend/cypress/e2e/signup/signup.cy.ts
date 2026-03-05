@@ -1,3 +1,4 @@
+import { appUrl } from "../../fixtures/constants"
 
 interface SignupData {
     email: string
@@ -10,7 +11,8 @@ describe("Signup Page", () => {
 
     beforeEach(() => {
         cy.fixture("../fixtures/signupData.json").then((data) => signupData = data)
-        cy.visit("http://localhost:3000/signup")
+        cy.visit(`${appUrl}/signup`)
+        cy.get("h1").contains("Sign Up").should("be.visible")
     })
 
     it("should display error messages when fields are empty", () => {

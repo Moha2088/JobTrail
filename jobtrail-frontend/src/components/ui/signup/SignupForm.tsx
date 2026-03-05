@@ -49,9 +49,9 @@ export function SignupForm() {
         
             <form className="flex flex-col justify-center" onSubmit={handleSubmit(onSubmit)}>
 
-                <div className="flex flex-col justify-center items-center gap-10 border-stone-300 border-3 w-130 h-120 ml-auto mr-auto rounded-xl">
+                <div className="flex flex-col justify-center items-center gap-6 border-stone-300 border-3 w-130 h-120 ml-auto mr-auto rounded-xl">
                     
-                    <div>
+                    <div >
                         <input
                             className="w-100 border-3 p-2 rounded-lg"
                             placeholder="Enter your name" 
@@ -63,7 +63,7 @@ export function SignupForm() {
                                 } })}
                         />
 
-                        {errors.name && <p className="text-red-400">{errors.name?.message}</p>}
+                        {errors.name && <p className="text-red-400 text-sm">{errors.name?.message}</p>}
                     </div>
                     
                     <div>
@@ -81,7 +81,7 @@ export function SignupForm() {
                                 } })}
                         />
 
-                        {errors.email && <p className="text-red-400">{errors.email.message}</p>}
+                        {errors.email && <p className="text-red-400 text-sm">{errors.email.message}</p>}
                     </div>
 
                     <div>
@@ -98,7 +98,7 @@ export function SignupForm() {
                             })}
                         />
 
-                        {errors.password && <p className="text-red-400">{errors.password.message}</p>}
+                        {errors.password && <p className="text-red-400 text-sm">{errors.password.message}</p>}
                     </div>
 
                     <div>
@@ -122,7 +122,7 @@ export function SignupForm() {
                             })}
                         />
 
-                        {errors.confirmedPassword && <p className="text-red-400">{errors.confirmedPassword.message}</p>}
+                        {errors.confirmedPassword && <p className="text-red-400 text-sm">{errors.confirmedPassword.message}</p>}
                     </div>
 
                     <div>
