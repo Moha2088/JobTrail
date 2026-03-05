@@ -9,7 +9,7 @@ describe('Login page', () => {
 
     beforeEach(() => {
         cy.fixture("../fixtures/loginData.json").then((data) => loginData = data)
-        cy.visit("/login")
+        cy.visit("http://localhost:3000/login")
     })
 
 
