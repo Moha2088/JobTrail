@@ -8,9 +8,7 @@ describe('Login page', () => {
     let loginData: LoginData
 
     beforeEach(() => {
-
         cy.fixture("../fixtures/loginData.json").then((data) => loginData = data)
-
         cy.visit("/login")
     })
 
