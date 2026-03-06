@@ -34,6 +34,10 @@ interface MockRouterProps extends Partial<NextRouter> {
     children: ReactNode
 }
 
+/* *
+    * A MockRouter for testing components that uses a router. Mounting a component in test without MockRouter
+    * will cause the tests to fail
+ */
 export function MockRouter (props: MockRouterProps) {
     const { children, ...rest } = props
 
