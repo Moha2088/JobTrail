@@ -36,6 +36,7 @@ jobs:
         uses: cypress-io/github-action@v7.1.5
         with:
             working-directory: ${{ env.NEXT_PATH }}
+            config: baseUrl=http://localhost:3002
             component: true
             browser: chrome
             install: false
