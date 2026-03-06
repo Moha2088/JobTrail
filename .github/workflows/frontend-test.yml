@@ -16,10 +16,10 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-      
+
       - name: Install bun
         uses: oven-sh/setup-bun@v2
-      
+
       - name: Install dependencies
         run: cd ${{ env.NEXT_PATH }} && bun install
 
@@ -29,42 +29,24 @@ jobs:
       - name: Test lint
         run: cd ${{ env.NEXT_PATH }} && bun lint
 
-  component-test:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Checkout repo
-        uses: actions/checkout@v4
-        
       - name: Install Cypress
         run: cd ${{ env.NEXT_PATH }} && npm install cypress
 
       - name: Run Component tests
         uses: cypress-io/github-action@v7.1.5
         with:
-          working-directory: ${{ env.NEXT_PATH }}
-          component: true
-          browser: chrome
-          install: false
-          start: bun run start
-
-  e2e-test:
-    needs: component-test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4  
-      
-      - name: Install Cypress
-        run: cd ${{ env.NEXT_PATH }} && npm install cypress
+            working-directory: ${{ env.NEXT_PATH }}
+            config: baseUrl=http://localhost:3002
+            component: true
+            browser: chrome
+            install: false
+            start: bun run start
 
       - name: Run E2E tests
         uses: cypress-io/github-action@v7.1.5
         with:
-          working-directory: ${{ env.NEXT_PATH }}
-          config: baseUrl=http://localhost:3000
-          wait-on: http://localhost:3000
-          install: false
-          browser: chrome
-          start: bun run start
+            working-directory: ${{ env.NEXT_PATH }}
+            config: baseUrl=http://localhost:3000
+            wait-on: http://localhost:3000
+            install: false
+            browser: chrome
