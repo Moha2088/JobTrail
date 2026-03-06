@@ -4,7 +4,7 @@ import { ButtonHTMLAttributes } from "react"
 
 
 const buttonStyles = cva(
-    "flex justify-center items-center p-3 font-bold rounded-lg cursor-pointer",
+    "flex justify-center items-center p-3 font-bold rounded-lg cursor-pointer w-fit",
     {
         variants: {
             variant:{
@@ -16,9 +16,6 @@ const buttonStyles = cva(
                 large: "w-25 h-13",
                 small: "w-20 h-10 text-xs"
             },
-            disabled: {
-                true: "pointer-events-none opacity-50"
-            }
         },
         defaultVariants:{
             variant: "dark",
@@ -30,9 +27,9 @@ const buttonStyles = cva(
 interface ButtonProps extends VariantProps<typeof buttonStyles>, ButtonHTMLAttributes<HTMLButtonElement> { }
 
 
-export function Button({ variant, size, children, disabled, ...props }: ButtonProps) {
+export function Button({ variant, size, children, ...props }: ButtonProps) {
     return (
-        <button className={(buttonStyles({ variant, size, disabled }))} {...props}>
+        <button className={(buttonStyles({ variant, size }))} {...props}>
             {children}
         </button>
     )

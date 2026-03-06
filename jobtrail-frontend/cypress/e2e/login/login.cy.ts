@@ -1,9 +1,8 @@
 import { appUrl } from "../../fixtures/constants"
+import { SignupData } from "../signup/signup.cy"
 
-interface LoginData {
-    email: string
-    password: string
-}
+type LoginData = Omit<SignupData, "name">
+
 
 describe('Login page', () => {
     let loginData: LoginData
