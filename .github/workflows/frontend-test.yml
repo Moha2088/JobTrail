@@ -1,7 +1,7 @@
 name: Frontend test
 
 env:
-    NEXT-PATH: jobtrail-frontend
+  NEXT_PATH: jobtrail-frontend
 
 on:
   pull_request:
@@ -21,10 +21,23 @@ jobs:
         uses: oven-sh/setup-bun@v2
       
       - name: Install dependencies
-        run: cd ${{ env.NEXT-PATH }} && bun install
+        run: cd ${{ env.NEXT_PATH }} && bun install
 
       - name: Build app
-        run: cd ${{ env.NEXT-PATH }} && bun run build
+        run: cd ${{ env.NEXT_PATH }} && bun run build
 
       - name: Test lint
-        run: cd ${{ env.NEXT-PATH }} && bun lint
+        run: cd ${{ env.NEXT_PATH }} && bun lint
+
+      - name: Install Cypress
+        run: cd ${{ env.NEXT_PATH }} && npm install cypress
+
+      - name: Run E2E
+        uses: cypress-io/github-action@v7.1.5
+        with:
+            working-directory: ${{ env.NEXT_PATH }}
+            config: baseUrl=http://localhost:3000
+            wait-on: http://localhost:3000
+            install: false
+            browser: chrome
+            start: bun run start

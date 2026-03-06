@@ -25,12 +25,12 @@ export function LoginForm(){
 
     const router = useRouter()
 
-    const login = useLogin()
+    const { mutate, error } = useLogin()
 
     const [passwordState, setPasswordState] = useState<PasswordState>("password")
 
     const onSubmit: SubmitHandler<LoginInput> = (data) => {
-        login.mutate({
+        mutate({
             email: data.email,
             password: data.password
         }, {
@@ -38,10 +38,6 @@ export function LoginForm(){
                 localStorage.setItem("token", data.token)
                 console.log("Token: ", data.token)
                 router.push("/applications")
-            },
-
-            onError: () => {
-                alert("Something happened!")
             }
         })
 
@@ -78,7 +74,7 @@ export function LoginForm(){
                             className="w-100 border-3 p-2 rounded-lg"
                             placeholder="Enter your password"
                             {...register("password", { 
-                                required: "Email is required!",
+                                required: "Password is required!",
                                 minLength: {
                                     value: 8,
                                     message: "Password must be atleast 8 characters"
@@ -87,6 +83,8 @@ export function LoginForm(){
                         />
 
                         {errors.password && <p className="text-red-400">{errors.password.message}</p>}
+                    
+                        {error && <p className="text-red-400">{``}</p>}
                     </div>
 
                     <div>

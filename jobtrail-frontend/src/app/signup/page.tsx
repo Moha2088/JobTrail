@@ -2,16 +2,14 @@ import { SignupForm } from "@/components/ui/signup/SignupForm"
 
 
 export default function Page() {
-    
-    
     return (
         <>
             <div className="p-10" />
 
             <div className="flex justify-center">
-                <p className="text-4xl font-bold">
+                <h1 className="text-4xl font-bold">
                     Sign Up
-                </p>
+                </h1>
             </div>
 
             <div className="p-5" />

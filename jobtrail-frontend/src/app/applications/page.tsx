@@ -44,7 +44,7 @@ export default function Page() {
                 onOpenChange={setIsCreateApplicationDialogOpen} 
             />
 
-            <div className="p-10" />
+            <div className="p-5" />
 
             <div>
                 <p className=" text-2xl font-bold ml-20">

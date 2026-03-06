@@ -12,7 +12,7 @@ export default function NotFound() {
             <div className="p-10" />
 
             <div className="flex justify-center">
-                <p className="text-8xl font-bold">
+                <p className="text-6xl font-bold">
                     404
                 </p>    
             </div>
@@ -23,8 +23,8 @@ export default function NotFound() {
                 <Image 
                     src={astro} 
                     alt="Astronaut"
-                    width={400}
                     className="rounded-xl"
+                    width={400}
                 />
             </div>
 
@@ -33,9 +33,14 @@ export default function NotFound() {
             <div className="flex justify-center">
                 <p className="text-lg">Lost in space? Click the button to go back</p>
             </div>
+
+            <div className="p-3" />
             
             <div className="flex justify-center">
-                <Button variant="light" onClick={() => router.push("/")}>
+                <Button 
+                    variant="light" 
+                    onClick={() => router.push("/")}
+                >
                     Back to the shuttle
                 </Button>
             </div>
