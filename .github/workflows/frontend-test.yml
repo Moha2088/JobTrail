@@ -33,9 +33,13 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        
       - name: Install Cypress
         run: cd ${{ env.NEXT_PATH }} && npm install cypress
-        
+
       - name: Run Component tests
         uses: cypress-io/github-action@v7.1.5
         with:
@@ -49,6 +53,9 @@ jobs:
     needs: component-test
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4  
+      
       - name: Install Cypress
         run: cd ${{ env.NEXT_PATH }} && npm install cypress
 
