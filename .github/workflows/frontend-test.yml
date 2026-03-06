@@ -33,6 +33,7 @@ jobs:
         run: cd ${{ env.NEXT_PATH }} && npm install cypress
 
   component-test:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Run Component tests
@@ -45,6 +46,7 @@ jobs:
           start: bun run start
 
   e2e-test:
+    needs: component-test
     runs-on: ubuntu-latest
     steps:
       - name: Run E2E tests
