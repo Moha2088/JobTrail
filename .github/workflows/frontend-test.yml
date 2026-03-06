@@ -39,7 +39,6 @@ jobs:
             component: true
             browser: chrome
             install: false
-            start: bun run start
 
       - name: Run E2E tests
         uses: cypress-io/github-action@v7.1.5
@@ -49,3 +48,4 @@ jobs:
             wait-on: http://localhost:3000
             install: false
             browser: chrome
+            start: bun run start
