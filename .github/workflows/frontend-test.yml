@@ -32,22 +32,27 @@ jobs:
       - name: Install Cypress
         run: cd ${{ env.NEXT_PATH }} && npm install cypress
 
+  component-test:
+    runs-on: ubuntu-latest
+    steps:
       - name: Run Component tests
         uses: cypress-io/github-action@v7.1.5
         with:
-            working-directory: ${{ env.NEXT_PATH }}
-            config: baseUrl=http://localhost:3002
-            component: true
-            browser: chrome
-            install: false
-            start: bun run start
+          working-directory: ${{ env.NEXT_PATH }}
+          component: true
+          browser: chrome
+          install: false
+          start: bun run start
 
+  e2e-test:
+    runs-on: ubuntu-latest
+    steps:
       - name: Run E2E tests
         uses: cypress-io/github-action@v7.1.5
         with:
-            working-directory: ${{ env.NEXT_PATH }}
-            config: baseUrl=http://localhost:3000
-            wait-on: http://localhost:3000
-            install: false
-            browser: chrome
-            start: bun run start
+          working-directory: ${{ env.NEXT_PATH }}
+          config: baseUrl=http://localhost:3000
+          wait-on: http://localhost:3000
+          install: false
+          browser: chrome
+          start: bun run start
