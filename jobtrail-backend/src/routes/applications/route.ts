@@ -10,10 +10,10 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     .onBeforeHandle(async({jwt, cookie: { auth }, set}) => {
         const claims: ClaimTypes = await jwt.verify(auth.value)
         
-        if(!claims.sub) {
-            set.status = 401
-            return "No id was found in claims!"
-        }
+        // if(!claims.sub) {
+        //     set.status = 401
+        //     return "No id was found in claims!"
+        // }
     })
     .post("/", async({ body, set, jwt, cookie: { auth } }) => {
         const { companyName, email, applicationStatus, position } = body

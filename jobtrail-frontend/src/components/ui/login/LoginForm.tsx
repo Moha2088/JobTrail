@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/controls/Button"
 import { useRouter } from "next/navigation"
 import { useLogin } from "@/services/auth/useLogin"
 import { useState } from "react"
+import axios from "axios"
+import { LoadingDots } from "../view/motion/LoadingDots"
 
 
 type LoginInput = {
@@ -25,23 +27,13 @@ export function LoginForm(){
 
     const router = useRouter()
 
-    const { mutate, error } = useLogin()
+    const login = useLogin()
 
     const [passwordState, setPasswordState] = useState<PasswordState>("password")
 
-    const onSubmit: SubmitHandler<LoginInput> = (data) => {
-        mutate({
-            email: data.email,
-            password: data.password
-        }, {
-            onSuccess:(data) => {
-                localStorage.setItem("token", data.token)
-                console.log("Token: ", data.token)
-                router.push("/applications")
-            }
-        })
-
-        // router.push("https://moha2088.vercel.app")
+    const onSubmit: SubmitHandler<LoginInput> = async(data) => {
+        await axios.post("../../api/login", data)
+        router.push("/applications")
     }
  
     return (
@@ -83,8 +75,6 @@ export function LoginForm(){
                         />
 
                         {errors.password && <p className="text-red-400">{errors.password.message}</p>}
-                    
-                        {error && <p className="text-red-400">{``}</p>}
                     </div>
 
                     <div>
@@ -99,7 +89,10 @@ export function LoginForm(){
                     </div>
 
                     <div>
-                        <Button type="submit" disabled={errors.email?.message?.trim() == "" && errors.password?.message?.trim() ==""}>
+                        <Button 
+                            type="submit" 
+                            disabled={errors.email?.message?.trim() == "" && errors.password?.message?.trim() ==""}
+                        >
                             Login
                         </Button>
                     </div>
