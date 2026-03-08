@@ -1,10 +1,12 @@
 
 import { cva, VariantProps } from "class-variance-authority"
-import { ButtonHTMLAttributes } from "react"
-
+import { ReactNode } from "react"
+import { LoadingDots } from "../view/motion/LoadingDots"
+import { cn } from "@/lib/utils"
+import * as React from "react"
 
 const buttonStyles = cva(
-    "flex justify-center items-center p-3 font-bold rounded-lg cursor-pointer w-fit",
+    "flex justify-center items-center p-3 font-bold rounded-lg cursor-pointer",
     {
         variants: {
             variant:{
@@ -24,13 +26,30 @@ const buttonStyles = cva(
     }
 )
 
-interface ButtonProps extends VariantProps<typeof buttonStyles>, ButtonHTMLAttributes<HTMLButtonElement> { }
+interface ButtonProps extends VariantProps<typeof buttonStyles>, React.ComponentProps<"button"> {
+    iconStart?: ReactNode
+    iconEnd?: ReactNode
+ }
 
 
-export function Button({ variant, size, children, ...props }: ButtonProps) {
+export function Button({ variant, className, size, iconStart, iconEnd, children, ...props }: ButtonProps) {
     return (
-        <button className={(buttonStyles({ variant, size }))} {...props}>
-            {children}
+        <button className={cn(buttonStyles({ variant, size }), className)} {...props}>
+            <div className="flex gap-3">
+                {iconStart &&
+                    <div>
+                        {iconStart}
+                    </div>
+                }
+                {children}
+                
+                {iconEnd &&
+                    <div>
+                        {iconEnd}
+                    </div>
+                }
+            </div>
+            
         </button>
     )
 }

@@ -37,7 +37,7 @@ export const authRouter = new Elysia({ prefix :"/auth" })
         })
         
         return {
-            token: value
+            accessToken: value
         }
 
     }, loginSchema)
