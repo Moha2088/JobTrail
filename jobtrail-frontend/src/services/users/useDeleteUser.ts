@@ -1,4 +1,4 @@
-import { elysiaApi } from "@/app/api/elysiaApi"
+import { elysiaApi } from "@/app/api/apiClients"
 import { useMutation } from "@tanstack/react-query"
 import { useUserCache } from "./useUserCache"
 

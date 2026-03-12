@@ -5,7 +5,7 @@ import axios from "axios"
 import { decodeJwt } from "jose"
 import { signSession } from "@/services/session/signSession"
 
-interface LoginData {
+export interface LoginData {
     accessToken: string
 }
 
@@ -13,17 +13,21 @@ interface LoginData {
 export async function POST(req: NextRequest) {
     const body = await req.json()
 
+    console.log(body)
+
     const { data } = await axios.post<LoginData>("http://localhost:3003/api/auth/login", body)
     const { accessToken } = data
-    const { sub, exp } = decodeJwt(accessToken)
+    const { sub, exp, name, email } = decodeJwt(accessToken)
 
     const sessionData: SessionData = {
-        userId: sub!,
+        userId: Number(sub!),
         expiresAt: exp!,
+        name: name as string,
+        email: email as string,
+        accessToken
     }
 
     const sessionToken = await signSession(sessionData)
-
     const cookieStore = await cookies()
 
     cookieStore.set({
@@ -33,5 +37,7 @@ export async function POST(req: NextRequest) {
         expires: new Date(exp! * 1000)
     })
 
-    return new Response(null, { status: 200 })
+    return new Response(null, { 
+        status: 200 
+    })
 }

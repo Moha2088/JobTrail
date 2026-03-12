@@ -1,5 +1,9 @@
-import { LoginForm } from "@/components/ui/login/LoginForm"
+import { LoginForm } from "@/components/ui/controls/login/LoginForm"
+import { Metadata } from "next"
 
+export const metadata: Metadata = {
+    title: "Login",
+}
 
 export default function LoginPage() {
     return (

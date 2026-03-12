@@ -8,8 +8,14 @@ export async function verifySession(sessionToken: string): Promise<SessionData> 
 
     console.log("Session verified successfully")
 
+    const { sub, exp, name, email, accessToken } = session.payload
+
     return {
-        userId: session.payload.sub!,
-        expiresAt: session.payload.exp!
+        userId: Number(sub),
+        expiresAt: exp!,
+        name: name as string,
+        email: email as string,
+        accessToken: accessToken as string
+
     }
 }

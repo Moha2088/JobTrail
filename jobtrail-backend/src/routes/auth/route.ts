@@ -4,11 +4,17 @@ import { db } from "../../db/db";
 import { usersTable } from "../../db/schema";
 import { eq } from "drizzle-orm";
 import { jwt } from "@elysiajs/jwt"
+import { getUser } from "../../utils/users/getUser"
 
 
 export const authRouter = new Elysia({ prefix :"/auth" })
-    .post("/login", async({ jwt, body, set, cookie: { auth}}) => {
+    // @ts-ignore
+    .post("/login", async({ jwt, body, set, headers}) => {
         const { email, password } = body
+
+
+        console.log("---- Getting header values ----")
+        console.log(headers)
 
         const result = await db.select()
             .from(usersTable)
@@ -19,29 +25,35 @@ export const authRouter = new Elysia({ prefix :"/auth" })
             throw "Unauthorized"
         }
 
-            const isMatch = await Bun.password.verify(password, result[0].password)
+        const isMatch = await Bun.password.verify(password, result[0].password)
 
-            if(!isMatch) {
-                set.status = 401
-                return "Password is incorrect!"
-            }
+        if(!isMatch) {
+            set.status = 401
+            return "Password is incorrect!"
+        }
 
-       const value =  await jwt.sign({
-            sub: result[0].id
+        const { sub, name } = await getUser(result[0].id)
+
+        const value =  await jwt.sign({
+            sub,
+            name,
+            email
         })
 
-        auth.set({
-            value,
-            httpOnly: true,
-            maxAge: 3600
-        })
-        
         return {
             accessToken: value
         }
 
     }, loginSchema)
 
+    // @ts-ignore
+    .post("/logout", async({jwt, set, cookie: { auth }}) => {
+        auth.remove()
+        set.status = 204
+        return
+    })
+
+    // @ts-ignore
     .get("/me", async({jwt, cookie: { auth }}) => {
         const claims: ClaimTypes = await jwt.verify(auth.value)
         const user = await db.select()

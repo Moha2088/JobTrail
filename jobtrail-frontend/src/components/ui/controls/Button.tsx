@@ -1,12 +1,12 @@
 
 import { cva, VariantProps } from "class-variance-authority"
 import { ReactNode } from "react"
-import { LoadingDots } from "../view/motion/LoadingDots"
 import { cn } from "@/lib/utils"
-import * as React from "react"
+import { ComponentProps } from "react"
+import { Slot } from "@radix-ui/react-slot"
 
 const buttonStyles = cva(
-    "flex justify-center items-center p-3 font-bold rounded-lg cursor-pointer",
+    "flex justify-center items-center font-bold text-sm rounded-lg cursor-pointer",
     {
         variants: {
             variant:{
@@ -15,8 +15,8 @@ const buttonStyles = cva(
                 destructive: "bg-red-400 text-white hover:bg-red-500"
             },
             size: {
-                large: "w-25 h-13",
-                small: "w-20 h-10 text-xs"
+                large: "p-3 w-25 h-15",
+                small: "p-3 w-30 h-10"
             },
         },
         defaultVariants:{
@@ -26,15 +26,21 @@ const buttonStyles = cva(
     }
 )
 
-interface ButtonProps extends VariantProps<typeof buttonStyles>, React.ComponentProps<"button"> {
+interface ButtonProps extends VariantProps<typeof buttonStyles>, ComponentProps<"button"> {
     iconStart?: ReactNode
     iconEnd?: ReactNode
+    asChild?: boolean
  }
 
 
-export function Button({ variant, className, size, iconStart, iconEnd, children, ...props }: ButtonProps) {
+export function Button({ variant, className, size, iconStart, iconEnd, asChild, children, ...props }: ButtonProps) { 
+    const Comp = asChild ? Slot : "button"
+
     return (
-        <button className={cn(buttonStyles({ variant, size }), className)} {...props}>
+        <Comp
+            {...props}
+            className={cn(buttonStyles({ variant, size }), className)} 
+        >
             <div className="flex gap-3">
                 {iconStart &&
                     <div>
@@ -49,7 +55,6 @@ export function Button({ variant, className, size, iconStart, iconEnd, children,
                     </div>
                 }
             </div>
-            
-        </button>
+        </Comp>
     )
 }

@@ -7,4 +7,13 @@ export interface Application {
     position: string,
 }
 
+export interface ApplicationData {
+    applications: Application[]
+    metrics: {
+        rejectedCount: number
+        pendingCount: number
+        acceptedCount: number
+    }
+}
+
 export type PostApplication = Omit<Application, "id">

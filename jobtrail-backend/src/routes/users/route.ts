@@ -25,6 +25,7 @@ export const userRouter = new Elysia({ prefix: "/users" })
 
     }, createUserSchema)
 
+    // @ts-ignore
     .onBeforeHandle(async({jwt, set, cookie: { auth } }) =>{
         const claims: ClaimTypes = await jwt.verify(auth.value)
 
@@ -33,8 +34,8 @@ export const userRouter = new Elysia({ prefix: "/users" })
             return "No id was found in claims!"
         }
     })
-
-
+    
+    // @ts-ignore
     .get("/:id", async({ params, set, jwt, cookie: { auth } }) => {
 
         const claims: ClaimTypes = await jwt.verify(auth.value)

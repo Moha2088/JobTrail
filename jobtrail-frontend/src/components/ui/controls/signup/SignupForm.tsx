@@ -1,12 +1,13 @@
 "use client"
 
 import { useForm } from "react-hook-form"
-import { PasswordState } from "../login/LoginForm"
+import { PasswordState } from "@/components/ui/controls/login/LoginForm"
 import { div } from "motion/react-client"
-import { Button } from "../controls/Button"
+import { Button } from "../Button"
 import { usePostUser } from "@/services/users/usePostUser"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import axios from "axios"
 
 export function SignupForm() {
 
@@ -38,8 +39,13 @@ export function SignupForm() {
             email: data.email,
             password: data.password
         }, {
-            onSuccess: () => {
-                router.push("/login")
+            onSuccess: async() => {
+                await axios.post("../../api/login", {
+                    email: getValues("email"),
+                    password: getValues("password")
+                })
+
+                router.push("/applications")
             }
         })
     }

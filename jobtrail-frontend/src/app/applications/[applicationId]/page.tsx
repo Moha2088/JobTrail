@@ -22,13 +22,12 @@ export default function Page() {
                     onClick={() => router.back()} 
                 />
             </div>
-            
 
             <div className="p-5" />
 
             <div>
                 <p className="flex justify-center text-4xl font-bold ml-10">
-                    {application.data?.companyName}
+                    {application.data?.companyName ?? "Not Found"}
                 </p>
             </div>
 
@@ -51,7 +50,6 @@ export default function Page() {
                     <p>{application.data?.position}</p>
                 </div>
             </div>
-        
         </>
     )
 

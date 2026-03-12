@@ -1,6 +1,6 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query"
 import { PostApplication } from "./types"
-import { elysiaApi } from "@/app/api/elysiaApi"
+import { elysiaApi } from "@/app/api/apiClients"
 import { useApplicationCache } from "./useApplicationCache"
 
 type PutApplication = Omit<PostApplication, "id">
