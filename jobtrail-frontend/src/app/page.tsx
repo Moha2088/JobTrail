@@ -10,14 +10,10 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { motion } from "motion/react"
 import { MotionButton } from "@/components/ui/controls/motion/MotionButton"
-import { useEffect } from "react"
-import { div } from "motion/react-client"
-import { LoadingDots } from "@/components/ui/view/motion/LoadingDots"
 
 export default function Home() {
 
     const router = useRouter()
-
 
     return (
         <>    
@@ -82,7 +78,6 @@ export default function Home() {
                         src={dashboard} 
                     />
                 </div>
-
             </div>
 
             <div className="p-10" />

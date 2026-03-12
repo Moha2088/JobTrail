@@ -1,5 +1,7 @@
 interface ClaimTypes {
     sub: number
     exp: number
-    iat: number
+    name: string
+    email: string
+    userId: number
 }

@@ -1,24 +1,34 @@
 import Elysia from "elysia";
-import { postApplicationSchema, getApplicationSchema, putApplicationSchema, deleteApplicationsSchema } from "./schema";
+import {
+    postApplicationSchema, getApplicationSchema, putApplicationSchema, deleteApplicationsSchema,
+    getApplicationsSchema
+} from "./schema";
 import { db } from "../../db/db";
 import { applicationsTable } from "../../db/schema";
 import { eq } from "drizzle-orm";
-import { Application } from "./types";
+import { getClaims } from "../../utils/auth/getClaims"
+import { getApplication } from "../../utils/applications"
+import { Application } from "./types"
 
 export const applicationRouter = new Elysia({ prefix: "/applications" })
-    // .use(authMiddleware)
-    .onBeforeHandle(async({jwt, cookie: { auth }, set}) => {
-        const claims: ClaimTypes = await jwt.verify(auth.value)
-        
-        // if(!claims.sub) {
-        //     set.status = 401
-        //     return "No id was found in claims!"
-        // }
+    // @ts-ignore
+    .onBeforeHandle(async({ set, headers: { authorization }, route}) => {
+        if(!authorization) {
+            set.status = 401
+            return "Unauthorized"
+        }
     })
-    .post("/", async({ body, set, jwt, cookie: { auth } }) => {
+
+    // @ts-ignore
+    .post("/", async({ body, set, jwt, headers: { authorization } }) => {
         const { companyName, email, applicationStatus, position } = body
 
-        const claims: ClaimTypes = await jwt.verify(auth.value)
+        if(!authorization) {
+            set.status = 401
+            return
+        }
+
+        const claims = await getClaims(authorization)
 
         const result = await db.insert(applicationsTable)
             .values({
@@ -26,21 +36,26 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
                 email: email,
                 applicationStatus: applicationStatus,
                 position: position,
-                userId: claims.sub
+                userId: claims.sub,
             })
 
             set.status = 201
 
     }, postApplicationSchema)
 
+    // @ts-ignore
+    .get("/",async({jwt, headers: { authorization }}) => {
+        // const claims: ClaimTypes = await jwt.verify(auth.value)
 
-    .get("/",async({jwt, cookie: { auth }}) => {
-        const claims: ClaimTypes = await jwt.verify(auth.value)
+        const claims = await getClaims(authorization!)
 
-        const results = await db.select().from(applicationsTable)
+        const results = await db.select()
+            .from(applicationsTable)
             .where(eq(applicationsTable.userId, claims.sub))
 
-        return results.map(app => {
+        console.log(results)
+
+        const applications: Application[] = results.map(app => {
             return {
                 id: app.id,
                 companyName: app.companyName,
@@ -49,9 +64,29 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
                 position: app.position
             }
         })
+
+
+        return {
+            applications: applications,
+            metrics: {
+                pendingCount: applications.filter(app => app.applicationStatus == "PENDING").length,
+                rejectedCount: applications.filter(app => app.applicationStatus == "REJECTED").length,
+                acceptedCount: applications.filter(app => app.applicationStatus == "ACCEPTED").length,
+            }
+        }
+    }, getApplicationsSchema)
+
+
+    .onBeforeHandle(async({set, params, headers: { authorization }}) => {
+        const applicationId = Number(params.id)
+        const application = await getApplication(applicationId)
+        const claims = await getClaims(authorization!)
+
+        if(claims.sub != application.userId) {
+            set.status = 401
+            return "Unauthorized"
+        }
     })
-
-
     .get("/:id", async({ params, set }) => {
         const id = Number(params.id)
 
@@ -73,6 +108,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         }
 
     }, getApplicationSchema)
+
 
     .put("/:id", async({ params, body, set }) => {
         const id = Number(params.id)

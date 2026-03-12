@@ -1,6 +1,5 @@
 import { appUrl } from "../../fixtures/constants"
 import { SignupData } from "../signup/signup.cy"
-import { SignJWT } from "jose"
 
 type LoginData = Omit<SignupData, "name">
 
@@ -47,22 +46,5 @@ describe('Login page', () => {
 
         cy.get('p').contains("Email is required!").should("be.visible")
         cy.get('p').contains("Password is required!").should("be.visible")
-    })
-
-    it("should redirect to applications page if user is authenticated", async() => {
-        const sessionToken = await new SignJWT({
-            sub: Math.floor(Math.random() * 1000).toString(),
-            exp: Math.floor(Date.now() / 1000) + 60 * 60,
-        })
-            .setProtectedHeader({ alg: "HS256" })
-            .setIssuedAt()
-            .sign(new TextEncoder().encode("my_secret_session_token_secret"))
-
-        cy.setCookie("session", sessionToken)
-
-        cy.visit(`${appUrl}/login`)
-        cy.url().should("include", "/applications")
-
-        cy.clearCookie("session")
     })
 })

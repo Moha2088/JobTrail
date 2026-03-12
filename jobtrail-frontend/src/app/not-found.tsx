@@ -37,7 +37,8 @@ export default function NotFound() {
             <div className="p-3" />
             
             <div className="flex justify-center">
-                <Button 
+                <Button
+                    className="w-fit"
                     variant="light" 
                     onClick={() => router.push("/")}
                 >

@@ -17,6 +17,12 @@ export const getApplicationSchema = {
     })
 }
 
+export const getApplicationsSchema = {
+    query: t.Object({
+        pending: t.Optional(t.Boolean())
+    })
+}
+
 export const putApplicationSchema = {
     params: t.Object({
         id: t.Number()

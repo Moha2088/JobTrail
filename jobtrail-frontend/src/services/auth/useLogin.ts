@@ -1,6 +1,6 @@
 "use client"
 
-import { elysiaApi } from "@/app/api/elysiaApi"
+import { elysiaApi } from "@/app/api/apiClients"
 import { useMutation, UseMutationResult } from "@tanstack/react-query"
 import axios from "axios"
 import { toast } from "sonner"
@@ -18,11 +18,12 @@ interface LoginData {
 axios.defaults.withCredentials = true
 
 export function useLogin() : UseMutationResult<LoginData, Error, LoginParams> {
+
     return useMutation({
         mutationKey: ["login"],
         mutationFn: async(variables) => {
-            // await elysiaApi.api.auth.login.post(variables)
-            const { data } = await axios.post<LoginData>(`http://localhost:3003/api/auth/login`, variables)
+            // await apiClients.api.auth.login.post(variables)
+            const { data } = await axios.post("/auth/login", variables)
             return data
         },
 

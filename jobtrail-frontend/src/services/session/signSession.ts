@@ -3,11 +3,14 @@ import { SessionData } from "@/app/api/login/types"
 
 
 export async function signSession(sessionData: SessionData) {
-    const { userId, expiresAt } = sessionData
+    const { userId, expiresAt, accessToken, name, email } = sessionData
 
     return await new SignJWT({
-        sub: userId,
+        sub: userId.toString(),
         exp: expiresAt,
+        name,
+        email,
+        accessToken
     })
         .setProtectedHeader({ alg: "HS256" })
         .setIssuedAt()

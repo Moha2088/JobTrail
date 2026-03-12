@@ -1,5 +1,8 @@
 
 export interface SessionData {
-    userId: string
+    userId: number
     expiresAt: number
+    name: string
+    email: string
+    accessToken: string
 }
