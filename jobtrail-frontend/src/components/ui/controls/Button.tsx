@@ -16,7 +16,7 @@ const buttonStyles = cva(
             },
             size: {
                 large: "p-3 w-25 h-15",
-                small: "p-3 pt-4 w-20 h-10"
+                small: "p-3 w-30 h-10"
             },
         },
         defaultVariants:{
@@ -35,7 +35,7 @@ interface ButtonProps extends VariantProps<typeof buttonStyles>, ComponentProps<
 
 export function Button({ variant, className, size, iconStart, iconEnd, asChild, children, ...props }: ButtonProps) { 
     const Comp = asChild ? Slot : "button"
-    
+
     return (
         <Comp
             {...props}

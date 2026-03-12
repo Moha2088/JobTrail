@@ -49,7 +49,7 @@ export default function ApplicationsPage() {
 
             <div className="flex flex-row justify-end">
 
-                <div className="flex justify-start items-center">
+                <div className="flex justify-start items-center w-screen">
                     <p className=" text-2xl font-bold ml-20">
                         Welcome back, {session?.name}!
                     </p>
@@ -66,7 +66,7 @@ export default function ApplicationsPage() {
                     </Button>
                 </div>
 
-                <div className="flex  mr-5">
+                <div className="flex mr-10">
                     <Button
                         size="small"
                         onClick={async() => logOut.mutate(undefined, {
@@ -80,7 +80,7 @@ export default function ApplicationsPage() {
                         })}
                         variant="destructive"
                         iconEnd={<IconLogout />}
-                        className="w-fit"
+                        className=""
                     >
                         Log Out
                     </Button>
@@ -91,11 +91,6 @@ export default function ApplicationsPage() {
                 isOpen={isCreateApplicationDialogOpen} 
                 onOpenChange={setIsCreateApplicationDialogOpen}
             />
-
-            <div className="p-5" />
-
-            
-
 
 
             <div className="p-5" />

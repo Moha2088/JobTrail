@@ -69,9 +69,10 @@ function Content() {
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Dialog.Content className="mr-auto ml-auto w-200 bg-white p-5 rounded-xl z-10 absolute right-0 left-0">
-                    <Dialog.Title className="mb-3 text-lg font-bold">Create Application</Dialog.Title>
+                    <Dialog.Title className="mb-3 text-2xl font-bold">Create Application</Dialog.Title>
+                    <div className="p-2" />
                     <Dialog.Description
-                        className="font-bold mb-5">
+                        className="mb-5">
                         Enter the details of the application you want to create
                     </Dialog.Description>
 

@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation"
 import { useLogin } from "@/services/auth/useLogin"
 import { useState } from "react"
 import axios from "axios"
-import { LoadingDots } from "../view/motion/LoadingDots"
-
+import { LoadingDots } from "../../view/motion/LoadingDots"
+import { motion } from "motion/react"
 
 type LoginInput = {
     email: string
@@ -38,8 +38,11 @@ export function LoginForm(){
  
     return (
         <>
-
-            <form className="flex flex-col justify-center" onSubmit={handleSubmit(onSubmit)}>
+            <motion.form
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{  duration : 0.5 }}
+                className="flex flex-col justify-center" onSubmit={handleSubmit(onSubmit)}>
 
                 <div className="flex flex-col justify-center items-center gap-10 border-stone-300 border-3 w-130 h-120 ml-auto mr-auto rounded-xl">
                     <div>
@@ -98,7 +101,7 @@ export function LoginForm(){
                     </div>
                 </div>
 
-            </form>
+            </motion.form>
 
         </>
     )

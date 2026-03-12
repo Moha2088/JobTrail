@@ -1,9 +1,9 @@
 "use client"
 
 import { useForm } from "react-hook-form"
-import { PasswordState } from "../login/LoginForm"
+import { PasswordState } from "@/components/ui/controls/login/LoginForm"
 import { div } from "motion/react-client"
-import { Button } from "../controls/Button"
+import { Button } from "../Button"
 import { usePostUser } from "@/services/users/usePostUser"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
