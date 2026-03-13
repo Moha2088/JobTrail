@@ -5,19 +5,20 @@ import { usePostApplication } from "@/services/applications"
 import { useForm } from "react-hook-form"
 import { ApplicationStatus, StatusDropdownMenu } from "@/components/ui/controls/application/StatusDropdownMenu"
 import { useState } from "react"
-
+import { motion } from "motion/react"
 
 interface CreateApplicationDialogProps {
     isOpen?: boolean
     onOpenChange?: (open: boolean) => void
 }
 
+
 export function CreateApplicationDialog(props: CreateApplicationDialogProps) {
     const { isOpen, onOpenChange } = props
 
     return (
         <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
-            <Content />
+            < Content />
         </Dialog.Root>
     )
 }
@@ -35,7 +36,7 @@ function Content() {
     const [isDropDownOpen, setIsDropdownOpen] = useState<boolean>(false)
     const [applicationStatus, setApplicationStatus] = useState<string>("")
 
-    const { handleSubmit, register, reset, getValues } = useForm<CreateApplicationInput>({
+    const { handleSubmit, register, reset, getValues, formState: { errors } } = useForm<CreateApplicationInput>({
         defaultValues: {
             companyName: "",
             email: "",
@@ -67,7 +68,8 @@ function Content() {
 
     return (
         <>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form
+                onSubmit={handleSubmit(onSubmit)}>
                 <Dialog.Content className="mr-auto ml-auto w-200 bg-white p-5 rounded-xl z-10 absolute right-0 left-0">
                     <Dialog.Title className="mb-3 text-2xl font-bold">Create Application</Dialog.Title>
                     <div className="p-2" />
@@ -84,8 +86,12 @@ function Content() {
                             <TextField.Root
                                 defaultValue=""
                                 placeholder="Enter the name of the company"
-                                {...register("companyName")}
+                                {...register("companyName", {
+                                    required: "Company name is required"
+                                })}
                             />
+                            {errors.companyName && <p className="text-red-400">{errors.companyName.message}</p>}
+
                         </label>
                         <label>
                             <p>
@@ -93,8 +99,11 @@ function Content() {
                             </p>
                             <TextField.Root
                                 placeholder="Enter the email of the company"
-                                {...register("email")}
+                                {...register("email", {
+                                    required: "Company email is required"
+                                })}
                             />
+                            {errors.email && <p className="text-red-400">{errors.email.message}</p>}
                         </label>
                         <label>
                             <p className="flex gap-1">
@@ -129,8 +138,11 @@ function Content() {
                             <TextField.Root
                                 defaultValue=""
                                 placeholder="Enter the position you are applying for"
-                                {...register("position")}
+                                {...register("position", {
+                                    required: "Position is required!"
+                                })}
                             />
+                            {errors.position && <p className="text-red-400">{errors.position.message}</p>}
                         </label>
                     </Flex>
 
@@ -151,6 +163,7 @@ function Content() {
                             }}
                         >
                             <Button
+                                disabled={!applicationStatus || !getValues("companyName") || !getValues("email") || !getValues("position")}
                                 type="submit"
                                 onClick={() => {
                                     createApplication.mutate({

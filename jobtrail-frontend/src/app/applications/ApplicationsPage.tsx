@@ -9,15 +9,13 @@ import { useLogOut } from "@/services/auth/useLogOut"
 import { IconLogout, IconPlus } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { toast } from "sonner"
 import { useSessionContext } from "@/contexts/SessionContext"
 
 
 export default function ApplicationsPage() {
-    const [applicationToDelete, setApplicationToDelete] = useState<number | null>(null)
     const [isCreateApplicationDialogOpen, setIsCreateApplicationDialogOpen] = useState<boolean>(false)
 
-    const deleteApplication = useDeleteApplication(applicationToDelete!)
+    
     const applications = useApplications().data
     const logOut = useLogOut()
 
@@ -25,23 +23,9 @@ export default function ApplicationsPage() {
     const rejectedCount = applications?.metrics.rejectedCount ?? 0
     const acceptedCount = applications?.metrics.acceptedCount ?? 0
 
-
     const router = useRouter()
-
     const session = useSessionContext()
 
-
-    const getApplicationid = (id: number) => {
-        setApplicationToDelete(id)
-        deleteApplication.mutate(undefined, {
-            onSuccess: () => {
-                console.log("Application deleted successfully")
-            },
-            onError: () => {
-                console.log("Error deleting application")
-            }
-        })
-    }
 
     return (
         <div className={`h-screen ${isCreateApplicationDialogOpen ? "bg-black/70": ""} `}>
@@ -72,10 +56,7 @@ export default function ApplicationsPage() {
                         onClick={async() => logOut.mutate(undefined, {
                             onSuccess: () => {
                                 console.log("Logging out!")
-                                router.refresh()
-                                toast.info("You have successfully logged out!", {
-                                    
-                                })
+                                router.replace("/")
                             }
                         })}
                         variant="destructive"
@@ -106,7 +87,6 @@ export default function ApplicationsPage() {
             <div className="p-5" />
 
             <ApplicationTable
-                deleteApplication={getApplicationid}
                 applications={applications?.applications}
             />
         </div>

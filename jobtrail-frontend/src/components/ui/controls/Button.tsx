@@ -6,7 +6,7 @@ import { ComponentProps } from "react"
 import { Slot } from "@radix-ui/react-slot"
 
 const buttonStyles = cva(
-    "flex justify-center items-center font-bold text-sm rounded-lg cursor-pointer",
+    "flex justify-center items-center font-bold text-sm rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
     {
         variants: {
             variant:{

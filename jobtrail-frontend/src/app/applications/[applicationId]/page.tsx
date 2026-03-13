@@ -18,7 +18,7 @@ export default function Page() {
             <div className="p-3">
                 <IconArrowBack
                     size={30} 
-                    className="cursor-pointer" 
+                    className="cursor-pointer text-black hover:text-gray-400" 
                     onClick={() => router.back()} 
                 />
             </div>
@@ -48,6 +48,11 @@ export default function Page() {
                 <div className="p-3">
                     <label className="font-bold">Position:</label>
                     <p>{application.data?.position}</p>
+                </div>
+
+                <div>
+                    <label className="font-bold">Created At:</label>
+                    <p>{application.data?.createdAt ? new Date(application.data.createdAt).toLocaleDateString() : "N/A"}</p>
                 </div>
             </div>
         </>

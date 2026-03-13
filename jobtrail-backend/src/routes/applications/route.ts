@@ -105,6 +105,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
             email: result[0].email,
             applicationStatus: result[0].applicationStatus,
             position: result[0].position,
+            createdAt: result[0].createdAt
         }
 
     }, getApplicationSchema)

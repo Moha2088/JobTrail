@@ -9,16 +9,6 @@ import { AuthProvider } from "@/providers/AuthProvider"
 import { ReactNode } from "react"
 import { Navbar } from "@/components/ui/view/Navbar"
 
-const robotoSlab = Roboto_Slab({
-    subsets: ["latin"],
-    weight: ["400", "500", "700"],
-    variable: "--font-roboto-slab",
-})
-
-const googleSans = Google_Sans({
-    subsets: ["latin"],
-    weight: ["400", "500", "700"],
-})
 
 export const metadata: Metadata = {
     title: {
@@ -39,7 +29,7 @@ export default function RootLayout({
             <ReactQueryClientProvider>
                 <AuthProvider>
                     <Theme>
-                        <body className={` antialiased`}>
+                        <body className={`antialiased`}>
                             {/* <Navbar /> */}
                             <Toaster />
                             {children}

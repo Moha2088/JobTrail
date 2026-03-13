@@ -1,14 +1,10 @@
 "use client"
 
-import { Button } from "@/components/ui/controls/Button"
 import { Label } from "@/components/ui/view/Label"
 import dashboard from "../../assets/landing/dashboard.png"
-import Image from "next/image"
 import {
     IconArrowRight,
     IconCheck,
-    IconShieldLock,
-    IconShieldLockFilled,
     IconSparklesFilled
 } from "@tabler/icons-react"
 import { MotionImage } from "@/components/ui/view/motion/Image"
@@ -16,7 +12,6 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { motion } from "motion/react"
 import { MotionButton } from "@/components/ui/controls/motion/MotionButton"
-import { delay } from "motion"
 
 export default function Home() {
 
@@ -99,11 +94,17 @@ export default function Home() {
 
             <div className="p-10" />
 
-            <div className="flex justify-center">
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                whileInView="visible"
+                className="flex justify-center"
+            >
                 <p className="text-4xl font-bold text-center max-w-300" >
                     AI powered job tracking right at your fingertips.
                 </p>
-            </div>
+            </motion.div>
 
             <div className="p-10" />
 
@@ -123,7 +124,7 @@ export default function Home() {
 
             {/* Footer  */}
 
-            <div className="bg-stone-800 h-70">
+            <div className="bg-stone-800 h-70 rounded-t-4xl">
 
                 <div className="flex justify-center">
                     <Link
@@ -137,9 +138,7 @@ export default function Home() {
                 <div className="flex justify-center text-white font-bold">
                     @2026 JobTrail. All rights reserved
                 </div>
-
             </div>
-
         </>
     )
 }

@@ -33,7 +33,7 @@ export function LoginForm(){
 
     const onSubmit: SubmitHandler<LoginInput> = async(data) => {
         await axios.post("../../api/login", data)
-        router.push("/applications")
+        router.replace("/applications")
     }
  
     return (
@@ -42,8 +42,8 @@ export function LoginForm(){
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{  duration : 0.5 }}
-                className="flex flex-col justify-center" onSubmit={handleSubmit(onSubmit)}>
-
+                className="flex flex-col justify-center" onSubmit={handleSubmit(onSubmit)}
+            >
                 <div className="flex flex-col justify-center items-center gap-10 border-stone-300 border-3 w-130 h-120 ml-auto mr-auto rounded-xl">
                     <div>
                         <input
