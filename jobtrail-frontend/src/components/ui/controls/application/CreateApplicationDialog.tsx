@@ -27,6 +27,7 @@ type CreateApplicationInput = {
     email: string
     applicationStatus: string
     position: string
+    content: string
 }
 
 function Content() {
@@ -40,7 +41,8 @@ function Content() {
             companyName: "",
             email: "",
             applicationStatus: "",
-            position: ""
+            position: "",
+            content: ""
         }
     })
 
@@ -49,7 +51,8 @@ function Content() {
             companyName: data.companyName,
             email: data.email,
             applicationStatus: applicationStatus,
-            position: data.position
+            position: data.position,
+            content: data.content,
         }, {
             onSuccess: () => {
                 console.log("Application created successfully")
@@ -146,6 +149,18 @@ function Content() {
                             />
                             {errors.position && <p className="text-red-400">{errors.position.message}</p>}
                         </label>
+
+                        <label>
+                            <p>
+                                Content
+                            </p>
+                            <textarea className="w-100 h-50 border-2"
+                                {...register("content", {
+                                    required: "Content is required!"
+                                })} 
+                            />
+                            {errors.content && <p className="text-red-400">{errors.content.message}</p>}
+                        </label>
                     </Flex>
 
                     <div className="p-3" />
@@ -165,14 +180,15 @@ function Content() {
                             }}
                         >
                             <Button
-                                disabled={!applicationStatus || !getValues("companyName") || !getValues("email") || !getValues("position")}
+                                disabled={!applicationStatus || !getValues("companyName") || !getValues("email") || !getValues("position") || !getValues("content")}
                                 type="submit"
                                 onClick={() => {
                                     createApplication.mutate({
                                         companyName: getValues("companyName"),
                                         email: getValues("email"),
                                         applicationStatus: applicationStatus,
-                                        position: getValues("position")
+                                        position: getValues("position"),
+                                        content: getValues("content")
                                     }, {
                                         onSuccess: () => {
                                             console.log("Application created successfully")

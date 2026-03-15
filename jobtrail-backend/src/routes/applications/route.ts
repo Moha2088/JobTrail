@@ -21,12 +21,15 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
 
     // @ts-ignore
     .post("/", async({ body, set, jwt, headers: { authorization } }) => {
-        const { companyName, email, applicationStatus, position } = body
+        const { companyName, email, applicationStatus, position, content } = body
 
         if(!authorization) {
             set.status = 401
             return
         }
+
+        console.log("Body: ")
+        console.log(body)
 
         const claims = await getClaims(authorization)
 
@@ -37,6 +40,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
                 applicationStatus: applicationStatus,
                 position: position,
                 userId: claims.sub,
+                content: content
             })
 
             set.status = 201
@@ -61,7 +65,8 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
                 companyName: app.companyName,
                 email: app.email,
                 applicationStatus: app.applicationStatus,
-                position: app.position
+                position: app.position,
+                content: app.content,
             }
         })
 
@@ -105,7 +110,8 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
             email: result[0].email,
             applicationStatus: result[0].applicationStatus,
             position: result[0].position,
-            createdAt: result[0].createdAt
+            createdAt: result[0].createdAt,
+            content: result[0].content
         }
 
     }, getApplicationSchema)

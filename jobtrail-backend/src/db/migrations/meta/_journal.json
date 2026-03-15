@@ -36,6 +36,13 @@
       "when": 1773046193548,
       "tag": "0004_add_CreatedAt_field_to_applications_table",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1773589839516,
+      "tag": "0005_add_content",
+      "breakpoints": true
     }
   ]
 }

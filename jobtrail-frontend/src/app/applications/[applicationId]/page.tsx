@@ -23,36 +23,39 @@ export default function Page() {
                 />
             </div>
 
-            <div className="p-5" />
-
-            <div>
-                <p className="flex justify-center text-4xl font-bold ml-10">
+            <div className="mb-10">
+                <p className="flex justify-center text-4xl font-bold">
                     {application.data?.companyName ?? "Not Found"}
                 </p>
             </div>
 
-            <div className="p-20" />
+            <div className=" bg-gray-50 mr-auto ml-auto w-fit p-5 rounded-xl">
 
-            <div className="bg-gray-200 mr-auto ml-auto w-fit p-5 rounded-xl">
-
-                <div className="p-3">
+                <div className="flex justify-center p-3">
                     <label className="font-bold">Email:</label>
                     <p>{application.data?.email}</p>
                 </div>
                 
-                <div className="p-3">
+                <div className="flex justify-center p-3">
                     <label className="font-bold">Application Status:</label>
                     <p>{application.data?.applicationStatus}</p>
                 </div>
                 
-                <div className="p-3">
+                <div className="flex justify-center p-3">
                     <label className="font-bold">Position:</label>
                     <p>{application.data?.position}</p>
                 </div>
 
-                <div>
+                <div className="flex justify-center mb-10 p-3">
                     <label className="font-bold">Created At:</label>
                     <p>{application.data?.createdAt ? new Date(application.data.createdAt).toLocaleDateString() : "N/A"}</p>
+                </div>
+
+                <div className="flex flex-col justify-center p-3 max-w-150">
+                    <label className="flex justify-center mb-5 font-bold text-xl">Content:</label>
+                    <div>
+                        <p>{application.data?.content}</p>
+                    </div>
                 </div>
             </div>
         </>

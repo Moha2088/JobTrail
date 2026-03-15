@@ -6,6 +6,7 @@ export interface Application {
     applicationStatus: string,
     position: string,
     createdAt?: Date
+    content: string
 }
 
 export interface ApplicationData {
