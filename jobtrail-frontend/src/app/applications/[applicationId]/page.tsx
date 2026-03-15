@@ -25,7 +25,7 @@ export default function Page() {
             <div>
                 <div className="mb-10">
                     <p className="flex justify-center text-4xl font-bold">
-                        {application.data?.companyName ?? "Not Found"}
+                        {data?.companyName ?? "Not Found"}
                     </p>
                 </div>
 
@@ -33,22 +33,22 @@ export default function Page() {
 
                     <div className="flex justify-center p-3">
                         <label className="font-bold">Email:</label>
-                        <p>{application.data?.email}</p>
+                        <p>{data?.email}</p>
                     </div>
                     
                     <div className="flex justify-center p-3">
                         <label className="font-bold">Application Status:</label>
-                        <p>{application.data?.applicationStatus}</p>
+                        <p>{data?.applicationStatus}</p>
                     </div>
                     
                     <div className="flex justify-center p-3">
                         <label className="font-bold">Position:</label>
-                        <p>{application.data?.position}</p>
+                        <p>{data?.position}</p>
                     </div>
 
                     <div className="flex justify-center mb-10 p-3">
                         <label className="font-bold">Created At:</label>
-                        <p>{application.data?.createdAt ? new Date(application.data.createdAt).toLocaleDateString() : "N/A"}</p>
+                        <p>{data?.createdAt ? new Date(data.createdAt).toLocaleDateString() : "N/A"}</p>
                     </div>
                 </div>
             </div>
