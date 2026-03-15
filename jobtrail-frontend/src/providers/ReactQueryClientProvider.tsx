@@ -29,6 +29,7 @@ export function ReactQueryClientProvider({ children }: ProviderProps) {
 
                     if(options?.successMessage) {
                         toast.success(options.successMessage, {
+                            position: "top-right",
                             action: {
                                 label: "Cancel",
                                 onClick: () => { }
@@ -43,6 +44,7 @@ export function ReactQueryClientProvider({ children }: ProviderProps) {
 
                     if(options?.errorMessage) {
                         toast.error(options.errorMessage, {
+                            position: "top-right",
                             action: {
                                 label: "Cancel",
                                 onClick: () => { }

@@ -5,7 +5,6 @@ import { usePostApplication } from "@/services/applications"
 import { useForm } from "react-hook-form"
 import { ApplicationStatus, StatusDropdownMenu } from "@/components/ui/controls/application/StatusDropdownMenu"
 import { useState } from "react"
-import { motion } from "motion/react"
 
 interface CreateApplicationDialogProps {
     isOpen?: boolean
@@ -84,6 +83,7 @@ function Content() {
                                 Name
                             </p>
                             <TextField.Root
+                                className="w-100"
                                 defaultValue=""
                                 placeholder="Enter the name of the company"
                                 {...register("companyName", {
@@ -98,6 +98,7 @@ function Content() {
                                 Email
                             </p>
                             <TextField.Root
+                                className="w-100"
                                 placeholder="Enter the email of the company"
                                 {...register("email", {
                                     required: "Company email is required"
@@ -136,6 +137,7 @@ function Content() {
                                 Position
                             </p>
                             <TextField.Root
+                                className="w-100"
                                 defaultValue=""
                                 placeholder="Enter the position you are applying for"
                                 {...register("position", {

@@ -4,7 +4,7 @@ import { CreateApplicationDialog } from "@/components/ui/controls/application/Cr
 import { Button } from "@/components/ui/controls/Button"
 import { ApplicationTable } from "@/components/ui/view/applications/ApplicationTable"
 import { Metrics } from "@/components/ui/view/applications/Metrics"
-import { useApplications, useDeleteApplication } from "@/services/applications"
+import { useApplications } from "@/services/applications"
 import { useLogOut } from "@/services/auth/useLogOut"
 import { IconLogout, IconPlus } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
@@ -15,7 +15,6 @@ import { useSessionContext } from "@/contexts/SessionContext"
 export default function ApplicationsPage() {
     const [isCreateApplicationDialogOpen, setIsCreateApplicationDialogOpen] = useState<boolean>(false)
 
-    
     const applications = useApplications().data
     const logOut = useLogOut()
 
@@ -39,40 +38,42 @@ export default function ApplicationsPage() {
                     </p>
                 </div>
 
-                <div className="flex  mr-5">
-                    <Button
-                        className="w-fit"
-                        size="small"
-                        onClick={() => setIsCreateApplicationDialogOpen(true)}
-                        iconEnd={<IconPlus />}
-                    >
-                        Create
-                    </Button>
-                </div>
+                <div className="flex mr-10 gap-3">
+                    <div>
+                        <Button
+                            className="w-fit"
+                            size="small"
+                            onClick={() => setIsCreateApplicationDialogOpen(true)}
+                            iconEnd={<IconPlus />}
+                        >
+                            Create
+                        </Button>
+                    </div>
 
-                <div className="flex mr-10">
-                    <Button
-                        size="small"
-                        onClick={async() => logOut.mutate(undefined, {
-                            onSuccess: () => {
-                                console.log("Logging out!")
-                                router.replace("/")
-                            }
-                        })}
-                        variant="destructive"
-                        iconEnd={<IconLogout />}
-                        className=""
-                    >
-                        Log Out
-                    </Button>
+                    <div>
+                        <Button
+                            size="small"
+                            onClick={async() => logOut.mutate(undefined, {
+                                onSuccess: () => {
+                                    console.log("Logging out!")
+                                    router.replace("/")
+                                }
+                            })}
+                            variant="destructive"
+                            iconEnd={<IconLogout />}
+                            className=""
+                        >
+                            Log Out
+                        </Button>
+                    </div>
                 </div>
+                
             </div>
 
             <CreateApplicationDialog 
                 isOpen={isCreateApplicationDialogOpen} 
                 onOpenChange={setIsCreateApplicationDialogOpen}
             />
-
 
             <div className="p-5" />
 
@@ -82,9 +83,7 @@ export default function ApplicationsPage() {
                 acceptedCount={acceptedCount ?? 0}
             />
 
-            <div className="p-5" />
-
-            <div className="p-5" />
+            <div className="p-10" />
 
             <ApplicationTable
                 applications={applications?.applications}

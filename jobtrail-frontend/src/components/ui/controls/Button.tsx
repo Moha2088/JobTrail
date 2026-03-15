@@ -12,7 +12,8 @@ const buttonStyles = cva(
             variant:{
                 dark: "bg-stone-800 text-white font-bold hover:bg-stone-500",
                 light: "bg-white border-2 font-bold border-transparent shadow-md hover:bg-zinc-200",
-                destructive: "bg-red-400 text-white hover:bg-red-500"
+                destructive: "bg-red-400 text-white hover:bg-red-500",
+                ghost: "font-bold hover:bg-gray-100",
             },
             size: {
                 large: "p-3 w-25 h-15",
