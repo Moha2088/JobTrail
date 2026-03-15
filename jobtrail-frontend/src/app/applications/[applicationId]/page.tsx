@@ -51,10 +51,7 @@ export default function Page() {
                         <p>{data?.createdAt ? new Date(data.createdAt).toLocaleDateString() : "N/A"}</p>
                     </div>
                 </div>
-            </div>
-
-            
+            </div>       
         </div>
     )
-
 }

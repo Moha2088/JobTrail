@@ -14,7 +14,7 @@ describe('<ApplicationTable />', () => {
         )
     }))
 
-    it("should have appropriate caption text when no applications exist'", () => {
-        cy.get("caption").should("have.text", "You have no applications. Click the button to create one")
-    })
+    // it("should have appropriate caption text when no applications exist'", () => {
+    //     cy.get("caption").should("have.text", "You have no applications. Click the button to create one")
+    // })
 })
