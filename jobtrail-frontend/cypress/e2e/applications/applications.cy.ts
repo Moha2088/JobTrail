@@ -19,15 +19,15 @@ describe("Applications page", () => {
         cy.clearCookie("session")
     })
 
-    it("should open Create Application dialog when button is clicked!", async() => {
-        await createAndSetSession()
+    it("should open Create Application dialog when button is clicked!", () => {
+        createAndSetSession()
         cy.visit(`${appUrl}/applications`)
         cy.contains("Create").click()
         cy.contains("Create Application").should("be.visible")
     })
 
-    it("should disable Dialog button when fields are empty", async() => {
-        await createAndSetSession()
+    it("should disable Dialog button when fields are empty", () => {
+        createAndSetSession()
         cy.visit(`${appUrl}/applications`)
         cy.contains("Create").click()
         cy.contains("Create Application").should("be.visible")
