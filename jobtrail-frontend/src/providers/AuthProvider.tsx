@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react"
 import { useSession } from "@/services/session/useSession"
-import { SessionContext } from "@/contexts/SessionContext"
+import { SessionContext } from "@/contexts/session/SessionContext"
 
 
 interface AuthProviderProps {

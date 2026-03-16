@@ -1,21 +1,22 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query"
 import { PostApplication } from "./types"
 import { elysiaApi } from "@/app/api/apiClients"
-import { useApplicationCache } from "./useApplicationCache"
+import axios from "axios"
+import { useSession } from "../session/useSession"
 
 type PutApplication = Omit<PostApplication, "id">
 
-export function usePutApplication(applicationId: never): UseMutationResult<void, Error, PutApplication> {
-    const applicationCache = useApplicationCache()
+export function usePutApplication(applicationId: number): UseMutationResult<void, Error, PutApplication> {
+    const session = useSession()
 
     return useMutation({
         mutationKey: ["applications", applicationId],
         mutationFn: async(variables) => {
-            await elysiaApi.api.applications({ id: applicationId }).put(variables)
-        },
-
-        onSuccess: () => {
-            applicationCache.invalidateApplication(applicationId)
+            await axios.put(`http://localhost:3003/api/applications/${applicationId}`, variables, {
+                headers: {
+                    Authorization: "Bearer " + session?.data?.accessToken
+                }
+            })
         }
     })
 }

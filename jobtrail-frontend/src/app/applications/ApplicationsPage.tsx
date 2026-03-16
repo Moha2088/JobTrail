@@ -9,7 +9,7 @@ import { useLogOut } from "@/services/auth/useLogOut"
 import { IconLogout, IconPlus } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { useSessionContext } from "@/contexts/SessionContext"
+import { useSessionContext } from "@/contexts/session/SessionContext"
 
 
 export default function ApplicationsPage() {
