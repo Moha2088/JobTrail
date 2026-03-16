@@ -3,24 +3,25 @@
 import { DeleteApplicationDialog } from "@/components/ui/controls/application/DeleteApplicationDialog"
 import { EditApplicationDialog } from "@/components/ui/controls/application/EditApplicationDialog"
 import { Button } from "@/components/ui/controls/Button"
-import { ApplicationContext } from "@/contexts/application/EditApplicationContext"
-import { useDeleteApplication } from "@/services/applications"
+import { ApplicationContext } from "@/contexts/application/ApplicationContext"
 import { useApplication } from "@/services/applications/useApplication"
 import { IconEdit, IconTrash } from "@tabler/icons-react"
-import { useParams } from "next/navigation"
+import { notFound, useParams } from "next/navigation"
 import { useState } from "react"
-import { set } from "react-hook-form"
 
 
 export default function Page() {
     const { applicationId } = useParams()
-
 
     const application = useApplication(Number(applicationId))
     const { data } = application
 
     const [isEditApplicationDialogOpen, setIsEditApplicationDialogOpen] = useState<boolean>(false)
     const [isDeleteApplicationDialogOpen, setIsDeleteApplicationDialogOpen] = useState<boolean>(false)
+
+    if(application.isError) {
+        notFound()
+    }
 
     return (
         <>

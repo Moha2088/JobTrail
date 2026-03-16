@@ -56,7 +56,7 @@ export default function NotFound() {
 
                     <div className="flex justify-center">
                         <Button
-                            className="w-fit h-fit text-black"
+                            className="w-fit text-black"
                             variant="light"
                             iconEnd={<IconRocket size={25} />}
                             onClick={() => router.push("/applications")}

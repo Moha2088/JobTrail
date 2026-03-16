@@ -5,7 +5,7 @@ import { usePutApplication } from "@/services/applications"
 import { useForm } from "react-hook-form"
 import { ApplicationStatus, StatusDropdownMenu } from "@/components/ui/controls/application/StatusDropdownMenu"
 import { useState } from "react"
-import { useApplicationContext } from "@/contexts/application/EditApplicationContext"
+import { useApplicationContext } from "@/contexts/application/ApplicationContext"
 
 interface EditApplicationDialogProps {
     isOpen?: boolean

@@ -1,15 +1,11 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query"
 import { PostApplication } from "./types"
 import { elysiaApi } from "@/app/api/apiClients"
-import { useApplicationCache } from "./useApplicationCache"
 import axios from "axios"
 import { getSession } from "@/services/session/getSession"
-import { MutationMetaOptions } from "@/providers/ReactQueryClientProvider"
 
 
 export function usePostApplication(): UseMutationResult<void, Error, PostApplication> {
-    const applicationCache = useApplicationCache()
-
     return useMutation({
         meta: {
             successMessage: "Application created successfully",
@@ -26,10 +22,6 @@ export function usePostApplication(): UseMutationResult<void, Error, PostApplica
                     Authorization: "Bearer " + session?.accessToken
                 }
             })
-        },
-
-        onSuccess: async() => {
-
         }
     })
 }

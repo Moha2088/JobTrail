@@ -1,7 +1,7 @@
 import { Dialog } from "radix-ui"
 import { Button } from "../Button"
 import { DialogProps } from "./types"
-import { useApplicationContext } from "@/contexts/application/EditApplicationContext"
+import { useApplicationContext } from "@/contexts/application/ApplicationContext"
 import { useDeleteApplication } from "@/services/applications"
 import { useRouter } from "next/navigation"
 
