@@ -1,14 +1,17 @@
 import React from 'react'
 import { ApplicationTable } from '@/components/ui/view/applications/ApplicationTable'
 import { MockRouter } from "../../fixtures/mockRouter"
+import { ReactQueryClientProvider } from '@/providers/ReactQueryClientProvider'
+import { TestProviders } from '../../fixtures/TestProviders'
 
 describe('<ApplicationTable />', () => {
 
     before((() => {
         cy.mount(
-            <MockRouter asPath="../../src/components/ui/view/applications/ApplicationTable">
+            <TestProviders>
                 <ApplicationTable />
-            </MockRouter>
+            </TestProviders>
+            
         )
     }))
 
