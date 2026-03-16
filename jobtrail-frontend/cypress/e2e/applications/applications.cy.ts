@@ -10,8 +10,8 @@ describe("Applications page", () => {
         cy.get("h1").contains("Login").should("be.visible")
     })
 
-    it("should redirect to applications page if user is authenticated", async() => {
-        await createAndSetSession()
+    it("should redirect to applications page if user is authenticated", () => {
+        createAndSetSession()
 
         cy.visit(`${appUrl}/login`)
         cy.url().should("include", "/applications")
