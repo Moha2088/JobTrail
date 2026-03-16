@@ -9,6 +9,7 @@ export default function Page() {
 
     const application = useApplication(Number(applicationId))
     const { data } = application
+
     return (
         <div className="flex flex-row justify-center items-center h-screen gap-30">
             {data?.content &&
@@ -25,7 +26,7 @@ export default function Page() {
             <div>
                 <div className="mb-10">
                     <p className="flex justify-center text-4xl font-bold">
-                        {data?.companyName ?? "Not Found"}
+                        {data?.companyName}
                     </p>
                 </div>
 
@@ -53,5 +54,6 @@ export default function Page() {
                 </div>
             </div>       
         </div>
+
     )
 }

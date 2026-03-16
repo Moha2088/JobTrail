@@ -25,7 +25,6 @@ export default function ApplicationsPage() {
     const router = useRouter()
     const session = useSessionContext()
 
-
     return (
         <div className={`h-screen ${isCreateApplicationDialogOpen ? "bg-black/70": ""} `}>
             <div className="p-5" />
@@ -66,8 +65,7 @@ export default function ApplicationsPage() {
                             Log Out
                         </Button>
                     </div>
-                </div>
-                
+                </div>                
             </div>
 
             <CreateApplicationDialog 
