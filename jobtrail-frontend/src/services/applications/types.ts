@@ -5,6 +5,8 @@ export interface Application {
     email: string,
     applicationStatus: string,
     position: string,
+    createdAt?: Date
+    content: string
 }
 
 export interface ApplicationData {
@@ -16,4 +18,4 @@ export interface ApplicationData {
     }
 }
 
-export type PostApplication = Omit<Application, "id">
+export type PostApplication = Omit<Application, "id" | "createdAt">

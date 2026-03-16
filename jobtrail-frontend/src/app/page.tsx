@@ -1,14 +1,10 @@
 "use client"
 
-import { Button } from "@/components/ui/controls/Button"
 import { Label } from "@/components/ui/view/Label"
 import dashboard from "../../assets/landing/dashboard.png"
-import Image from "next/image"
 import {
     IconArrowRight,
     IconCheck,
-    IconShieldLock,
-    IconShieldLockFilled,
     IconSparklesFilled
 } from "@tabler/icons-react"
 import { MotionImage } from "@/components/ui/view/motion/Image"
@@ -16,7 +12,6 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { motion } from "motion/react"
 import { MotionButton } from "@/components/ui/controls/motion/MotionButton"
-import { delay } from "motion"
 
 export default function Home() {
 
@@ -24,7 +19,7 @@ export default function Home() {
 
     return (
         <>
-            <div className="bg-linear-to-b from-black via-black to-white h-300">
+            <div className="bg-linear-to-b from-blue-300 via-blue-300 to-white h-300">
 
                 <div className="p-3" />
 
@@ -33,6 +28,8 @@ export default function Home() {
                         <MotionButton
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
+                            size="small"
+                            className="w-fit"
                             onClick={() => router.push("/login")}
                         >
                             Log in
@@ -44,6 +41,8 @@ export default function Home() {
                             variant="light"
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
+                            size="small"
+                            className="w-fit"
                             onClick={() => router.push("/signup")}
                         >
                             Sign Up
@@ -62,7 +61,7 @@ export default function Home() {
                     <motion.div
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
-                        className="mr-auto ml-auto mt-5 w-fit">
+                        className="mr-auto ml-auto w-fit">
                         <Label
                             iconStart={<IconSparklesFilled color="white" />}
                             iconEnd={<IconArrowRight color="white" />}
@@ -76,7 +75,7 @@ export default function Home() {
                     <div className="p-5" />
 
                     <div className="flex justify-center items-center">
-                        <p className="text-5xl font-bold text-white max-w-300 ">
+                        <p className="text-4xl font-bold text-white max-w-300 ">
                             AI assisted job tracking for everyone
                         </p>
                     </div>
@@ -91,7 +90,7 @@ export default function Home() {
                     <MotionImage
                         whileHover={{ scale: 1.1 }}
                         alt=""
-                        className="w-300 rounded-xl"
+                        className="w-200 rounded-xl"
                         src={dashboard} 
                     />
                 </motion.div>
@@ -99,11 +98,17 @@ export default function Home() {
 
             <div className="p-10" />
 
-            <div className="flex justify-center">
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                whileInView="visible"
+                className="flex justify-center"
+            >
                 <p className="text-4xl font-bold text-center max-w-300" >
                     AI powered job tracking right at your fingertips.
                 </p>
-            </div>
+            </motion.div>
 
             <div className="p-10" />
 
@@ -123,23 +128,21 @@ export default function Home() {
 
             {/* Footer  */}
 
-            <div className="bg-stone-800 h-70">
+            <div className="text-white bg-blue-200 h-70 rounded-t-4xl">
 
                 <div className="flex justify-center">
                     <Link
                         href="/privacy-policy"
-                        className="font-bold text-xl mt-10 mb-20 text-white hover:underline"
+                        className="font-bold text-xl mt-10 mb-20  hover:underline"
                     >
                         Privacy Policy
                     </Link>
                 </div>
 
-                <div className="flex justify-center text-white font-bold">
+                <div className="flex justify-center font-bold">
                     @2026 JobTrail. All rights reserved
                 </div>
-
             </div>
-
         </>
     )
 }

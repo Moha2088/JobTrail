@@ -8,6 +8,7 @@ import { useState } from "react"
 import axios from "axios"
 import { LoadingDots } from "../../view/motion/LoadingDots"
 import { motion } from "motion/react"
+import Link from "next/link"
 
 type LoginInput = {
     email: string
@@ -33,7 +34,7 @@ export function LoginForm(){
 
     const onSubmit: SubmitHandler<LoginInput> = async(data) => {
         await axios.post("../../api/login", data)
-        router.push("/applications")
+        router.replace("/applications")
     }
  
     return (
@@ -42,12 +43,12 @@ export function LoginForm(){
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{  duration : 0.5 }}
-                className="flex flex-col justify-center" onSubmit={handleSubmit(onSubmit)}>
-
-                <div className="flex flex-col justify-center items-center gap-10 border-stone-300 border-3 w-130 h-120 ml-auto mr-auto rounded-xl">
+                className="flex flex-col justify-center" onSubmit={handleSubmit(onSubmit)}
+            >
+                <div className="flex flex-col justify-center items-center gap-5 border-stone-300  w-130 h-100 bg-white ml-auto mr-auto rounded-xl">
                     <div>
                         <input
-                            className="w-100 border-3 p-2 rounded-lg"
+                            className="w-70 text-xs border-3 p-2 rounded-lg"
                             placeholder="Enter your email" 
                             {...register("email", { 
                                 required: "Email is required!",
@@ -66,7 +67,7 @@ export function LoginForm(){
                     <div>
                         <input
                             type={passwordState}
-                            className="w-100 border-3 p-2 rounded-lg"
+                            className="w-70 text-xs border-3 p-2 rounded-lg"
                             placeholder="Enter your password"
                             {...register("password", { 
                                 required: "Password is required!",
@@ -85,6 +86,7 @@ export function LoginForm(){
                             variant="light"
                             type="button"
                             size="small"
+                            className="w-fit"
                             onClick={() => setPasswordState(passwordState == "password" ? "text" : "password")}
                         >
                             {passwordState == "password" ? "Show" : "Hide"} 
@@ -92,13 +94,27 @@ export function LoginForm(){
                     </div>
 
                     <div>
-                        <Button 
-                            type="submit" 
+                        <Button
+                            type="submit"
                             disabled={errors.email?.message?.trim() == "" && errors.password?.message?.trim() ==""}
                         >
                             Login
                         </Button>
                     </div>
+
+                    <hr className="border-1 w-70" />
+
+                    <Button
+                        className="w-fit"
+                        variant="ghost"
+                        type="button"
+                    >
+                        <Link
+                            href="/signup"
+                        >
+                            Sign Up
+                        </Link>
+                    </Button>
                 </div>
 
             </motion.form>

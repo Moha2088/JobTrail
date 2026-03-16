@@ -4,20 +4,17 @@ import { CreateApplicationDialog } from "@/components/ui/controls/application/Cr
 import { Button } from "@/components/ui/controls/Button"
 import { ApplicationTable } from "@/components/ui/view/applications/ApplicationTable"
 import { Metrics } from "@/components/ui/view/applications/Metrics"
-import { useApplications, useDeleteApplication } from "@/services/applications"
+import { useApplications } from "@/services/applications"
 import { useLogOut } from "@/services/auth/useLogOut"
 import { IconLogout, IconPlus } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { toast } from "sonner"
 import { useSessionContext } from "@/contexts/SessionContext"
 
 
 export default function ApplicationsPage() {
-    const [applicationToDelete, setApplicationToDelete] = useState<number | null>(null)
     const [isCreateApplicationDialogOpen, setIsCreateApplicationDialogOpen] = useState<boolean>(false)
 
-    const deleteApplication = useDeleteApplication(applicationToDelete!)
     const applications = useApplications().data
     const logOut = useLogOut()
 
@@ -25,23 +22,9 @@ export default function ApplicationsPage() {
     const rejectedCount = applications?.metrics.rejectedCount ?? 0
     const acceptedCount = applications?.metrics.acceptedCount ?? 0
 
-
     const router = useRouter()
-
     const session = useSessionContext()
 
-
-    const getApplicationid = (id: number) => {
-        setApplicationToDelete(id)
-        deleteApplication.mutate(undefined, {
-            onSuccess: () => {
-                console.log("Application deleted successfully")
-            },
-            onError: () => {
-                console.log("Error deleting application")
-            }
-        })
-    }
 
     return (
         <div className={`h-screen ${isCreateApplicationDialogOpen ? "bg-black/70": ""} `}>
@@ -55,43 +38,42 @@ export default function ApplicationsPage() {
                     </p>
                 </div>
 
-                <div className="flex  mr-5">
-                    <Button
-                        className="w-fit"
-                        size="small"
-                        onClick={() => setIsCreateApplicationDialogOpen(true)}
-                        iconEnd={<IconPlus />}
-                    >
-                        Create
-                    </Button>
-                </div>
+                <div className="flex mr-10 gap-3">
+                    <div>
+                        <Button
+                            className="w-fit"
+                            size="small"
+                            onClick={() => setIsCreateApplicationDialogOpen(true)}
+                            iconEnd={<IconPlus />}
+                        >
+                            Create
+                        </Button>
+                    </div>
 
-                <div className="flex mr-10">
-                    <Button
-                        size="small"
-                        onClick={async() => logOut.mutate(undefined, {
-                            onSuccess: () => {
-                                console.log("Logging out!")
-                                router.refresh()
-                                toast.info("You have successfully logged out!", {
-                                    
-                                })
-                            }
-                        })}
-                        variant="destructive"
-                        iconEnd={<IconLogout />}
-                        className=""
-                    >
-                        Log Out
-                    </Button>
+                    <div>
+                        <Button
+                            size="small"
+                            onClick={async() => logOut.mutate(undefined, {
+                                onSuccess: () => {
+                                    console.log("Logging out!")
+                                    router.replace("/")
+                                }
+                            })}
+                            variant="destructive"
+                            iconEnd={<IconLogout />}
+                            className=""
+                        >
+                            Log Out
+                        </Button>
+                    </div>
                 </div>
+                
             </div>
 
             <CreateApplicationDialog 
                 isOpen={isCreateApplicationDialogOpen} 
                 onOpenChange={setIsCreateApplicationDialogOpen}
             />
-
 
             <div className="p-5" />
 
@@ -101,12 +83,9 @@ export default function ApplicationsPage() {
                 acceptedCount={acceptedCount ?? 0}
             />
 
-            <div className="p-5" />
-
-            <div className="p-5" />
+            <div className="p-10" />
 
             <ApplicationTable
-                deleteApplication={getApplicationid}
                 applications={applications?.applications}
             />
         </div>

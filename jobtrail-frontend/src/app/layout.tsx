@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Google_Sans, Inter, Roboto_Slab } from "next/font/google"
+import { Google_Sans, Outfit } from "next/font/google"
 import "./globals.css"
 import "@radix-ui/themes/styles.css"
 import { Theme } from "@radix-ui/themes"
@@ -9,17 +9,6 @@ import { AuthProvider } from "@/providers/AuthProvider"
 import { ReactNode } from "react"
 import { Navbar } from "@/components/ui/view/Navbar"
 
-const robotoSlab = Roboto_Slab({
-    subsets: ["latin"],
-    weight: ["400", "500", "700"],
-    variable: "--font-roboto-slab",
-})
-
-const googleSans = Google_Sans({
-    subsets: ["latin"],
-    weight: ["400", "500", "700"],
-})
-
 export const metadata: Metadata = {
     title: {
         template: '%s · Jobtrail',
@@ -27,6 +16,11 @@ export const metadata: Metadata = {
     },
     description: 'Jobtrail.'
 }
+
+
+const googleSans = Google_Sans({
+    variable: "--font-google-sans",
+})
 
 export default function RootLayout({
     children,
@@ -36,17 +30,17 @@ export default function RootLayout({
 
     return (
         <html lang="en">
-            <ReactQueryClientProvider>
-                <AuthProvider>
-                    <Theme>
-                        <body className={` antialiased`}>
+            <body className={`${googleSans.className} antialiased`}>
+                <ReactQueryClientProvider>
+                    <AuthProvider>
+                        <Theme style={{ ["--default-font-family" as string]: "var(--font-google-sans)" }}>
                             {/* <Navbar /> */}
                             <Toaster />
                             {children}
-                        </body>
-                    </Theme>
-                </AuthProvider>
-            </ReactQueryClientProvider>
+                        </Theme>
+                    </AuthProvider>
+                </ReactQueryClientProvider>
+            </body>
         </html>
     )
 }

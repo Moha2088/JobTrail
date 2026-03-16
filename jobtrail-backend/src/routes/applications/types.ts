@@ -5,4 +5,5 @@ export interface Application {
     email: string;
     applicationStatus: string
     position: string
+    content: string
 }

@@ -1,5 +1,6 @@
 import { appUrl } from "../../fixtures/constants"
 import { SignJWT } from "jose"
+import { createAndSetSession } from "../../fixtures/createAndSetSession"
 
 
 describe("Applications page", () => {
@@ -9,16 +10,8 @@ describe("Applications page", () => {
         cy.get("h1").contains("Login").should("be.visible")
     })
 
-    it("should redirect to applications page if user is authenticated", async() => {
-        const sessionToken = await new SignJWT({
-            sub: Math.floor(Math.random() * 1000).toString(),
-            exp: Math.floor(Date.now() / 1000) + 60 * 60,
-        })
-            .setProtectedHeader({ alg: "HS256" })
-            .setIssuedAt()
-            .sign(new TextEncoder().encode("my_secret_session_token_secret"))
-
-        cy.setCookie("session", sessionToken)
+    it("should redirect to applications page if user is authenticated", () => {
+        createAndSetSession()
 
         cy.visit(`${appUrl}/login`)
         cy.url().should("include", "/applications")
@@ -26,8 +19,18 @@ describe("Applications page", () => {
         cy.clearCookie("session")
     })
 
-    it("should open create application dialog when create application button is clicked", () => {
-        cy.get("button").contains("Create").click()
-        cy.get("header").contains("Create Application").should("be.visible")
+    it("should open Create Application dialog when button is clicked!", () => {
+        createAndSetSession()
+        cy.visit(`${appUrl}/applications`)
+        cy.contains("Create").click()
+        cy.contains("Create Application").should("be.visible")
+    })
+
+    it("should disable Dialog button when fields are empty", () => {
+        createAndSetSession()
+        cy.visit(`${appUrl}/applications`)
+        cy.contains("Create").click()
+        cy.contains("Create Application").should("be.visible")
+        cy.get("button").contains("Save").should("be.disabled")
     })
 })

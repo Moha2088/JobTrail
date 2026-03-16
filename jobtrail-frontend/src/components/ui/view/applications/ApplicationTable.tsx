@@ -7,18 +7,20 @@ import {
     TableHeader,
     TableRow
 } from "@/components/ui/table"
-import { Application } from "@/services/applications"
+import { Application, useDeleteApplication } from "@/services/applications"
 import { useRouter } from "next/navigation"
 import { IconArrowNarrowRight, IconTrash } from "@tabler/icons-react"
+import { useEffect, useState } from "react"
 
 
 interface ApplicationTableProps {
     applications?: Application[]
-    deleteApplication: (id: number) => void
 }
 
 export function ApplicationTable(props: ApplicationTableProps) {
-    const { applications, deleteApplication  } = props
+    const { applications } = props
+
+    const deleteApplication = useDeleteApplication()
 
     const router = useRouter()
 
@@ -54,7 +56,11 @@ export function ApplicationTable(props: ApplicationTableProps) {
                             <IconTrash 
                                 size={20}
                                 className="cursor-pointer text-red-500 hover:text-red-200"
-                                onClick={() => deleteApplication(app.id)}
+                                onClick={() => {
+                                    deleteApplication.mutate({
+                                        applicationId: app.id
+                                    })
+                                }}
                             />
                         </TableCell>
                     </TableRow>

@@ -4,12 +4,17 @@ import { elysiaApi } from "@/app/api/apiClients"
 import { useApplicationCache } from "./useApplicationCache"
 import axios from "axios"
 import { getSession } from "@/services/session/getSession"
+import { MutationMetaOptions } from "@/providers/ReactQueryClientProvider"
 
 
 export function usePostApplication(): UseMutationResult<void, Error, PostApplication> {
     const applicationCache = useApplicationCache()
 
     return useMutation({
+        meta: {
+            successMessage: "Application created successfully",
+            errorMessage: "Failed to create application"
+        },
         mutationKey: ["applications"],
         mutationFn: async (variables) => {
             // await apiClients.api.applications.post(variables)
@@ -24,7 +29,7 @@ export function usePostApplication(): UseMutationResult<void, Error, PostApplica
         },
 
         onSuccess: async() => {
-            await applicationCache.invalidateApplications()
+
         }
     })
 }

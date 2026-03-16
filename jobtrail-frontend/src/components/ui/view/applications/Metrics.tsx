@@ -2,7 +2,7 @@ import {
     IconContract,
     IconLoaderQuarter, IconThumbDownFilled,
 } from "@tabler/icons-react"
-
+import { motion } from "motion/react"
 
 interface MetricsProps {
     pendingCount: number
@@ -16,7 +16,11 @@ export function Metrics(props: MetricsProps) {
 
     return (
         <div className="flex justify-center flex-row gap-3">
-            <div className="border-2 p-8 w-fit rounded-xl shadow-md">
+            <motion.div
+                initial={{ opacity: 0, y: -25 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="border-2 p-8 w-fit rounded-xl shadow-md">
                 <div className="flex flex-row">
                     <div className="flex justify-start w-40 font-bold text-sm">
                         Pending
@@ -30,9 +34,13 @@ export function Metrics(props: MetricsProps) {
                     {pendingCount}
                 </div>
 
-            </div>
+            </motion.div>
 
-            <div className="border-2 p-8 w-fit rounded-xl shadow-md">
+            <motion.div
+                initial={{ opacity: 0, y: 25 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.5 }}
+                className="border-2 p-8 w-fit rounded-xl shadow-md">
                 <div className="flex flex-row">
                     <div className="flex justify-start w-40 font-bold text-sm">
                         Rejected
@@ -46,9 +54,13 @@ export function Metrics(props: MetricsProps) {
                     {rejectedCount}
                 </div>
 
-            </div>
+            </motion.div>
 
-            <div className="border-2 p-8 w-fit rounded-xl shadow-md">
+            <motion.div
+                initial={{ opacity: 0, y: -25 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 1 }}
+                className="border-2 p-8 w-fit rounded-xl shadow-md">
                 <div className="flex flex-row">
                     <div className="flex justify-start w-40 font-bold text-sm">
                         Accepted
@@ -63,7 +75,7 @@ export function Metrics(props: MetricsProps) {
                 </div>
                 
 
-            </div>
+            </motion.div>
         </div>
     )
 }

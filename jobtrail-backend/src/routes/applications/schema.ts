@@ -7,7 +7,8 @@ export const postApplicationSchema = {
         companyName: t.String(),
         email: t.String(),
         applicationStatus: t.String(),
-        position: t.String()
+        position: t.String(),
+        content: t.String()
     })
 }
 
@@ -32,6 +33,8 @@ export const putApplicationSchema = {
         companyName: t.String(),
         email: t.String(),
         applicationStatus: t.String(),
+        position: t.String(),
+        content: t.String()
     })
 }
 

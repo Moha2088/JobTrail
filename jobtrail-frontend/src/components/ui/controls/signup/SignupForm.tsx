@@ -2,7 +2,6 @@
 
 import { useForm } from "react-hook-form"
 import { PasswordState } from "@/components/ui/controls/login/LoginForm"
-import { div } from "motion/react-client"
 import { Button } from "../Button"
 import { usePostUser } from "@/services/users/usePostUser"
 import { useState } from "react"
@@ -52,19 +51,15 @@ export function SignupForm() {
 
     return (
         <>
-        
-            <form className="flex flex-col justify-center" onSubmit={handleSubmit(onSubmit)}>
-
-                <div className="flex flex-col justify-center items-center gap-6 border-stone-300 border-3 w-130 h-120 ml-auto mr-auto rounded-xl">
-                    
+            <form className="flex flex-col justify-center bg-blue-300" onSubmit={handleSubmit(onSubmit)}>
+                <div className="flex flex-col justify-center items-center gap-6 border-3 p-12 bg-white w-130  ml-auto mr-auto rounded-xl">
                     <div >
                         <input
-                            className="w-100 border-3 p-2 rounded-lg"
+                            className="w-70 text-xs border-3 p-2 rounded-lg"
                             placeholder="Enter your name" 
                             {...register("name", { 
                                 required: "Name is required!",
                                 validate:(value) =>{
-
                                     return true
                                 } })}
                         />
@@ -74,17 +69,18 @@ export function SignupForm() {
                     
                     <div>
                         <input
-                            className="w-100 border-3 p-2 rounded-lg"
+                            className="w-70 text-xs border-3 p-2 rounded-lg"
                             placeholder="Enter your email" 
                             {...register("email", { 
                                 required: "Email is required!",
-                                validate:(value) =>{
+                                validate:(value) => {
                                     if(!value.includes("@")) {
                                         return "Email is not valid!"
                                     }
 
                                     return true
-                                } })}
+                                }
+                            })}
                         />
 
                         {errors.email && <p className="text-red-400 text-sm">{errors.email.message}</p>}
@@ -93,7 +89,7 @@ export function SignupForm() {
                     <div>
                         <input
                             type={passwordState}
-                            className="w-100 border-3 p-2 rounded-lg"
+                            className="w-70 text-xs border-3 p-2 rounded-lg"
                             placeholder="Enter your password"
                             {...register("password", { 
                                 required: "Password is required!",
@@ -110,7 +106,7 @@ export function SignupForm() {
                     <div>
                         <input
                             type={passwordState}
-                            className="w-100 border-3 p-2 rounded-lg"
+                            className="w-70 text-xs border-3 p-2 rounded-lg"
                             placeholder="Confirm password"
                             {...register("confirmedPassword", { 
                                 required: "Password must be confirmed!",
@@ -136,6 +132,7 @@ export function SignupForm() {
                             variant="light"
                             type="button"
                             size="small"
+                            className="w-fit"
                             onClick={() => setPasswordState(passwordState == "password" ? "text" : "password")}
                         >
                             {passwordState == "password" ? "Show" : "Hide"} 
@@ -148,9 +145,7 @@ export function SignupForm() {
                         </Button>
                     </div>
                 </div>
-
             </form>
-
         </>
     )
 }
