@@ -6,10 +6,11 @@ import { ApplicationTable } from "@/components/ui/view/applications/ApplicationT
 import { Metrics } from "@/components/ui/view/applications/Metrics"
 import { useApplications } from "@/services/applications"
 import { useLogOut } from "@/services/auth/useLogOut"
-import { IconLogout, IconPlus } from "@tabler/icons-react"
+import { IconLogout, IconPlus, IconUser } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { useSessionContext } from "@/contexts/session/SessionContext"
+import Link from "next/link"
 
 
 export default function ApplicationsPage() {
@@ -28,7 +29,6 @@ export default function ApplicationsPage() {
     return (
         <div className={`h-screen ${isCreateApplicationDialogOpen ? "bg-black/70": ""} `}>
             <div className="p-5" />
-
             <div className="flex flex-row justify-end">
 
                 <div className="flex justify-start items-center w-screen">
@@ -38,6 +38,12 @@ export default function ApplicationsPage() {
                 </div>
 
                 <div className="flex mr-10 gap-3">
+                    <div className="pt-2 p-2 mr-3 bg-gray-100 rounded-full hover:bg-gray-200">
+                        <Link href={`/user/${session?.userId}`}>
+                            <IconUser size={28} />
+                        </Link>
+                    </div>
+
                     <div>
                         <Button
                             className="w-fit"

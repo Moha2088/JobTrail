@@ -1,7 +1,6 @@
 import Elysia from "elysia";
 import {
     postApplicationSchema, getApplicationSchema, putApplicationSchema, deleteApplicationsSchema,
-    getApplicationsSchema
 } from "./schema";
 import { db } from "../../db/db";
 import { applicationsTable } from "../../db/schema";
@@ -9,6 +8,20 @@ import { eq } from "drizzle-orm";
 import { getClaims } from "../../utils/auth/getClaims"
 import { getApplication } from "../../utils/applications"
 import { Application } from "./types"
+
+const validate = async (
+    id: number,
+    authorization: string,
+    set: { status?: number | string }
+) => {
+    const application = await getApplication(id)
+    const claims = await getClaims(authorization)
+
+    if(claims.sub != application.userId) {
+        set.status = 401
+        return "Unauthorized"
+    }
+}
 
 export const applicationRouter = new Elysia({ prefix: "/applications" })
     // @ts-ignore
@@ -46,7 +59,6 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
             set.status = 201
 
     }, postApplicationSchema)
-
     // @ts-ignore
     .get("/",async({jwt, headers: { authorization }}) => {
         // const claims: ClaimTypes = await jwt.verify(auth.value)
@@ -79,21 +91,16 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
                 acceptedCount: applications.filter(app => app.applicationStatus == "ACCEPTED").length,
             }
         }
-    }, getApplicationsSchema)
-
-
-    .onBeforeHandle(async({set, params, headers: { authorization }}) => {
-        const applicationId = Number(params.id)
-        const application = await getApplication(applicationId)
-        const claims = await getClaims(authorization!)
-
-        if(claims.sub != application.userId) {
-            set.status = 401
-            return "Unauthorized"
-        }
     })
-    .get("/:id", async({ params, set }) => {
+
+
+    .get("/:id", async({ params, set, headers: { authorization } }) => {
         const id = Number(params.id)
+
+        const unauthorized = await validate(id, authorization!, set)
+        if(unauthorized) {
+            return unauthorized
+        }
 
         const result = await db.select()
             .from(applicationsTable)
@@ -117,8 +124,13 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     }, getApplicationSchema)
 
 
-    .put("/:id", async({ params, body, set }) => {
+    .put("/:id", async({ params, body, set, headers: { authorization } }) => {
         const id = Number(params.id)
+
+        const unauthorized = await validate(id, authorization!, set)
+        if(unauthorized) {
+            return unauthorized
+        }
 
         await db.update(applicationsTable)
             .set(body)
@@ -129,8 +141,13 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     }, putApplicationSchema)
 
 
-    .delete("/:id", async({params, set}) => {
+    .delete("/:id", async({params, set, headers: { authorization }}) => {
         const id = Number(params.id)
+
+        const unauthorized = await validate(id, authorization!, set)
+        if(unauthorized) {
+            return unauthorized
+        }
         
         await db.delete(applicationsTable).where(eq(applicationsTable.id, id))
 

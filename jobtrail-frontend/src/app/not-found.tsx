@@ -13,7 +13,7 @@ export default function NotFound() {
         <>
             <div className="p-5 bg-black" />
         
-            <div 
+            <div
                 className="bg-black h-screen text-white">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -26,11 +26,10 @@ export default function NotFound() {
                 </motion.div>
 
                 <motion.div
-                    initial={{ opacity: 1, y: 20 }}
-                    animate={{ opacity: [1], y: [ 0, 20, 0, 0] }}
+                    initial={{ opacity: 1, y: 0 }}
+                    animate={{ opacity: [1], y: [ 20,0, 20, 0, 20] }}
                     transition={{ 
-                        duration: 5,
-                        repeat: Infinity,
+                        duration: 5, repeat: Infinity,
                     }}
                     className="flex justify-center mb-5"
                 >

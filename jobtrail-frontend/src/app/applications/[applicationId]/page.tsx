@@ -35,23 +35,21 @@ export default function Page() {
                     isOpen={isDeleteApplicationDialogOpen}
                     onOpenChange={() => setIsDeleteApplicationDialogOpen(true)}
                 />
-            </ApplicationContext>        
+            </ApplicationContext>
 
-
-
-            <div className={`flex flex-row justify-center items-center h-screen gap-30 ${isEditApplicationDialogOpen} ? "bg-black/70" : ""`}>
+            <div className={`flex flex-row justify-center items-center gap-30 ${isEditApplicationDialogOpen} ? "bg-black/70" : ""`}>
                 {data?.content &&
                     <div>
                         <div className="flex flex-col p-3 max-w-150 overflow-y-scroll h-screen">
                             <label className="mr-auto ml-auto w-fit pl-5 pr-5 p-2 rounded-2xl mb-5 bg-gray-100 font-bold text-xl">Content</label>
-                            <div>
+                            <div className="mr-auto ml-auto">
                                 <p>{data.content}</p>
                             </div>
                         </div>
                     </div>
                 }
 
-                <div>
+                <div className="">
                     <div className="mb-10">
                         <p className="flex justify-center text-4xl font-bold">
                             {data?.companyName}

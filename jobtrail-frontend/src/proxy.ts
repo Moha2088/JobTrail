@@ -4,7 +4,11 @@ import { verifySession } from "@/services/session/verifySession"
 
 
 export async function proxy(req: NextRequest) {
-    const protectedRoutes = ["/applications"]
+    const protectedRoutes = [
+        "/applications",
+        "/user"
+    ]
+
     const currentPath = req.nextUrl.pathname
 
     const cookieStore = await cookies()

@@ -3,6 +3,7 @@ import { createUserSchema, deleteUserSchema, getUserSchema, putUserSchema } from
 import { db } from "../../db/db";
 import { applicationsTable, usersTable } from "../../db/schema";
 import { eq } from "drizzle-orm"
+import { getClaims } from "../../utils/auth/getClaims"
 
 
 export const userRouter = new Elysia({ prefix: "/users" })
@@ -26,19 +27,28 @@ export const userRouter = new Elysia({ prefix: "/users" })
     }, createUserSchema)
 
     // @ts-ignore
-    .onBeforeHandle(async({jwt, set, cookie: { auth } }) =>{
-        const claims: ClaimTypes = await jwt.verify(auth.value)
-
-        if(!claims.sub) {
+    .onBeforeHandle(async({jwt, set, headers: { authorization } }) =>{
+        const claims = await getClaims(authorization!)
+        const { sub } = claims
+        if(!sub) {
             set.status = 401
             return "No id was found in claims!"
         }
     })
     
     // @ts-ignore
-    .get("/:id", async({ params, set, jwt, cookie: { auth } }) => {
+    .get("/:id", async({ params, set, jwt, headers: { authorization } }) => {
+        if(!authorization) {
+            set.status = 401
+            return
+        }
 
-        const claims: ClaimTypes = await jwt.verify(auth.value)
+        const claims: ClaimTypes = await getClaims(authorization!)
+
+        if(!claims) {
+            set.status = 401
+        }
+
         const id = Number(params.id)
 
         const result = await db.select()
