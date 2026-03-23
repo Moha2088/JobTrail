@@ -3,6 +3,8 @@ import { createUserSchema, deleteUserSchema, getUserSchema, putUserSchema } from
 import { db } from "../../db/db";
 import { applicationsTable, usersTable } from "../../db/schema";
 import { eq } from "drizzle-orm"
+import { getClaims } from "../../utils/auth/getClaims"
+import { StatusCodes } from "http-status-codes"
 
 
 export const userRouter = new Elysia({ prefix: "/users" })
@@ -15,7 +17,7 @@ export const userRouter = new Elysia({ prefix: "/users" })
             .values(body)
             .returning()
 
-        set.status = 201
+        set.status = StatusCodes.CREATED
         
         // return {
         //     id: result[0].id,
@@ -26,19 +28,28 @@ export const userRouter = new Elysia({ prefix: "/users" })
     }, createUserSchema)
 
     // @ts-ignore
-    .onBeforeHandle(async({jwt, set, cookie: { auth } }) =>{
-        const claims: ClaimTypes = await jwt.verify(auth.value)
-
-        if(!claims.sub) {
-            set.status = 401
+    .onBeforeHandle(async({jwt, set, headers: { authorization } }) =>{
+        const claims = await getClaims(authorization!)
+        const { sub } = claims
+        if(!sub) {
+            set.status = StatusCodes.UNAUTHORIZED
             return "No id was found in claims!"
         }
     })
     
     // @ts-ignore
-    .get("/:id", async({ params, set, jwt, cookie: { auth } }) => {
+    .get("/:id", async({ params, set, jwt, headers: { authorization } }) => {
+        if(!authorization) {
+            set.status = StatusCodes.UNAUTHORIZED
+            return
+        }
 
-        const claims: ClaimTypes = await jwt.verify(auth.value)
+        const claims: ClaimTypes = await getClaims(authorization!)
+
+        if(!claims) {
+            set.status = StatusCodes.UNAUTHORIZED
+        }
+
         const id = Number(params.id)
 
         const result = await db.select()
@@ -47,7 +58,7 @@ export const userRouter = new Elysia({ prefix: "/users" })
             .leftJoin(applicationsTable, eq(applicationsTable.userId, usersTable.id))
 
         if (result.length == 0) {
-            set.status = 404
+            set.status = StatusCodes.NOT_FOUND
             return
         }
 
@@ -55,6 +66,7 @@ export const userRouter = new Elysia({ prefix: "/users" })
             id: result[0].users.id,
             name: result[0].users.name,
             email: result[0].users.email,
+            createdAt: result[0].users.createdAt,
             applications: [
                 result.map(s => s.applications)
             ]
@@ -69,7 +81,7 @@ export const userRouter = new Elysia({ prefix: "/users" })
             .where(eq(usersTable.id, id))
 
         if(result.length == 0) {
-            set.status = 404
+            set.status = StatusCodes.NOT_FOUND
             return
         }
 
@@ -83,11 +95,18 @@ export const userRouter = new Elysia({ prefix: "/users" })
 
     }, putUserSchema)
 
-    .delete("/:id", async({params, set}) => {
+    .delete("/:id", async({params, set, headers: { authorization }}) => {
+        const claims = await getClaims(authorization!)
+
+        if(!claims) {
+            set.status = StatusCodes.UNAUTHORIZED
+            return
+        }
+
         const id = Number(params.id)
 
         await db.delete(usersTable)
             .where(eq(usersTable.id, id))
 
-        set.status = 204
+        set.status = StatusCodes.NO_CONTENT
     }, deleteUserSchema)

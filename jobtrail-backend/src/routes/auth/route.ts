@@ -5,30 +5,27 @@ import { usersTable } from "../../db/schema";
 import { eq } from "drizzle-orm";
 import { jwt } from "@elysiajs/jwt"
 import { getUser } from "../../utils/users/getUser"
+import { StatusCodes } from "http-status-codes"
 
 
 export const authRouter = new Elysia({ prefix :"/auth" })
     // @ts-ignore
-    .post("/login", async({ jwt, body, set, headers}) => {
+    .post("/login", async({ jwt, body, set}) => {
         const { email, password } = body
-
-
-        console.log("---- Getting header values ----")
-        console.log(headers)
 
         const result = await db.select()
             .from(usersTable)
             .where(eq(usersTable.email, email))
 
         if (result.length == 0) {
-            set.status = 401
+            set.status = StatusCodes.UNAUTHORIZED
             throw "Unauthorized"
         }
 
         const isMatch = await Bun.password.verify(password, result[0].password)
 
         if(!isMatch) {
-            set.status = 401
+            set.status = StatusCodes.UNAUTHORIZED
             return "Password is incorrect!"
         }
 

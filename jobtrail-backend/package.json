@@ -10,6 +10,7 @@
     "@elysiajs/openapi": "^1.4.14",
     "drizzle-orm": "^0.45.1",
     "elysia": "latest",
+    "http-status-codes": "^2.3.0",
     "jose": "^6.2.1",
     "pg": "^8.18.0"
   },

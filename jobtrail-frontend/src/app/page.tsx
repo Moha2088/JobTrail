@@ -1,7 +1,6 @@
 "use client"
 
 import { Label } from "@/components/ui/view/Label"
-import dashboard from "../../assets/landing/dashboard.png"
 import {
     IconArrowRight,
     IconCheck,
@@ -89,9 +88,11 @@ export default function Home() {
                 >
                     <MotionImage
                         whileHover={{ scale: 1.1 }}
+                        width={500}
+                        height={0}
                         alt=""
                         className="w-200 rounded-xl"
-                        src={dashboard} 
+                        src={"/landing/dashboard.png"} 
                     />
                 </motion.div>
             </div>

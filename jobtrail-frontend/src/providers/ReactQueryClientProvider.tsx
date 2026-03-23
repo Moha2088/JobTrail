@@ -59,7 +59,7 @@ export function ReactQueryClientProvider({ children }: ProviderProps) {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <TanStackDevtools />
+            {/* <TanStackDevtools /> */}
             {children}
         </QueryClientProvider>
     )

@@ -47,7 +47,7 @@ export function ApplicationTable(props: ApplicationTableProps) {
                         <TableCell>{app.position}</TableCell>
                         <TableCell>{app.applicationStatus}</TableCell>
                         <TableCell>
-                            <IconArrowNarrowRight 
+                            <IconArrowNarrowRight
                                 className="cursor-pointer hover:text-gray-300" 
                                 onClick={() => router.push(`/applications/${app.id}`)} 
                             />

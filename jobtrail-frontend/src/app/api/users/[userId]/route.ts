@@ -1,0 +1,27 @@
+import { getSession } from "@/services/session/getSession"
+import axios from "axios"
+import { cookies } from "next/headers"
+import { NextRequest, NextResponse } from "next/server"
+
+export async function DELETE(req: NextRequest, { params }: { params: { userId: number } }) {
+    const { userId } = params
+
+    const cookieStore = await cookies()
+    const sessionCookie = cookieStore.get("session")
+
+    if(!sessionCookie) {
+        return new Response("Unauthorized", { status: 401 })
+    }
+
+    const session = await getSession()
+
+    await axios.delete(`http://localhost:3003/api/users/${userId}`, {
+        headers: {
+            Authorization: "Bearer " + session?.accessToken
+        }
+    })
+
+    cookieStore.delete("session")
+    
+    return NextResponse.json({ message: "User deleted" })
+}
