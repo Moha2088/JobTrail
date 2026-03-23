@@ -5,9 +5,10 @@ import { EditApplicationDialog } from "@/components/ui/controls/application/Edit
 import { Button } from "@/components/ui/controls/Button"
 import { ApplicationContext } from "@/contexts/application/ApplicationContext"
 import { useApplication } from "@/services/applications/useApplication"
-import { IconEdit, IconTrash } from "@tabler/icons-react"
+import { IconEdit, IconSparkles, IconTrash } from "@tabler/icons-react"
 import { notFound, useParams } from "next/navigation"
 import { useState } from "react"
+import { QuickTip } from "@/components/ui/view/QuickTip"
 
 
 export default function Page() {
@@ -25,6 +26,10 @@ export default function Page() {
 
     return (
         <>
+            <QuickTip>
+                Not satisfied with the content? Click on the sparkles button at the top, to enhance it with AI.
+            </QuickTip>
+
             <ApplicationContext value={{ applicationId: Number(applicationId) }}>
                 <EditApplicationDialog 
                     isOpen={isEditApplicationDialogOpen}
@@ -40,10 +45,21 @@ export default function Page() {
             <div className={`flex flex-row justify-center items-center gap-30 ${isEditApplicationDialogOpen} ? "bg-black/70" : ""`}>
                 {data?.content &&
                     <div>
-                        <div className="flex flex-col p-3 max-w-150 overflow-y-scroll h-screen">
+                        <div className="flex flex-col p-3 max-w-150 overflow-y-scroll h-screen gap-5">
                             <label className="mr-auto ml-auto w-fit pl-5 pr-5 p-2 rounded-2xl mb-5 bg-gray-100 font-bold text-xl">
                                 Content
                             </label>
+
+                            <div className="flex justify-center">
+                                <Button
+                                    variant="ghost"
+                                    size="small"
+                                    iconStart={<IconSparkles />}
+                                    className="w-20"
+                                >
+
+                                </Button>
+                            </div>
                             
                             <div className="mr-auto ml-auto">
                                 <p>{data.content}</p>

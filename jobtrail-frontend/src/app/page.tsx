@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { motion } from "motion/react"
 import { MotionButton } from "@/components/ui/controls/motion/MotionButton"
+import Image from "next/image"
 
 export default function Home() {
 
@@ -99,17 +100,23 @@ export default function Home() {
 
             <div className="p-10" />
 
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                whileInView="visible"
-                className="flex justify-center"
-            >
-                <p className="text-4xl font-bold text-center max-w-300" >
-                    AI powered job tracking right at your fingertips.
-                </p>
-            </motion.div>
+            <div className="flex flex-row gap-200">
+                <div className="flex justify-start">
+                    {/* <Image
+                        alt=""
+                        src=
+                    /> */}
+                </div>
+
+                <div
+                    className="flex"
+                >
+                    <p className="text-lg font-bold text-center max-w-300" >
+                        AI powered job tracking right at your fingertips.
+                    </p>
+                </div>
+            </div>
+
 
             <div className="p-10" />
 
