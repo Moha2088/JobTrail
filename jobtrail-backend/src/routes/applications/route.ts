@@ -8,6 +8,7 @@ import { eq } from "drizzle-orm";
 import { getClaims } from "../../utils/auth/getClaims"
 import { getApplication } from "../../utils/applications"
 import { Application } from "./types"
+import { StatusCodes } from "http-status-codes";
 
 const validate = async (
     id: number,
@@ -18,7 +19,7 @@ const validate = async (
     const claims = await getClaims(authorization)
 
     if(claims.sub != application.userId) {
-        set.status = 401
+        set.status = StatusCodes.UNAUTHORIZED
         return "Unauthorized"
     }
 }
@@ -27,7 +28,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     // @ts-ignore
     .onBeforeHandle(async({ set, headers: { authorization }, route}) => {
         if(!authorization) {
-            set.status = 401
+            set.status = StatusCodes.UNAUTHORIZED
             return "Unauthorized"
         }
     })
@@ -37,7 +38,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         const { companyName, email, applicationStatus, position, content } = body
 
         if(!authorization) {
-            set.status = 401
+            set.status = StatusCodes.UNAUTHORIZED
             return
         }
 
@@ -56,7 +57,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
                 content: content
             })
 
-            set.status = 201
+            set.status = StatusCodes.CREATED
 
     }, postApplicationSchema)
     // @ts-ignore
@@ -107,7 +108,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
             .where(eq(applicationsTable.id, id))
        
         if(result.length == 0) {
-            set.status = 404
+            set.status = StatusCodes.NOT_FOUND
             throw `Application with id: ${id} not found`
         }
 
@@ -136,7 +137,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
             .set(body)
             .where(eq(applicationsTable.id, id))
 
-        set.status = 204
+        set.status = StatusCodes.NO_CONTENT
 
     }, putApplicationSchema)
 
@@ -151,5 +152,5 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         
         await db.delete(applicationsTable).where(eq(applicationsTable.id, id))
 
-        set.status = 204
+        set.status = StatusCodes.NO_CONTENT
     }, deleteApplicationsSchema)

@@ -14,7 +14,7 @@ export async function proxy(req: NextRequest) {
     const cookieStore = await cookies()
     const sessionToken = cookieStore.get("session")?.value
 
-    if (protectedRoutes.includes(currentPath)) {
+    if (protectedRoutes.includes(currentPath) || protectedRoutes.some(route => currentPath.startsWith(route))) {
         if(!sessionToken) {
             console.log("Session token not found! Redirecting to login!")
             return NextResponse.redirect("http://localhost:3000/login")

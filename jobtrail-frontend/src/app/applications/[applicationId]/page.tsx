@@ -41,7 +41,10 @@ export default function Page() {
                 {data?.content &&
                     <div>
                         <div className="flex flex-col p-3 max-w-150 overflow-y-scroll h-screen">
-                            <label className="mr-auto ml-auto w-fit pl-5 pr-5 p-2 rounded-2xl mb-5 bg-gray-100 font-bold text-xl">Content</label>
+                            <label className="mr-auto ml-auto w-fit pl-5 pr-5 p-2 rounded-2xl mb-5 bg-gray-100 font-bold text-xl">
+                                Content
+                            </label>
+                            
                             <div className="mr-auto ml-auto">
                                 <p>{data.content}</p>
                             </div>
