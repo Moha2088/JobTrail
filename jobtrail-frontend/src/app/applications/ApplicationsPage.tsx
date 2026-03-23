@@ -22,6 +22,7 @@ export default function ApplicationsPage() {
     const debouncedSearchQuery = useDebounce(searchQuery)
 
     const applications = useApplications().data
+    const filteredApplications = applications?.applications.filter(app => app.companyName.toLowerCase().includes(debouncedSearchQuery.toLowerCase()))
     const logOut = useLogOut()
 
     const pendingCount = applications?.metrics.pendingCount ?? 0
@@ -107,7 +108,7 @@ export default function ApplicationsPage() {
             <div className="p-10" />
 
             <ApplicationTable
-                applications={applications?.applications}
+                applications={debouncedSearchQuery ? filteredApplications : applications?.applications}
             />
         </div>
     )
