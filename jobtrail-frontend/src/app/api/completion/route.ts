@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
 
     const result = streamText({
         model: openAIClient("gpt-5"),
-        prompt
+        prompt: prompt,
     })
 
     return result.toTextStreamResponse()

@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/view/Label"
 import {
     IconArrowRight,
     IconCheck,
+    IconSparkles,
     IconSparklesFilled
 } from "@tabler/icons-react"
 import { MotionImage } from "@/components/ui/view/motion/Image"
@@ -19,7 +20,7 @@ export default function Home() {
 
     return (
         <>
-            <div className="bg-linear-to-b from-blue-300 via-blue-300 to-white h-300">
+            <div className="bg-linear-to-b from-blue-300 via-blue-300 to-white h-300 mb-10">
 
                 <div className="p-3" />
 
@@ -98,27 +99,40 @@ export default function Home() {
                 </motion.div>
             </div>
 
-            <div className="p-10" />
-
-            <div className="flex flex-row gap-200">
-                <div className="flex justify-start">
-                    {/* <Image
+            <div className="flex flex-row gap-100 mb-50">
+                <div className="">
+                    <Image
                         alt=""
-                        src=
-                    /> */}
+                        src="/landing/landing-ai.png"
+                        width="500"
+                        height="100"
+                    />
                 </div>
 
-                <div
-                    className="flex"
-                >
-                    <p className="text-lg font-bold text-center max-w-300" >
+                <div className="pt-20">
+                    <p className="text-xl font-bold text-center" >
                         AI powered job tracking right at your fingertips.
                     </p>
                 </div>
             </div>
 
+            <div className="flex flex-row gap-80 mb-50">
+                <div>
+                    <Image 
+                        alt=""
+                        src="/landing/landing-ai-text.png"
+                        width="400"
+                        height="100"
+                    />
+                </div>
 
-            <div className="p-10" />
+                <div>
+                    <p className="text-xl font-bold text-center pt-60 max-w-130">
+                        Leverage the power of AI to review and update your application in real time.
+                    </p>
+                </div>
+            </div>
+
 
             <div className="flex flex-col justify-center items-center gap-3">
                 <div className="flex flex-row gap-2">

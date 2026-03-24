@@ -1,14 +1,16 @@
-import { IconBulbFilled, IconX } from "@tabler/icons-react"
+import { cn } from "@/lib/utils"
+import { IconBulbFilled, IconTrashFilled, IconX } from "@tabler/icons-react"
 import { motion } from "motion/react"
-import { PropsWithChildren, useState } from "react"
+import { ComponentProps, PropsWithChildren, useState } from "react"
 
-interface QuickTipProps extends PropsWithChildren { 
+
+interface QuickTipProps extends PropsWithChildren, ComponentProps<"div"> {
 
 }
 
 
 export function QuickTip(props: QuickTipProps) {
-    const { children } = props
+    const { children, className, ...rest } = props
 
     const [hideTip, setHideTip] = useState<boolean>()
 
@@ -20,25 +22,25 @@ export function QuickTip(props: QuickTipProps) {
         <>
             {!hideTip &&
                 <motion.div
-                    className=" absolute w-fit p-3 max-w-100 bg-gray-50 ml-10 rounded-xl text-sm"
-                    initial={{ opacity: 0, y: 50, x: 800 }}
-                    transition={{ duration: 0.5, delay: 5 }}
+                    className={`absolute w-fit p-3 bg-yellow-50 max-w-120 border ml-10 rounded-xl text-sm ${cn(className)}`}
+                    initial={{ opacity: 0, y: 50, x: 730 }}
+                    transition={{ duration: 0.5, delay: 10 }}
                     animate={{ opacity: 1, y: 20 }}
                 >
                     <div>
-                        <div className="flex mb-2">
-                            <div className="flex w-full">
-                                <p className="font-bold">
-                                    Quick Tip
+                        <div className="flex mb-1">
+                            <div className="flex w-full mb-3">
+                                <p className="font-bold text-lg">
+                                    Quick Tip <IconBulbFilled className="text-yellow-400 inline-block" />
                                 </p>
                             </div>
 
-                            <div className="w-full">
-                                <IconBulbFilled className="text-yellow-400 size-5" />
-                            </div>
+                            {/* <div className="flex justify-start">
+                                
+                            </div> */}
                             
                             <div
-                                className="flex justify-end w-screen">
+                                className="flex justify-end">
                                 <IconX onClick={dismissTip} className="text-black hover:text-gray-300 cursor-pointer" />
                             </div>
                         </div>
