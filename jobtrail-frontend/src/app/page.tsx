@@ -4,6 +4,8 @@ import { Label } from "@/components/ui/view/Label"
 import {
     IconArrowRight,
     IconCheck,
+    IconPoint,
+    IconPointFilled,
     IconSparkles,
     IconSparklesFilled
 } from "@tabler/icons-react"
@@ -65,7 +67,7 @@ export default function Home() {
                         className="mr-auto ml-auto w-fit">
                         <Label
                             iconStart={<IconSparklesFilled color="white" />}
-                            iconEnd={<IconArrowRight color="white" />}
+                            iconEnd={<IconPointFilled className="pt-1" size={20} color="white" />}
                         >
                             <Link href="/login">
                                 Enhance your jobtracking now
