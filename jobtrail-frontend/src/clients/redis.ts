@@ -16,8 +16,6 @@ export const rateLimiter = new Ratelimit({
 export async function checkRateLimit(userId: string) {
     const { success, limit, reset } = await rateLimiter.limit(userId)
 
-    console.log("Limit: " + limit + " Reset: " + reset)
-
     return {
         success,
         limit,
