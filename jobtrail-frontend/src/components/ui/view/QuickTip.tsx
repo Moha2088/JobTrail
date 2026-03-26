@@ -35,10 +35,6 @@ export function QuickTip(props: QuickTipProps) {
                                 </p>
                             </div>
 
-                            {/* <div className="flex justify-start">
-                                
-                            </div> */}
-                            
                             <div
                                 className="flex justify-end">
                                 <IconX onClick={dismissTip} className="text-black hover:text-gray-300 cursor-pointer" />

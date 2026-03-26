@@ -6,12 +6,12 @@ import { cn } from "@/lib/utils"
 
 
 const actionButtonStyles = cva(
-    "p-1 rounded-md w-10 flex justify-center cursor-pointer", {
+    "text-white p-1 rounded-md w-10 flex justify-center cursor-pointer", {
         variants: {
             variant: {
-                keep: "bg-green-400 text-white hover:bg-green-500",
-                discard: "bg-red-400 text-white hover:bg-red-500",
-                stop: "bg-red-400 text-white hover:bg-red-500",
+                keep: "bg-green-400  hover:bg-green-500",
+                discard: "bg-red-400  hover:bg-red-500",
+                stop: "bg-red-400 hover:bg-red-500",
             }
         },
 

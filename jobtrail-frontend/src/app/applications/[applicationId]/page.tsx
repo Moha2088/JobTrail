@@ -5,14 +5,14 @@ import { EditApplicationDialog } from "@/components/ui/controls/application/Edit
 import { Button } from "@/components/ui/controls/Button"
 import { ApplicationContext } from "@/contexts/application/ApplicationContext"
 import { useApplication } from "@/services/applications/useApplication"
-import { IconCheck, IconEdit, IconSparkles, IconTrash } from "@tabler/icons-react"
+import { IconEdit, IconSparkles, IconTrash, IconZoomExclamationFilled } from "@tabler/icons-react"
 import { notFound, useParams } from "next/navigation"
-import { useEffect, useMemo, useState } from "react"
+import { useState } from "react"
 import { QuickTip } from "@/components/ui/view/QuickTip"
 import { useCompletion } from "@ai-sdk/react"
 import { LoadingDots } from "@/components/ui/view/motion/LoadingDots"
 import { StreamedTextOutput } from "@/components/ui/view/ai/StreamedTextOutput"
-import { createPrompt } from "@/providers/openAIProvider"
+import { createContentPrompt } from "@/providers/openAIProvider"
 import { ActionButton } from "@/components/ui/controls/ai/ActionButton"
 import { usePutApplication } from "@/services/applications"
 
@@ -22,7 +22,6 @@ export default function Page() {
 
     const application = useApplication(Number(applicationId))
     const { data } = application
-
 
     const  updateApplication = usePutApplication(data?.id || 0)
 
@@ -45,11 +44,15 @@ export default function Page() {
         streamProtocol: "text"
     })
 
+    // const underLimit =  data?.content && data?.content.length < 100
+
     return (
         <>
+
             <QuickTip>
                 Not satisfied with the content? Click on the <IconSparkles className="inline-block" /> button at the top, to enhance it with AI.
             </QuickTip>
+
 
             <ApplicationContext value={{ applicationId: Number(applicationId) }}>
                 <EditApplicationDialog 
@@ -74,15 +77,32 @@ export default function Page() {
                             <div className="flex justify-center">
                                 <Button
                                     onClick={() => {
-                                        setInput(createPrompt(data?.content))
+                                        setInput(createContentPrompt(data?.content))
                                         handleSubmit()
                                     }}
                                     variant="ghost"
+                                    disabled={isLoading}
                                     size="small"
                                     iconStart={<IconSparkles />}
                                     className="w-20"
                                 />
                             </div>
+
+                            {data?.content.length < 100 &&
+                                <div className="p-2 rounded-full bg-red-400">
+                                    <p className="text-white text-xs">
+                                        AI optimization requires more content!.
+                                    </p>
+                                </div>
+                            }
+
+                            {error && 
+                                <div className="p-2 rounded-full bg-red-400">
+                                    <p className="text-white text-xs">
+                                        {error.message}
+                                    </p>
+                                </div>
+                            }
 
                             {isLoading &&
                                 <div className="flex justify-center">
@@ -143,8 +163,26 @@ export default function Page() {
                     </div>
                 }
 
-                <div className="">
-                    <div className="mb-10">
+                {!data?.content &&
+                    <div className="flex flex-row gap-5">
+                        <div className="flex flex-col justify-center items-center">
+                            <div className="flex justify-center items-center mb-5">
+                                <IconZoomExclamationFilled />
+                            </div>
+
+                            <div className="text-sm mb-20">
+                                <p>No Content was found. Click the edit button to add content.</p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <hr className="border h-screen"/>
+                        </div>
+                    </div>
+                }
+
+                <div>
+                    <div className="mb-10 mt-10">
                         <p className="flex justify-center text-4xl font-bold">
                             {data?.companyName}
                         </p>
