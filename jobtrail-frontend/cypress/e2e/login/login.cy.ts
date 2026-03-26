@@ -23,7 +23,7 @@ describe('Login page', () => {
         
         cy.get('button[type="submit"]').click()
 
-        cy.get('p').contains("Password must be atleast 8 characters").should("be.visible")
+        cy.get('p').contains("Password must be at least 8 characters").should("be.visible")
     })
 
     it ("should display error message when email is invalid", () => {

@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form"
 import { ApplicationStatus, StatusDropdownMenu } from "@/components/ui/controls/application/StatusDropdownMenu"
 import { useState } from "react"
 import { useApplicationContext } from "@/contexts/application/ApplicationContext"
+import { toast, Toaster } from "sonner"
 
 interface EditApplicationDialogProps {
     isOpen?: boolean
@@ -31,8 +32,13 @@ type EditApplicationInput = {
     content: string
 }
 
-function Content() {
+interface ContentProps {
+    onOpenChange?: (open: boolean) => void
+}
 
+
+function Content(props: ContentProps) {
+    const { onOpenChange } = props
     const { applicationId } = useApplicationContext()
 
     const editApplication = usePutApplication(applicationId)
@@ -51,6 +57,8 @@ function Content() {
     })
 
     const onSubmit = (data: EditApplicationInput) => {
+        console.log("Entered edit function")
+
         editApplication.mutate({
             companyName: data.companyName,
             email: data.email,
@@ -60,10 +68,11 @@ function Content() {
         }, {
             onSuccess: () => {
                 console.log("Application updated successfully")
+                onOpenChange?.(true)
             },
-            
+
             onError: () => {
-                alert("Failed to create application")
+                alert("Failed to update application")
             }
         })
     }
@@ -172,20 +181,15 @@ function Content() {
                     <div className="flex justify-end gap-10" >
                         <Dialog.Close>
                             <Button
+                                type="button"
                                 variant="light"
                                 size="small">
                                 Cancel
                             </Button>
                         </Dialog.Close>
-                        <Dialog.Close
-                            type={"button"}
-                            onClick={() => {
-                                reset()
-                            }}
-                        >
+                        <Dialog.Close>
                             <Button
                                 disabled={!applicationStatus || !getValues("companyName") || !getValues("email") || !getValues("position") || !getValues("content")}
-                                type="submit"
                                 onClick={() => {
                                     editApplication.mutate({
                                         companyName: getValues("companyName"),
@@ -195,11 +199,7 @@ function Content() {
                                         content: getValues("content")
                                     }, {
                                         onSuccess: () => {
-                                            console.log("Application created successfully")
-                                        },
 
-                                        onError: () => {
-                                            alert("Failed to create application")
                                         }
                                     })
                                 }}

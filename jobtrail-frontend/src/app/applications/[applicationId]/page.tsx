@@ -5,9 +5,16 @@ import { EditApplicationDialog } from "@/components/ui/controls/application/Edit
 import { Button } from "@/components/ui/controls/Button"
 import { ApplicationContext } from "@/contexts/application/ApplicationContext"
 import { useApplication } from "@/services/applications/useApplication"
-import { IconEdit, IconTrash } from "@tabler/icons-react"
+import { IconEdit, IconSparkles, IconTrash, IconZoomExclamationFilled } from "@tabler/icons-react"
 import { notFound, useParams } from "next/navigation"
 import { useState } from "react"
+import { QuickTip } from "@/components/ui/view/QuickTip"
+import { useCompletion } from "@ai-sdk/react"
+import { LoadingDots } from "@/components/ui/view/motion/LoadingDots"
+import { StreamedTextOutput } from "@/components/ui/view/ai/StreamedTextOutput"
+import { createContentPrompt } from "@/providers/openAIProvider"
+import { ActionButton } from "@/components/ui/controls/ai/ActionButton"
+import { usePutApplication } from "@/services/applications"
 
 
 export default function Page() {
@@ -16,6 +23,8 @@ export default function Page() {
     const application = useApplication(Number(applicationId))
     const { data } = application
 
+    const  updateApplication = usePutApplication(data?.id || 0)
+
     const [isEditApplicationDialogOpen, setIsEditApplicationDialogOpen] = useState<boolean>(false)
     const [isDeleteApplicationDialogOpen, setIsDeleteApplicationDialogOpen] = useState<boolean>(false)
 
@@ -23,8 +32,28 @@ export default function Page() {
         notFound()
     }
 
+    const {
+        completion,
+        handleSubmit,
+        setInput,
+        error,
+        isLoading,
+        setCompletion,
+        stop
+    } = useCompletion({
+        streamProtocol: "text"
+    })
+
+    // const underLimit =  data?.content && data?.content.length < 100
+
     return (
         <>
+
+            <QuickTip>
+                Not satisfied with the content? Click on the <IconSparkles className="inline-block" /> button at the top, to enhance it with AI.
+            </QuickTip>
+
+
             <ApplicationContext value={{ applicationId: Number(applicationId) }}>
                 <EditApplicationDialog 
                     isOpen={isEditApplicationDialogOpen}
@@ -40,20 +69,120 @@ export default function Page() {
             <div className={`flex flex-row justify-center items-center gap-30 ${isEditApplicationDialogOpen} ? "bg-black/70" : ""`}>
                 {data?.content &&
                     <div>
-                        <div className="flex flex-col p-3 max-w-150 overflow-y-scroll h-screen">
-                            <label className="mr-auto ml-auto w-fit pl-5 pr-5 p-2 rounded-2xl mb-5 bg-gray-100 font-bold text-xl">
+                        <div className="flex flex-col p-3 max-w-150 overflow-y-scroll h-screen gap-5">
+                            <label className="mr-auto ml-auto w-fit pl-5 pr-5 p-2 rounded-2xl bg-gray-100 font-bold text-xl">
                                 Content
                             </label>
-                            
-                            <div className="mr-auto ml-auto">
-                                <p>{data.content}</p>
+
+                            <div className="flex justify-center">
+                                <Button
+                                    onClick={() => {
+                                        setInput(createContentPrompt(data?.content))
+                                        handleSubmit()
+                                    }}
+                                    variant="ghost"
+                                    disabled={isLoading}
+                                    size="small"
+                                    iconStart={<IconSparkles />}
+                                    className="w-20"
+                                />
                             </div>
+
+                            {data?.content.length < 100 &&
+                                <div className="p-2 rounded-full bg-red-400">
+                                    <p className="text-white text-xs">
+                                        AI optimization requires more content!.
+                                    </p>
+                                </div>
+                            }
+
+                            {error && 
+                                <div className="p-2 rounded-full bg-red-400">
+                                    <p className="text-white text-xs">
+                                        {error.message}
+                                    </p>
+                                </div>
+                            }
+
+                            {isLoading &&
+                                <div className="flex justify-center">
+                                    <LoadingDots />
+                                </div>
+                            }
+
+                            {completion && isLoading &&
+                                <div className="flex justify-center">
+                                    <ActionButton 
+                                        variant="stop"
+                                        onClick={stop} 
+                                    />
+                                </div>
+                            }
+
+                            {completion && !isLoading &&
+                                <>
+                                    <QuickTip>
+                                        To keep changes, click the <ActionButton className="inline-block" variant="keep"/> button.<br />
+                                        To discard changes, click the <ActionButton className="inline-block" variant="discard" /> button.
+                                    </QuickTip>
+
+                                    <div className="flex justify-center flex-row gap-2">
+                                        <div>
+                                            <ActionButton
+                                                disabled={isLoading}
+                                                variant="discard"
+                                                onClick={() => setCompletion("")}
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <ActionButton
+                                                type="submit"
+                                                disabled={isLoading} 
+                                                variant="keep"
+                                                onClick={() => updateApplication.mutate}
+                                            />
+                                        </div>
+                                    </div>
+                                </>
+                            }
+
+                            {completion &&
+                                <StreamedTextOutput>
+                                    {completion}
+                                </StreamedTextOutput>
+                            }
+
+                            {!completion &&
+                                <div className="mr-auto ml-auto">
+                                    <p>{data.content}</p>
+                                </div>
+                            }
+
                         </div>
                     </div>
                 }
 
-                <div className="">
-                    <div className="mb-10">
+                {!data?.content &&
+                    <div className="flex flex-row gap-5">
+                        <div className="flex flex-col justify-center items-center">
+                            <div className="flex justify-center items-center mb-5">
+                                <IconZoomExclamationFilled />
+                            </div>
+
+                            <div className="text-sm mb-20">
+                                <p>No Content was found. Click the edit button to add content.</p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <hr className="border h-screen"/>
+                        </div>
+                    </div>
+                }
+
+                <div>
+                    <div className="mb-10 mt-10">
                         <p className="flex justify-center text-4xl font-bold">
                             {data?.companyName}
                         </p>

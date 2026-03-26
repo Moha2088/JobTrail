@@ -125,7 +125,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     }, getApplicationSchema)
 
 
-    .put("/:id", async({ params, body, set, headers: { authorization } }) => {
+    .patch("/:id", async({ params, body, set, headers: { authorization } }) => {
         const id = Number(params.id)
 
         const unauthorized = await validate(id, authorization!, set)

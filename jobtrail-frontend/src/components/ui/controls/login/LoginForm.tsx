@@ -9,6 +9,7 @@ import axios from "axios"
 import { LoadingDots } from "../../view/motion/LoadingDots"
 import { motion } from "motion/react"
 import Link from "next/link"
+import { IconEye, IconEyeClosed } from "@tabler/icons-react"
 
 type LoginInput = {
     email: string
@@ -73,7 +74,7 @@ export function LoginForm(){
                                 required: "Password is required!",
                                 minLength: {
                                     value: 8,
-                                    message: "Password must be atleast 8 characters"
+                                    message: "Password must be at least 8 characters"
                                 }
                             })}
                         />
@@ -89,7 +90,7 @@ export function LoginForm(){
                             className="w-fit"
                             onClick={() => setPasswordState(passwordState == "password" ? "text" : "password")}
                         >
-                            {passwordState == "password" ? "Show" : "Hide"} 
+                            {passwordState == "password" ? <IconEyeClosed /> : <IconEye /> }
                         </Button>
                     </div>
 

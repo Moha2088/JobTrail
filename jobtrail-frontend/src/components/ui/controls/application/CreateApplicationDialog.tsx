@@ -47,6 +47,8 @@ function Content() {
     })
 
     const onSubmit = (data: CreateApplicationInput) => {
+        console.error("Entering submit function!")
+
         createApplication.mutate({
             companyName: data.companyName,
             email: data.email,
@@ -70,9 +72,8 @@ function Content() {
 
     return (
         <>
-            <form
-                onSubmit={handleSubmit(onSubmit)}>
-                <Dialog.Content className="mr-auto ml-auto w-200 bg-white p-5 rounded-xl z-10 absolute right-0 left-0">
+            <Dialog.Content className="mr-auto ml-auto w-200 overflow-y-auto max-h-[90vh] bg-white p-5 rounded-xl z-10 ">
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <Dialog.Title className="mb-3 text-2xl font-bold">Create Application</Dialog.Title>
                     <div className="p-2" />
                     <Dialog.Description
@@ -168,20 +169,16 @@ function Content() {
                     <div className="flex justify-end gap-10" >
                         <Dialog.Close>
                             <Button
+                                type="button"
                                 variant="light"
                                 size="small">
                                 Cancel
                             </Button>
                         </Dialog.Close>
-                        <Dialog.Close
-                            type={"button"}
-                            onClick={() => {
-                                reset()
-                            }}
-                        >
+
+                        <Dialog.Close>
                             <Button
                                 disabled={!applicationStatus || !getValues("companyName") || !getValues("email") || !getValues("position") || !getValues("content")}
-                                type="submit"
                                 onClick={() => {
                                     createApplication.mutate({
                                         companyName: getValues("companyName"),
@@ -204,9 +201,12 @@ function Content() {
                                 Save
                             </Button>
                         </Dialog.Close>
-                    </div>
-                </Dialog.Content>
-            </form>
+                    </div>   
+                </form>
+                
+            </Dialog.Content>
+
+            
         </>
     )
 }
