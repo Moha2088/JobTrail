@@ -2,12 +2,9 @@
 
 import { Label } from "@/components/ui/view/Label"
 import {
-    IconArrowRight,
     IconCheck,
-    IconPoint,
     IconPointFilled,
-    IconSparkles,
-    IconSparklesFilled
+    IconSparklesFilled,
 } from "@tabler/icons-react"
 import { MotionImage } from "@/components/ui/view/motion/Image"
 import { useRouter } from "next/navigation"

@@ -15,6 +15,7 @@ export const applicationsTable = pgTable("applications", {
     position: varchar("Position", { length: 40 }).notNull(),
     createdAt: timestamp("CreatedAt").defaultNow(),
     content: varchar("Content"),
+    key: varchar("Key", { length: 100 }),
     userId: integer("UserId").references(() => usersTable.id)
 }, (table => [
         index("CompanyName_idx").on(table.companyName),

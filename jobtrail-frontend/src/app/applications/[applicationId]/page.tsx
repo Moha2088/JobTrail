@@ -5,9 +5,9 @@ import { EditApplicationDialog } from "@/components/ui/controls/application/Edit
 import { Button } from "@/components/ui/controls/Button"
 import { ApplicationContext } from "@/contexts/application/ApplicationContext"
 import { useApplication } from "@/services/applications/useApplication"
-import { IconEdit, IconSparkles, IconTrash, IconZoomExclamationFilled } from "@tabler/icons-react"
+import { IconDownload, IconEdit, IconFileCv, IconSparkles, IconTrash, IconZoomExclamationFilled } from "@tabler/icons-react"
 import { notFound, useParams } from "next/navigation"
-import { useState } from "react"
+import { ChangeEvent, useRef, useState } from "react"
 import { QuickTip } from "@/components/ui/view/QuickTip"
 import { useCompletion } from "@ai-sdk/react"
 import { LoadingDots } from "@/components/ui/view/motion/LoadingDots"
@@ -15,6 +15,8 @@ import { StreamedTextOutput } from "@/components/ui/view/ai/StreamedTextOutput"
 import { createContentPrompt } from "@/providers/openAIProvider"
 import { ActionButton } from "@/components/ui/controls/ai/ActionButton"
 import { usePutApplication } from "@/services/applications"
+import { useUploadFile } from "@/services/applications/files/useUploadFile"
+import { useSession } from "@/services/session/useSession"
 
 
 export default function Page() {
@@ -25,8 +27,19 @@ export default function Page() {
 
     const  updateApplication = usePutApplication(data?.id || 0)
 
+    const { userId } = useSession()?.data || {}
+
     const [isEditApplicationDialogOpen, setIsEditApplicationDialogOpen] = useState<boolean>(false)
     const [isDeleteApplicationDialogOpen, setIsDeleteApplicationDialogOpen] = useState<boolean>(false)
+
+    const [selectedFile, setSelectedFile] = useState<File | null>(null)
+
+    const fileUploadRef = useRef<HTMLInputElement>(null)
+
+    const handleUpload = () => fileUploadRef?.current?.click()
+    const onUpload =(event: ChangeEvent<HTMLInputElement>) => setSelectedFile(event?.target.files ? event.target.files[0] : null)
+    
+    const uploadFile = useUploadFile()
 
     if(application.isError) {
         notFound()
@@ -54,7 +67,7 @@ export default function Page() {
             </QuickTip>
 
 
-            <ApplicationContext value={{ applicationId: Number(applicationId) }}>
+            <ApplicationContext value={{ application: data! }}>
                 <EditApplicationDialog 
                     isOpen={isEditApplicationDialogOpen}
                     onOpenChange={() => setIsEditApplicationDialogOpen(true)} 
@@ -205,9 +218,59 @@ export default function Page() {
                             <p>{data?.position}</p>
                         </div>
 
-                        <div className="flex justify-center mb-10 p-3">
+                        <div className="flex justify-center mb-5 p-3">
                             <label className="font-bold pr-1">Created At:</label>
                             <p>{data?.createdAt ? new Date(data.createdAt).toLocaleDateString() : "N/A"}</p>
+                        </div>
+
+                        <div className="flex justify-center">
+                            <Button
+                                variant="ghost"
+                                size="small"
+                                className="w-20"
+                                onClick={handleUpload}
+                            >
+                                <IconFileCv size={30}  />
+                            </Button>
+                        </div>
+
+                        <div>
+                            <input
+                                ref={fileUploadRef}
+                                type="file"
+                                onChange={onUpload} 
+                                className="hidden" 
+                            />
+                        </div>
+
+                        <div className="flex justify-center">
+                            <Button
+                                disabled={!selectedFile}
+                                variant="ghost"
+                                size="small"
+                                className="w-fit"
+                            >
+                                {selectedFile &&
+                                    <a href={URL.createObjectURL(selectedFile!)} download={selectedFile?.name}>
+                                        <IconDownload  />
+                                    </a>
+                                }
+                            </Button>
+                        </div>
+
+                        <div className="flex justify-center">
+                            <Button
+                                disabled={!selectedFile}
+                                onClick={() => {
+                                    uploadFile.mutate({
+                                        file: selectedFile!,
+                                        userId: userId!,
+                                        applicationId: data!.id
+                                    })
+                                }}
+                            >
+                                Upload CV
+                            </Button>
                         </div>
                     </div>
 
@@ -231,6 +294,7 @@ export default function Page() {
                                 <IconTrash color="white" />
                             </Button>
                         </div>
+
                     </div>
                 </div>       
             </div>

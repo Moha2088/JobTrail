@@ -1,10 +1,11 @@
+import { Application } from "@/services/applications"
 import { createContext, useContext } from "react"
 
 
 export const ApplicationContext = createContext<ApplicationContextValue| undefined>(undefined)
 
 interface ApplicationContextValue {
-    applicationId: number
+    application: Application
 }
 
 export function useApplicationContext(): ApplicationContextValue {

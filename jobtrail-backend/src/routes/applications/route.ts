@@ -1,6 +1,6 @@
 import Elysia from "elysia";
 import {
-    postApplicationSchema, getApplicationSchema, putApplicationSchema, deleteApplicationsSchema,
+    postApplicationSchema, getApplicationSchema, putApplicationSchema, deleteApplicationsSchema
 } from "./schema";
 import { db } from "../../db/db";
 import { applicationsTable } from "../../db/schema";
@@ -9,6 +9,7 @@ import { getClaims } from "../../utils/auth/getClaims"
 import { getApplication } from "../../utils/applications"
 import { Application } from "./types"
 import { StatusCodes } from "http-status-codes";
+import { uploadToR2 } from "../../utils/r2";
 
 const validate = async (
     id: number,
@@ -154,3 +155,33 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
 
         set.status = StatusCodes.NO_CONTENT
     }, deleteApplicationsSchema)
+
+
+    .post("/resume", async({ body, set, headers: { authorization }}) => {
+        const claims = await getClaims(authorization!)
+
+        console.log("Received file upload request")
+        const file = body.file as File
+        const buffer = await file.arrayBuffer()
+        
+        const { key } = await uploadToR2({
+            buffer: buffer,
+            name: file.name,
+            userId: body.userId as string
+        })
+
+        const result = await db.select()
+            .from(applicationsTable)
+            .where(eq(applicationsTable.id, body.applicationId) && eq(applicationsTable.userId, claims.sub))
+
+        if(result.length == 0) {
+            set.status = StatusCodes.NOT_FOUND
+            throw `Application with id: ${body.applicationId} not found`
+        }
+        
+        await db.update(applicationsTable)
+        .set({ key: key })
+        .where(eq(applicationsTable.id, body.applicationId))
+
+        set.status = StatusCodes.NO_CONTENT
+    })

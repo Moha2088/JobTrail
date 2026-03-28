@@ -4,9 +4,8 @@ import { Flex, TextField } from "@radix-ui/themes/dist/cjs/components/index.js"
 import { usePutApplication } from "@/services/applications"
 import { useForm } from "react-hook-form"
 import { ApplicationStatus, StatusDropdownMenu } from "@/components/ui/controls/application/StatusDropdownMenu"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useApplicationContext } from "@/contexts/application/ApplicationContext"
-import { toast, Toaster } from "sonner"
 
 interface EditApplicationDialogProps {
     isOpen?: boolean
@@ -39,22 +38,35 @@ interface ContentProps {
 
 function Content(props: ContentProps) {
     const { onOpenChange } = props
-    const { applicationId } = useApplicationContext()
+    const { application } = useApplicationContext()
 
-    const editApplication = usePutApplication(applicationId)
+    const editApplication = usePutApplication(application?.id)
 
     const [isDropDownOpen, setIsDropdownOpen] = useState<boolean>(false)
     const [applicationStatus, setApplicationStatus] = useState<string>("")
 
+
     const { handleSubmit, register, reset, getValues, formState: { errors } } = useForm<EditApplicationInput>({
         defaultValues: {
-            companyName: "",
-            email: "",
-            applicationStatus: "",
-            position: "",
-            content: ""
+            companyName: application?.companyName,
+            email: application?.email,
+            applicationStatus: application?.applicationStatus,
+            position: application?.position,
+            content: application?.content
         }
     })
+
+    useEffect(() => {
+        if(application) {
+            reset({
+                companyName: application?.companyName,
+                email: application?.email,
+                applicationStatus: application?.applicationStatus,
+                position: application?.position,
+                content: application?.content
+            })
+        }
+    }, [application, reset])
 
     const onSubmit = (data: EditApplicationInput) => {
         console.log("Entered edit function")

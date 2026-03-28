@@ -22,7 +22,7 @@ export default function ApplicationsPage() {
     const debouncedSearchQuery = useDebounce(searchQuery)
 
     const applications = useApplications().data
-    const filteredApplications = applications?.applications.filter(app => app.companyName.toLowerCase().includes(debouncedSearchQuery.toLowerCase().trim()))
+    const filteredApplications = applications?.applications.filter(app => app.companyName.toLowerCase().includes(debouncedSearchQuery.toLowerCase()))
     const logOut = useLogOut()
 
     const pendingCount = applications?.metrics.pendingCount ?? 0
@@ -31,7 +31,6 @@ export default function ApplicationsPage() {
 
     const router = useRouter()
     const session = useSessionContext()
-
 
     return (
         <div className={`h-screen ${isCreateApplicationDialogOpen ? "bg-black/70": ""} `}>
