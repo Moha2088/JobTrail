@@ -13,6 +13,7 @@ import { useSessionContext } from "@/contexts/session/SessionContext"
 import Link from "next/link"
 import { useDebounce } from "@/hooks/useDebounce"
 import { Input } from "@/components/ui/controls/Input"
+import { LoadingDots } from "@/components/ui/view/motion/LoadingDots"
 
 
 export default function ApplicationsPage() {
@@ -21,17 +22,35 @@ export default function ApplicationsPage() {
 
     const debouncedSearchQuery = useDebounce(searchQuery)
 
-    const applications = useApplications().data
-    const filteredApplications = applications?.applications.filter(app => app.companyName.toLowerCase().includes(debouncedSearchQuery.toLowerCase().trim()))
-    const logOut = useLogOut()
-
-    const pendingCount = applications?.metrics.pendingCount ?? 0
-    const rejectedCount = applications?.metrics.rejectedCount ?? 0
-    const acceptedCount = applications?.metrics.acceptedCount ?? 0
+    const { data, isLoading } = useApplications()
 
     const router = useRouter()
     const session = useSessionContext()
 
+    const logOut = useLogOut()
+
+
+    if(isLoading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <LoadingDots />
+            </div>
+        )
+    }
+
+    if(!data) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <p className="text-lg">No applications found.</p>
+            </div>
+        )
+    }
+
+    const filteredApplications = data.applications.filter(app => app.companyName.toLowerCase().includes(debouncedSearchQuery.toLowerCase()))
+
+    const pendingCount = data.metrics.pendingCount ?? 0
+    const rejectedCount = data.metrics.rejectedCount ?? 0
+    const acceptedCount = data.metrics.acceptedCount ?? 0
 
     return (
         <div className={`h-screen ${isCreateApplicationDialogOpen ? "bg-black/70": ""} `}>
@@ -109,7 +128,7 @@ export default function ApplicationsPage() {
             <div className="p-10" />
 
             <ApplicationTable
-                applications={debouncedSearchQuery ? filteredApplications : applications?.applications}
+                applications={debouncedSearchQuery ? filteredApplications : data.applications}
             />
         </div>
     )

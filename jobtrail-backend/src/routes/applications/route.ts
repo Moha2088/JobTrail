@@ -1,6 +1,7 @@
 import Elysia from "elysia";
 import {
     postApplicationSchema, getApplicationSchema, putApplicationSchema, deleteApplicationsSchema,
+    getFileSchema
 } from "./schema";
 import { db } from "../../db/db";
 import { applicationsTable } from "../../db/schema";
@@ -9,6 +10,8 @@ import { getClaims } from "../../utils/auth/getClaims"
 import { getApplication } from "../../utils/applications"
 import { Application } from "./types"
 import { StatusCodes } from "http-status-codes";
+import { uploadToR2, getFile, deleteFile, fileExists } from "../../utils/r2";
+
 
 const validate = async (
     id: number,
@@ -119,7 +122,8 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
             applicationStatus: result[0].applicationStatus,
             position: result[0].position,
             createdAt: result[0].createdAt,
-            content: result[0].content
+            content: result[0].content,
+            key: result[0].key
         }
 
     }, getApplicationSchema)
@@ -154,3 +158,97 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
 
         set.status = StatusCodes.NO_CONTENT
     }, deleteApplicationsSchema)
+
+    // Files
+
+    .post("/resume", async({ body, set, headers: { authorization }}) => {
+        const claims = await getClaims(authorization!)
+
+        console.log("Received file upload request")
+        const file = body.file as File
+        const buffer = await file.arrayBuffer()
+        
+        const { key } = await uploadToR2({
+            buffer: buffer,
+            name: file.name,
+            applicationId: body.applicationId as string
+        })
+
+        const result = await db.select()
+            .from(applicationsTable)
+            .where(eq(applicationsTable.id, body.applicationId) && eq(applicationsTable.userId, claims.sub))
+
+        if(result.length == 0) {
+            set.status = StatusCodes.NOT_FOUND
+            throw `Application with id: ${body.applicationId} not found`
+        }
+        
+        await db.update(applicationsTable)
+        .set({ key: key })
+        .where(eq(applicationsTable.id, body.applicationId))
+
+        set.status = StatusCodes.NO_CONTENT
+    })
+
+
+    .get("/resume/:key", async({ params, set, headers: { authorization }}) => {
+        const { sub } = await getClaims(authorization!)
+
+        const { key }  = params
+
+        if(!key || key === "undefined") {
+            set.status = StatusCodes.BAD_REQUEST
+            throw "Key is required"
+        }
+
+        const result = await db.select()
+        .from(applicationsTable)
+        .where(eq(applicationsTable.key, key) && eq(applicationsTable.userId, sub))
+
+        if(result.length == 0) {
+            set.status = StatusCodes.NOT_FOUND
+            throw `Application with key: ${key} not found`
+        }
+
+        if(!await fileExists(key)) {
+            return
+        }
+
+        const signedUrl = await getFile({
+            key: key
+        })
+
+        if(!signedUrl) {
+            set.status = StatusCodes.NOT_FOUND
+            throw "File not found"
+        }
+
+        set.status = StatusCodes.OK
+        return signedUrl
+
+    }, getFileSchema)
+
+
+    .delete("/:id/resume/:key", async({ params, set, headers: { authorization }}) => {
+        const { key, id }  = params
+        const { sub } = await getClaims(authorization!)
+
+        const result = await db.select()
+            .from(applicationsTable)
+            .where(eq(applicationsTable.key, key)
+                && eq(applicationsTable.id, Number(id))
+                && eq(applicationsTable.userId, sub))
+
+        if (result.length == 0) {
+            set.status = StatusCodes.NOT_FOUND
+            throw `Application with id: ${id} and key: ${key} not found`
+        }
+
+        await deleteFile(key)
+
+        await db.update(applicationsTable)
+            .set({ key: null })
+            .where(eq(applicationsTable.key, key) && eq(applicationsTable.id, Number(id)))
+
+        set.status = StatusCodes.NO_CONTENT
+    })

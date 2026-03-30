@@ -5,9 +5,9 @@ import { EditApplicationDialog } from "@/components/ui/controls/application/Edit
 import { Button } from "@/components/ui/controls/Button"
 import { ApplicationContext } from "@/contexts/application/ApplicationContext"
 import { useApplication } from "@/services/applications/useApplication"
-import { IconEdit, IconSparkles, IconTrash, IconZoomExclamationFilled } from "@tabler/icons-react"
+import { IconDownload, IconEdit, IconFileCv, IconSparkles, IconTrash, IconX, IconZoomExclamationFilled } from "@tabler/icons-react"
 import { notFound, useParams } from "next/navigation"
-import { useState } from "react"
+import { ChangeEvent, useRef, useState } from "react"
 import { QuickTip } from "@/components/ui/view/QuickTip"
 import { useCompletion } from "@ai-sdk/react"
 import { LoadingDots } from "@/components/ui/view/motion/LoadingDots"
@@ -15,34 +15,61 @@ import { StreamedTextOutput } from "@/components/ui/view/ai/StreamedTextOutput"
 import { createContentPrompt } from "@/providers/openAIProvider"
 import { ActionButton } from "@/components/ui/controls/ai/ActionButton"
 import { usePutApplication } from "@/services/applications"
+import { useUploadFile } from "@/services/applications/files/useUploadFile"
+import { useSession } from "@/services/session/useSession"
+import { useGetFile } from "@/services/applications/files/useGetFile"
+import { useDeleteFile } from "@/services/applications/files/useDeleteFile"
 
 
 export default function Page() {
     const { applicationId } = useParams()
+    const parsedApplicationId = Number(applicationId)
 
-    const application = useApplication(Number(applicationId))
-    const { data } = application
+    const application = useApplication(parsedApplicationId)
+    const { data, isLoading: isApplicationLoading, isError } = application
 
-    const  updateApplication = usePutApplication(data?.id || 0)
+    const updateApplication = usePutApplication(parsedApplicationId)
+
+    const { userId } = useSession()?.data || {}
 
     const [isEditApplicationDialogOpen, setIsEditApplicationDialogOpen] = useState<boolean>(false)
     const [isDeleteApplicationDialogOpen, setIsDeleteApplicationDialogOpen] = useState<boolean>(false)
 
-    if(application.isError) {
-        notFound()
-    }
+    const [selectedFile, setSelectedFile] = useState<File | null>(null)
+
+    const fileUploadRef = useRef<HTMLInputElement>(null)
+
+    const handleUpload = () => fileUploadRef?.current?.click()
+    const onUpload =(event: ChangeEvent<HTMLInputElement>) => setSelectedFile(event?.target?.files![0] )
+
+    const { data: fileData } = useGetFile(data?.key as string)
+    const uploadFile = useUploadFile()
+
+    const deleteFile = useDeleteFile(Number(data?.id), data?.key as string)
 
     const {
         completion,
         handleSubmit,
         setInput,
         error,
-        isLoading,
+        isLoading: isCompletionLoading,
         setCompletion,
         stop
     } = useCompletion({
         streamProtocol: "text"
     })
+
+    if (isApplicationLoading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <LoadingDots />
+            </div>
+        )
+    }
+
+    if (isError) {
+        notFound()
+    }
 
     // const underLimit =  data?.content && data?.content.length < 100
 
@@ -54,7 +81,7 @@ export default function Page() {
             </QuickTip>
 
 
-            <ApplicationContext value={{ applicationId: Number(applicationId) }}>
+            <ApplicationContext value={{ application: data! }}>
                 <EditApplicationDialog 
                     isOpen={isEditApplicationDialogOpen}
                     onOpenChange={() => setIsEditApplicationDialogOpen(true)} 
@@ -81,14 +108,14 @@ export default function Page() {
                                         handleSubmit()
                                     }}
                                     variant="ghost"
-                                    disabled={isLoading}
+                                    disabled={isCompletionLoading}
                                     size="small"
                                     iconStart={<IconSparkles />}
                                     className="w-20"
                                 />
                             </div>
 
-                            {data?.content.length < 100 &&
+                            {data.content.length < 100 &&
                                 <div className="p-2 rounded-full bg-red-400">
                                     <p className="text-white text-xs">
                                         AI optimization requires more content!.
@@ -104,13 +131,13 @@ export default function Page() {
                                 </div>
                             }
 
-                            {isLoading &&
+                            {isCompletionLoading &&
                                 <div className="flex justify-center">
                                     <LoadingDots />
                                 </div>
                             }
 
-                            {completion && isLoading &&
+                            {completion && isCompletionLoading &&
                                 <div className="flex justify-center">
                                     <ActionButton 
                                         variant="stop"
@@ -119,7 +146,7 @@ export default function Page() {
                                 </div>
                             }
 
-                            {completion && !isLoading &&
+                            {completion && !isCompletionLoading &&
                                 <>
                                     <QuickTip>
                                         To keep changes, click the <ActionButton className="inline-block" variant="keep"/> button.<br />
@@ -129,7 +156,7 @@ export default function Page() {
                                     <div className="flex justify-center flex-row gap-2">
                                         <div>
                                             <ActionButton
-                                                disabled={isLoading}
+                                                disabled={isCompletionLoading}
                                                 variant="discard"
                                                 onClick={() => setCompletion("")}
                                             />
@@ -138,7 +165,7 @@ export default function Page() {
                                         <div>
                                             <ActionButton
                                                 type="submit"
-                                                disabled={isLoading} 
+                                                disabled={isCompletionLoading} 
                                                 variant="keep"
                                                 onClick={() => updateApplication.mutate}
                                             />
@@ -205,9 +232,79 @@ export default function Page() {
                             <p>{data?.position}</p>
                         </div>
 
-                        <div className="flex justify-center mb-10 p-3">
+                        <div className="flex justify-center mb-5 p-3">
                             <label className="font-bold pr-1">Created At:</label>
-                            <p>{data?.createdAt ? new Date(data.createdAt).toLocaleDateString() : "N/A"}</p>
+                            <p>{data?.createdAt ? new Date(data?.createdAt).toLocaleDateString() : "N/A"}</p>
+                        </div>
+
+                        <div className="flex justify-center">
+                            <Button
+                                variant="ghost"
+                                size="small"
+                                className="w-20"
+                                onClick={handleUpload}
+                            >
+                                <IconFileCv size={30}  />
+                            </Button>
+                        </div>
+
+                        <div className="mb-5">
+                            <input
+                                ref={fileUploadRef}
+                                type="file"
+                                onChange={onUpload} 
+                                className="hidden" 
+                            />
+                        </div>
+
+                        {fileData && !fileData.includes("null") &&
+                            <div className="mb-5">
+                                <div className="flex justify-center mb-2">
+                                    <div className="flex justify-center">
+                                        <Button
+                                            variant="ghost"
+                                            size="small"
+                                            className="w-fit"
+                                        >
+                                            <a href={fileData} download={selectedFile?.name}>
+                                                <IconDownload />
+                                            </a>
+                                        </Button>
+                                    </div>
+
+                                    <div>
+                                        <Button
+                                            variant="ghost"
+                                            size="small"
+                                            className="w-fit"
+                                        >
+                                            <IconX color="red" onClick={() => deleteFile.mutate()} />
+                                        </Button>
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-center font-bold">
+                                    <p>{data?.key}</p>
+                                </div>
+                            </div>
+                        }
+
+                        <div className="flex justify-center">
+                            <Button
+                                disabled={!selectedFile || !userId}
+                                onClick={() => {
+                                    if (!selectedFile || !userId) {
+                                        return
+                                    }
+
+                                    uploadFile.mutate({
+                                        file: selectedFile,
+                                        applicationId: data!.id!
+                                    })
+                                }}
+                            >
+                                Upload CV
+                            </Button>
                         </div>
                     </div>
 
@@ -231,6 +328,7 @@ export default function Page() {
                                 <IconTrash color="white" />
                             </Button>
                         </div>
+
                     </div>
                 </div>       
             </div>

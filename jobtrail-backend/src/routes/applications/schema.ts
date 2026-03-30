@@ -1,6 +1,4 @@
 import { t } from "elysia"
-import { ApplicationStatus } from "../../db/schema"
-import { param } from "drizzle-orm"
 
 export const postApplicationSchema = {
     body: t.Object({
@@ -35,5 +33,19 @@ export const putApplicationSchema = {
 export const deleteApplicationsSchema = {
     params: t.Object({
         id: t.Number()
+    })
+}
+
+// Files
+export const getFileSchema = {
+    params: t.Object({
+        key: t.String()
+    })
+}
+
+export const deleteFileSchema = {
+    params: t.Object({
+        id: t.Number(),
+        key: t.String()
     })
 }

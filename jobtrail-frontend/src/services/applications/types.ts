@@ -7,6 +7,7 @@ export interface Application {
     position: string,
     createdAt?: Date
     content: string
+    key?: string
 }
 
 export interface ApplicationData {
