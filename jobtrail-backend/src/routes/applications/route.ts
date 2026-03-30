@@ -12,6 +12,7 @@ import { Application } from "./types"
 import { StatusCodes } from "http-status-codes";
 import { uploadToR2, getFile, deleteFile, fileExists } from "../../utils/r2";
 
+
 const validate = async (
     id: number,
     authorization: string,
@@ -210,7 +211,6 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         }
 
         if(!await fileExists(key)) {
-            console.log("File does not exist in R2")
             return
         }
 
