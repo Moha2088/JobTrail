@@ -15,6 +15,7 @@ export function useApplication(applicationId: number): UseQueryResult<Applicatio
                     Authorization: "Bearer " + session?.accessToken
                 }
             })
+
             return data
         }
     })

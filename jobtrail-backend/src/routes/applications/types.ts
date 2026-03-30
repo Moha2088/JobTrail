@@ -6,4 +6,5 @@ export interface Application {
     applicationStatus: string
     position: string
     content: string | null
+    key?: string
 }

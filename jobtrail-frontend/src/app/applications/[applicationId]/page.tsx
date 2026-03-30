@@ -5,7 +5,7 @@ import { EditApplicationDialog } from "@/components/ui/controls/application/Edit
 import { Button } from "@/components/ui/controls/Button"
 import { ApplicationContext } from "@/contexts/application/ApplicationContext"
 import { useApplication } from "@/services/applications/useApplication"
-import { IconDownload, IconEdit, IconFileCv, IconSparkles, IconTrash, IconZoomExclamationFilled } from "@tabler/icons-react"
+import { IconDownload, IconEdit, IconFileCv, IconSparkles, IconTrash, IconX, IconZoomExclamationFilled } from "@tabler/icons-react"
 import { notFound, useParams } from "next/navigation"
 import { ChangeEvent, useRef, useState } from "react"
 import { QuickTip } from "@/components/ui/view/QuickTip"
@@ -17,15 +17,18 @@ import { ActionButton } from "@/components/ui/controls/ai/ActionButton"
 import { usePutApplication } from "@/services/applications"
 import { useUploadFile } from "@/services/applications/files/useUploadFile"
 import { useSession } from "@/services/session/useSession"
+import { useGetFile } from "@/services/applications/files/useGetFile"
+import { useDeleteFile } from "@/services/applications/files/useDeleteFile"
 
 
 export default function Page() {
     const { applicationId } = useParams()
+    const parsedApplicationId = Number(applicationId)
 
-    const application = useApplication(Number(applicationId))
-    const { data } = application
+    const application = useApplication(parsedApplicationId)
+    const { data, isLoading: isApplicationLoading, isError } = application
 
-    const  updateApplication = usePutApplication(data?.id || 0)
+    const updateApplication = usePutApplication(parsedApplicationId)
 
     const { userId } = useSession()?.data || {}
 
@@ -37,25 +40,44 @@ export default function Page() {
     const fileUploadRef = useRef<HTMLInputElement>(null)
 
     const handleUpload = () => fileUploadRef?.current?.click()
-    const onUpload =(event: ChangeEvent<HTMLInputElement>) => setSelectedFile(event?.target.files ? event.target.files[0] : null)
-    
+    const onUpload =(event: ChangeEvent<HTMLInputElement>) => setSelectedFile(event?.target?.files![0] )
+
+    const { data: fileData } = useGetFile(data?.key as string)
     const uploadFile = useUploadFile()
 
-    if(application.isError) {
-        notFound()
-    }
+    const deleteFile = useDeleteFile(Number(data?.id), data?.key as string)
 
     const {
         completion,
         handleSubmit,
         setInput,
         error,
-        isLoading,
+        isLoading: isCompletionLoading,
         setCompletion,
         stop
     } = useCompletion({
         streamProtocol: "text"
     })
+
+    if (isApplicationLoading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <LoadingDots />
+            </div>
+        )
+    }
+
+    if (isError) {
+        notFound()
+    }
+
+    if (!data) {
+        return (
+            <div className="flex justify-center text-sm text-gray-600">
+                No application data found.
+            </div>
+        )
+    }
 
     // const underLimit =  data?.content && data?.content.length < 100
 
@@ -67,7 +89,7 @@ export default function Page() {
             </QuickTip>
 
 
-            <ApplicationContext value={{ application: data! }}>
+            <ApplicationContext value={{ application: data }}>
                 <EditApplicationDialog 
                     isOpen={isEditApplicationDialogOpen}
                     onOpenChange={() => setIsEditApplicationDialogOpen(true)} 
@@ -80,7 +102,7 @@ export default function Page() {
             </ApplicationContext>
 
             <div className={`flex flex-row justify-center items-center gap-30 ${isEditApplicationDialogOpen} ? "bg-black/70" : ""`}>
-                {data?.content &&
+                {data.content &&
                     <div>
                         <div className="flex flex-col p-3 max-w-150 overflow-y-scroll h-screen gap-5">
                             <label className="mr-auto ml-auto w-fit pl-5 pr-5 p-2 rounded-2xl bg-gray-100 font-bold text-xl">
@@ -90,18 +112,18 @@ export default function Page() {
                             <div className="flex justify-center">
                                 <Button
                                     onClick={() => {
-                                        setInput(createContentPrompt(data?.content))
+                                        setInput(createContentPrompt(data.content))
                                         handleSubmit()
                                     }}
                                     variant="ghost"
-                                    disabled={isLoading}
+                                    disabled={isCompletionLoading}
                                     size="small"
                                     iconStart={<IconSparkles />}
                                     className="w-20"
                                 />
                             </div>
 
-                            {data?.content.length < 100 &&
+                            {data.content.length < 100 &&
                                 <div className="p-2 rounded-full bg-red-400">
                                     <p className="text-white text-xs">
                                         AI optimization requires more content!.
@@ -117,13 +139,13 @@ export default function Page() {
                                 </div>
                             }
 
-                            {isLoading &&
+                            {isCompletionLoading &&
                                 <div className="flex justify-center">
                                     <LoadingDots />
                                 </div>
                             }
 
-                            {completion && isLoading &&
+                            {completion && isCompletionLoading &&
                                 <div className="flex justify-center">
                                     <ActionButton 
                                         variant="stop"
@@ -132,7 +154,7 @@ export default function Page() {
                                 </div>
                             }
 
-                            {completion && !isLoading &&
+                            {completion && !isCompletionLoading &&
                                 <>
                                     <QuickTip>
                                         To keep changes, click the <ActionButton className="inline-block" variant="keep"/> button.<br />
@@ -142,7 +164,7 @@ export default function Page() {
                                     <div className="flex justify-center flex-row gap-2">
                                         <div>
                                             <ActionButton
-                                                disabled={isLoading}
+                                                disabled={isCompletionLoading}
                                                 variant="discard"
                                                 onClick={() => setCompletion("")}
                                             />
@@ -151,7 +173,7 @@ export default function Page() {
                                         <div>
                                             <ActionButton
                                                 type="submit"
-                                                disabled={isLoading} 
+                                                disabled={isCompletionLoading} 
                                                 variant="keep"
                                                 onClick={() => updateApplication.mutate}
                                             />
@@ -176,7 +198,7 @@ export default function Page() {
                     </div>
                 }
 
-                {!data?.content &&
+                {!data.content &&
                     <div className="flex flex-row gap-5">
                         <div className="flex flex-col justify-center items-center">
                             <div className="flex justify-center items-center mb-5">
@@ -197,7 +219,7 @@ export default function Page() {
                 <div>
                     <div className="mb-10 mt-10">
                         <p className="flex justify-center text-4xl font-bold">
-                            {data?.companyName}
+                            {data.companyName}
                         </p>
                     </div>
 
@@ -205,22 +227,22 @@ export default function Page() {
 
                         <div className="flex justify-center p-3">
                             <label className="font-bold pr-1">Email:</label>
-                            <p>{data?.email}</p>
+                            <p>{data.email}</p>
                         </div>
                         
                         <div className="flex justify-center p-3">
                             <label className="font-bold pr-1">Application Status:</label>
-                            <p>{data?.applicationStatus}</p>
+                            <p>{data.applicationStatus}</p>
                         </div>
                         
                         <div className="flex justify-center p-3">
                             <label className="font-bold pr-1">Position:</label>
-                            <p>{data?.position}</p>
+                            <p>{data.position}</p>
                         </div>
 
                         <div className="flex justify-center mb-5 p-3">
                             <label className="font-bold pr-1">Created At:</label>
-                            <p>{data?.createdAt ? new Date(data.createdAt).toLocaleDateString() : "N/A"}</p>
+                            <p>{data.createdAt ? new Date(data.createdAt).toLocaleDateString() : "N/A"}</p>
                         </div>
 
                         <div className="flex justify-center">
@@ -234,7 +256,7 @@ export default function Page() {
                             </Button>
                         </div>
 
-                        <div>
+                        <div className="mb-5">
                             <input
                                 ref={fileUploadRef}
                                 type="file"
@@ -243,29 +265,49 @@ export default function Page() {
                             />
                         </div>
 
-                        <div className="flex justify-center">
-                            <Button
-                                disabled={!selectedFile}
-                                variant="ghost"
-                                size="small"
-                                className="w-fit"
-                            >
-                                {selectedFile &&
-                                    <a href={URL.createObjectURL(selectedFile!)} download={selectedFile?.name}>
-                                        <IconDownload  />
-                                    </a>
-                                }
-                            </Button>
-                        </div>
+                        {fileData && !fileData.includes("null") &&
+                            <div className="mb-5">
+                                <div className="flex justify-center mb-2">
+                                    <div className="flex justify-center">
+                                        <Button
+                                            variant="ghost"
+                                            size="small"
+                                            className="w-fit"
+                                        >
+                                            <a href={fileData} download={selectedFile?.name}>
+                                                <IconDownload />
+                                            </a>
+                                        </Button>
+                                    </div>
+
+                                    <div>
+                                        <Button
+                                            variant="ghost"
+                                            size="small"
+                                            className="w-fit"
+                                        >
+                                            <IconX color="red" onClick={() => deleteFile.mutate()} />
+                                        </Button>
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-center font-bold">
+                                    <p>{data.key}</p>
+                                </div>
+                            </div>
+                        }
 
                         <div className="flex justify-center">
                             <Button
-                                disabled={!selectedFile}
+                                disabled={!selectedFile || !userId}
                                 onClick={() => {
+                                    if (!selectedFile || !userId) {
+                                        return
+                                    }
+
                                     uploadFile.mutate({
-                                        file: selectedFile!,
-                                        userId: userId!,
-                                        applicationId: data!.id
+                                        file: selectedFile,
+                                        applicationId: data.id
                                     })
                                 }}
                             >

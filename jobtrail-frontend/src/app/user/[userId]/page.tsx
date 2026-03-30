@@ -6,15 +6,23 @@ import { useDeleteUser } from "@/services/users/useDeleteUser"
 import { useUser } from "@/services/users/useUser"
 import { IconClockHour3, IconEdit, IconMail, IconTrash, IconUser } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
+import { LoadingDots } from "@/components/ui/view/motion/LoadingDots"
 
 
 export default function UserPage(){
     const { data } = useSession()
-    const { data: userData } = useUser(Number(data?.userId))
+    const { data: userData, isLoading } = useUser(Number(data?.userId))
     const deleteUser = useDeleteUser(Number(data?.userId))
 
     const router = useRouter()
 
+    if(isLoading) {
+        return(
+            <div className="flex justify-center items-center h-screen">
+                <LoadingDots />
+            </div>
+        )
+    }
 
     return (
         <div>
