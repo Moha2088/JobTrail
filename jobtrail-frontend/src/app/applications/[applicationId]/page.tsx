@@ -71,14 +71,6 @@ export default function Page() {
         notFound()
     }
 
-    if (!data) {
-        return (
-            <div className="flex justify-center text-sm text-gray-600">
-                No application data found.
-            </div>
-        )
-    }
-
     // const underLimit =  data?.content && data?.content.length < 100
 
     return (
@@ -89,7 +81,7 @@ export default function Page() {
             </QuickTip>
 
 
-            <ApplicationContext value={{ application: data }}>
+            <ApplicationContext value={{ application: data! }}>
                 <EditApplicationDialog 
                     isOpen={isEditApplicationDialogOpen}
                     onOpenChange={() => setIsEditApplicationDialogOpen(true)} 
@@ -102,7 +94,7 @@ export default function Page() {
             </ApplicationContext>
 
             <div className={`flex flex-row justify-center items-center gap-30 ${isEditApplicationDialogOpen} ? "bg-black/70" : ""`}>
-                {data.content &&
+                {data?.content &&
                     <div>
                         <div className="flex flex-col p-3 max-w-150 overflow-y-scroll h-screen gap-5">
                             <label className="mr-auto ml-auto w-fit pl-5 pr-5 p-2 rounded-2xl bg-gray-100 font-bold text-xl">
@@ -112,7 +104,7 @@ export default function Page() {
                             <div className="flex justify-center">
                                 <Button
                                     onClick={() => {
-                                        setInput(createContentPrompt(data.content))
+                                        setInput(createContentPrompt(data?.content))
                                         handleSubmit()
                                     }}
                                     variant="ghost"
@@ -198,7 +190,7 @@ export default function Page() {
                     </div>
                 }
 
-                {!data.content &&
+                {!data?.content &&
                     <div className="flex flex-row gap-5">
                         <div className="flex flex-col justify-center items-center">
                             <div className="flex justify-center items-center mb-5">
@@ -219,7 +211,7 @@ export default function Page() {
                 <div>
                     <div className="mb-10 mt-10">
                         <p className="flex justify-center text-4xl font-bold">
-                            {data.companyName}
+                            {data?.companyName}
                         </p>
                     </div>
 
@@ -227,22 +219,22 @@ export default function Page() {
 
                         <div className="flex justify-center p-3">
                             <label className="font-bold pr-1">Email:</label>
-                            <p>{data.email}</p>
+                            <p>{data?.email}</p>
                         </div>
                         
                         <div className="flex justify-center p-3">
                             <label className="font-bold pr-1">Application Status:</label>
-                            <p>{data.applicationStatus}</p>
+                            <p>{data?.applicationStatus}</p>
                         </div>
                         
                         <div className="flex justify-center p-3">
                             <label className="font-bold pr-1">Position:</label>
-                            <p>{data.position}</p>
+                            <p>{data?.position}</p>
                         </div>
 
                         <div className="flex justify-center mb-5 p-3">
                             <label className="font-bold pr-1">Created At:</label>
-                            <p>{data.createdAt ? new Date(data.createdAt).toLocaleDateString() : "N/A"}</p>
+                            <p>{data?.createdAt ? new Date(data?.createdAt).toLocaleDateString() : "N/A"}</p>
                         </div>
 
                         <div className="flex justify-center">
@@ -292,7 +284,7 @@ export default function Page() {
                                 </div>
 
                                 <div className="flex justify-center font-bold">
-                                    <p>{data.key}</p>
+                                    <p>{data?.key}</p>
                                 </div>
                             </div>
                         }
@@ -307,7 +299,7 @@ export default function Page() {
 
                                     uploadFile.mutate({
                                         file: selectedFile,
-                                        applicationId: data.id
+                                        applicationId: data!.id!
                                     })
                                 }}
                             >
