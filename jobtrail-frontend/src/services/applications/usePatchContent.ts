@@ -7,7 +7,7 @@ interface PatchContentParams {
     content: string
 }
 
-export function usePatchContent(applicationId: number): UseMutationResult<string | undefined, Error, PatchContentParams> {
+export function usePatchContent(applicationId: number): UseMutationResult<string, Error, PatchContentParams> {
     return useMutation({
         meta: {
             errorMessage: "Failed to update application content",
@@ -22,9 +22,7 @@ export function usePatchContent(applicationId: number): UseMutationResult<string
                 }
             })
 
-            if(typeof data == "string") {
-                return data
-            }
+            return data
         }
     })
 }
