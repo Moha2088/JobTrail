@@ -7,7 +7,7 @@ import { ApplicationContext } from "@/contexts/application/ApplicationContext"
 import { useApplication } from "@/services/applications/useApplication"
 import { IconDownload, IconEdit, IconFileCv, IconSparkles, IconTrash, IconX, IconZoomExclamationFilled } from "@tabler/icons-react"
 import { notFound, useParams } from "next/navigation"
-import { ChangeEvent, useRef, useState } from "react"
+import { ChangeEvent, useEffect, useRef, useState } from "react"
 import { QuickTip } from "@/components/ui/view/QuickTip"
 import { useCompletion } from "@ai-sdk/react"
 import { LoadingDots } from "@/components/ui/view/motion/LoadingDots"
@@ -19,6 +19,7 @@ import { useUploadFile } from "@/services/applications/files/useUploadFile"
 import { useSession } from "@/services/session/useSession"
 import { useGetFile } from "@/services/applications/files/useGetFile"
 import { useDeleteFile } from "@/services/applications/files/useDeleteFile"
+import { usePatchContent } from "@/services/applications/usePatchContent"
 
 
 export default function Page() {
@@ -29,6 +30,8 @@ export default function Page() {
     const { data, isLoading: isApplicationLoading, isError } = application
 
     const updateApplication = usePutApplication(parsedApplicationId)
+
+    const patchContent = usePatchContent(parsedApplicationId)
 
     const { userId } = useSession()?.data || {}
 
@@ -167,7 +170,13 @@ export default function Page() {
                                                 type="submit"
                                                 disabled={isCompletionLoading} 
                                                 variant="keep"
-                                                onClick={() => updateApplication.mutate}
+                                                onClick={() => {
+                                                    patchContent.mutate({
+                                                        content: completion
+                                                    })
+
+                                                    setCompletion("")
+                                                }}
                                             />
                                         </div>
                                     </div>
