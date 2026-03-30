@@ -1,7 +1,7 @@
 import Elysia from "elysia";
 import {
     postApplicationSchema, getApplicationSchema, putApplicationSchema, deleteApplicationsSchema,
-    getFileSchema
+    getFileSchema, patchApplicationContentSchema
 } from "./schema";
 import { db } from "../../db/db";
 import { applicationsTable } from "../../db/schema";
@@ -153,11 +153,27 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         if(unauthorized) {
             return unauthorized
         }
-        
+
         await db.delete(applicationsTable).where(eq(applicationsTable.id, id))
 
         set.status = StatusCodes.NO_CONTENT
     }, deleteApplicationsSchema)
+
+
+    .patch("/:id/content", async({ params, body, set, headers: { authorization } }) => {
+        const { id } = params
+        const { content } = body
+        const unauthorized = await validate(Number(params.id), authorization!, set)
+
+        if (unauthorized) {
+            return unauthorized
+        }
+
+        const result = await db.update(applicationsTable)
+            .set({ content: body.content})
+            .where(eq(applicationsTable.id, Number(params.id)))
+
+    }, patchApplicationContentSchema)
 
     // Files
 

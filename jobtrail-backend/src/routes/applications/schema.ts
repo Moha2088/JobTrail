@@ -30,6 +30,17 @@ export const putApplicationSchema = {
     })
 }
 
+export const patchApplicationContentSchema = {
+    params: t.Object({
+        id: t.Number()
+    }),
+
+    body: t.Object({
+        content: t.String()
+    })
+}
+
+
 export const deleteApplicationsSchema = {
     params: t.Object({
         id: t.Number()
