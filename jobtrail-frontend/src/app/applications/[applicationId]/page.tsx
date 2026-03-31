@@ -5,9 +5,9 @@ import { EditApplicationDialog } from "@/components/ui/controls/application/Edit
 import { Button } from "@/components/ui/controls/Button"
 import { ApplicationContext } from "@/contexts/application/ApplicationContext"
 import { useApplication } from "@/services/applications/useApplication"
-import { IconDownload, IconEdit, IconFileCv, IconSparkles, IconTrash, IconX, IconZoomExclamationFilled } from "@tabler/icons-react"
+import { IconBrandOpenai, IconDownload, IconEdit, IconFileCv, IconSparkles, IconTrash, IconX, IconZoomExclamationFilled } from "@tabler/icons-react"
 import { notFound, useParams } from "next/navigation"
-import { ChangeEvent, useEffect, useRef, useState } from "react"
+import { ChangeEvent, useRef, useState } from "react"
 import { QuickTip } from "@/components/ui/view/QuickTip"
 import { useCompletion } from "@ai-sdk/react"
 import { LoadingDots } from "@/components/ui/view/motion/LoadingDots"
@@ -21,6 +21,8 @@ import { useGetFile } from "@/services/applications/files/useGetFile"
 import { useDeleteFile } from "@/services/applications/files/useDeleteFile"
 import { usePatchContent } from "@/services/applications/usePatchContent"
 
+
+export type Provider = "anthropic" | "openai"
 
 export default function Page() {
     const { applicationId } = useParams()
@@ -39,6 +41,8 @@ export default function Page() {
     const [isDeleteApplicationDialogOpen, setIsDeleteApplicationDialogOpen] = useState<boolean>(false)
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
+
+    const [currentProvider, setCurrentProvider] = useState<Provider>("openai")
 
     const fileUploadRef = useRef<HTMLInputElement>(null)
 
@@ -59,7 +63,10 @@ export default function Page() {
         setCompletion,
         stop
     } = useCompletion({
-        streamProtocol: "text"
+        streamProtocol: "text",
+        body: {
+            currentProvider
+        }
     })
 
     if (isApplicationLoading) {
@@ -118,6 +125,38 @@ export default function Page() {
                                 />
                             </div>
 
+                            <div className="flex justify-center gap-5 flex-col items-center">
+                                <div>
+                                    <p>Current Provider: 
+                                        <p className="font-bold inline-block ml-1">
+                                            {currentProvider}
+                                        </p>
+                                    </p>
+                                </div>
+                                
+                                <div className="flex gap-3">
+                                    <div>
+                                        <Button
+                                            size="small"
+                                            className="w-fit"
+                                            onClick={() => setCurrentProvider("anthropic")}
+                                        >
+                                            Anthropic
+                                        </Button>
+                                    </div>
+
+                                    <div>
+                                        <Button
+                                            size="small"
+                                            className="w-fit"
+                                            onClick={() => setCurrentProvider("openai")}
+                                        >
+                                            <IconBrandOpenai size={15}/>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+
                             {data.content.length < 100 &&
                                 <div className="p-2 rounded-full bg-red-400">
                                     <p className="text-white text-xs">
@@ -168,13 +207,13 @@ export default function Page() {
                                         <div>
                                             <ActionButton
                                                 type="submit"
-                                                disabled={isCompletionLoading} 
+                                                disabled={isCompletionLoading}
                                                 variant="keep"
                                                 onClick={() => {
                                                     patchContent.mutate({
                                                         content: completion
                                                     })
-
+                                                    
                                                     setCompletion("")
                                                 }}
                                             />

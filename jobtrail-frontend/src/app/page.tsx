@@ -48,7 +48,7 @@ export default function Home() {
                             Sign Up
                         </MotionButton>
                     </div>
-                    
+
                 </div>
 
                 <div className="p-10" />
