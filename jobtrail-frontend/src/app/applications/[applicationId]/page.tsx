@@ -15,11 +15,12 @@ import { StreamedTextOutput } from "@/components/ui/view/ai/StreamedTextOutput"
 import { createContentPrompt } from "@/providers/openAIProvider"
 import { ActionButton } from "@/components/ui/controls/ai/ActionButton"
 import { usePutApplication } from "@/services/applications"
-import { useUploadFile } from "@/services/applications/files/useUploadFile"
+import { useUploadFile, useGetFile, useDeleteFile } from "@/services/applications/files"
 import { useSession } from "@/services/session/useSession"
-import { useGetFile } from "@/services/applications/files/useGetFile"
-import { useDeleteFile } from "@/services/applications/files/useDeleteFile"
 import { usePatchContent } from "@/services/applications/usePatchContent"
+import { Toggle } from "@/components/ui/controls/ai/Toggle"
+
+import { BsAnthropic } from "react-icons/bs"
 
 
 export type Provider = "anthropic" | "openai"
@@ -125,36 +126,25 @@ export default function Page() {
                                 />
                             </div>
 
-                            <div className="flex justify-center gap-5 flex-col items-center">
-                                <div>
-                                    <p>Current Provider: 
-                                        <p className="font-bold inline-block ml-1">
-                                            {currentProvider}
-                                        </p>
-                                    </p>
-                                </div>
-                                
+                            <div className="flex justify-center gap-5 flex-col items-center">                                
                                 <div className="flex gap-3">
-                                    <div>
-                                        <Button
-                                            size="small"
-                                            className="w-fit"
-                                            onClick={() => setCurrentProvider("anthropic")}
-                                        >
-                                            Anthropic
-                                        </Button>
-                                    </div>
+                                    <Toggle 
+                                        setProvider={setCurrentProvider} 
+                                        text="anthropic"
+                                        current={currentProvider}
+                                    >
+                                        <BsAnthropic size={20} />
+                                    </Toggle>
 
-                                    <div>
-                                        <Button
-                                            size="small"
-                                            className="w-fit"
-                                            onClick={() => setCurrentProvider("openai")}
-                                        >
-                                            <IconBrandOpenai size={15}/>
-                                        </Button>
-                                    </div>
+                                    <Toggle 
+                                        setProvider={setCurrentProvider} 
+                                        text="openai"
+                                        current={currentProvider} 
+                                    >
+                                        <IconBrandOpenai size={20} />
+                                    </Toggle>
                                 </div>
+
                             </div>
 
                             {data.content.length < 100 &&
