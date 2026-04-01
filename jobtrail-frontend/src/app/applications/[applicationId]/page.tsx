@@ -7,7 +7,7 @@ import { ApplicationContext } from "@/contexts/application/ApplicationContext"
 import { useApplication } from "@/services/applications/useApplication"
 import { IconBrandOpenai, IconDownload, IconEdit, IconFileCv, IconSparkles, IconTrash, IconX, IconZoomExclamationFilled } from "@tabler/icons-react"
 import { notFound, useParams } from "next/navigation"
-import { ChangeEvent, useRef, useState } from "react"
+import { ChangeEvent, useEffect, useRef, useState } from "react"
 import { QuickTip } from "@/components/ui/view/QuickTip"
 import { useCompletion } from "@ai-sdk/react"
 import { LoadingDots } from "@/components/ui/view/motion/LoadingDots"
@@ -21,7 +21,7 @@ import { usePatchContent } from "@/services/applications/usePatchContent"
 import { Toggle } from "@/components/ui/controls/ai/Toggle"
 
 import { BsAnthropic } from "react-icons/bs"
-
+import { useLocalStorage } from "@/hooks/useLocalStorage"
 
 export type Provider = "anthropic" | "openai"
 
@@ -54,6 +54,17 @@ export default function Page() {
     const uploadFile = useUploadFile()
 
     const deleteFile = useDeleteFile(Number(data?.id), data?.key as string)
+
+    const { getItem } = useLocalStorage<Provider>("defaultProvider")
+
+    useEffect(() => {
+        const storedDefaultProvider = getItem()
+
+        if(storedDefaultProvider) {
+            setCurrentProvider(storedDefaultProvider)
+        }
+    }, [])
+
 
     const {
         completion,
@@ -371,8 +382,6 @@ export default function Page() {
                 </div>       
             </div>
         </>
-
-        
 
     )
 }
