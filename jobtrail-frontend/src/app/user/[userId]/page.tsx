@@ -4,9 +4,14 @@ import { Button } from "@/components/ui/controls/Button"
 import { useSession } from "@/services/session/useSession"
 import { useDeleteUser } from "@/services/users/useDeleteUser"
 import { useUser } from "@/services/users/useUser"
-import { IconClockHour3, IconEdit, IconMail, IconTrash, IconUser } from "@tabler/icons-react"
+import { IconBrandOpenai, IconClockHour3, IconEdit, IconMail, IconTrash, IconUser } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
 import { LoadingDots } from "@/components/ui/view/motion/LoadingDots"
+import { Provider } from "@/app/applications/[applicationId]/page"
+import { useEffect, useState } from "react"
+import { Toggle } from "@/components/ui/controls/ai/Toggle"
+import { BsAnthropic } from "react-icons/bs"
+import { useLocalStorage } from "@/hooks/useLocalStorage"
 
 
 export default function UserPage(){
@@ -16,6 +21,21 @@ export default function UserPage(){
 
     const router = useRouter()
 
+    const [currentProvider, setCurrentProvider] = useState<Provider>()
+
+    const { setItem, getItem } = useLocalStorage<Provider>("defaultProvider")
+
+    useEffect(() => {
+        const storedDefaultProvider = getItem()
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setCurrentProvider(storedDefaultProvider)
+    }, [])
+
+    const setProvider = (provider: Provider) => {
+        setItem(provider)
+        setCurrentProvider(provider)
+    }
+
     if(isLoading) {
         return(
             <div className="flex justify-center items-center h-screen">
@@ -23,6 +43,7 @@ export default function UserPage(){
             </div>
         )
     }
+
 
     return (
         <div>
@@ -34,6 +55,30 @@ export default function UserPage(){
 
                 <div className="font-bold text-xl mt-25">
                     {data?.name}
+                </div>
+
+                <div>
+                    <p>
+                        Default Provider
+                    </p>
+                </div>
+
+                <div className="flex gap-3 mb-5">
+                    <Toggle
+                        setProvider={setProvider}
+                        current={currentProvider!}
+                        text="anthropic"
+                    >
+                        <BsAnthropic size={20} />
+                    </Toggle>
+
+                    <Toggle
+                        setProvider={setProvider}
+                        current={currentProvider!}
+                        text="openai"
+                    >
+                        <IconBrandOpenai size={20} />
+                    </Toggle>
                 </div>
 
                 <div className="flex flex-col max-w-200 gap-5 mb-5">

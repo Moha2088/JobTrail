@@ -5,7 +5,7 @@ import { EditApplicationDialog } from "@/components/ui/controls/application/Edit
 import { Button } from "@/components/ui/controls/Button"
 import { ApplicationContext } from "@/contexts/application/ApplicationContext"
 import { useApplication } from "@/services/applications/useApplication"
-import { IconDownload, IconEdit, IconFileCv, IconSparkles, IconTrash, IconX, IconZoomExclamationFilled } from "@tabler/icons-react"
+import { IconBrandOpenai, IconDownload, IconEdit, IconFileCv, IconSparkles, IconTrash, IconX, IconZoomExclamationFilled } from "@tabler/icons-react"
 import { notFound, useParams } from "next/navigation"
 import { ChangeEvent, useEffect, useRef, useState } from "react"
 import { QuickTip } from "@/components/ui/view/QuickTip"
@@ -15,12 +15,15 @@ import { StreamedTextOutput } from "@/components/ui/view/ai/StreamedTextOutput"
 import { createContentPrompt } from "@/providers/openAIProvider"
 import { ActionButton } from "@/components/ui/controls/ai/ActionButton"
 import { usePutApplication } from "@/services/applications"
-import { useUploadFile } from "@/services/applications/files/useUploadFile"
+import { useUploadFile, useGetFile, useDeleteFile } from "@/services/applications/files"
 import { useSession } from "@/services/session/useSession"
-import { useGetFile } from "@/services/applications/files/useGetFile"
-import { useDeleteFile } from "@/services/applications/files/useDeleteFile"
 import { usePatchContent } from "@/services/applications/usePatchContent"
+import { Toggle } from "@/components/ui/controls/ai/Toggle"
 
+import { BsAnthropic } from "react-icons/bs"
+import { useLocalStorage } from "@/hooks/useLocalStorage"
+
+export type Provider = "anthropic" | "openai"
 
 export default function Page() {
     const { applicationId } = useParams()
@@ -40,6 +43,8 @@ export default function Page() {
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
 
+    const [currentProvider, setCurrentProvider] = useState<Provider>("openai")
+
     const fileUploadRef = useRef<HTMLInputElement>(null)
 
     const handleUpload = () => fileUploadRef?.current?.click()
@@ -50,6 +55,18 @@ export default function Page() {
 
     const deleteFile = useDeleteFile(Number(data?.id), data?.key as string)
 
+    const { getItem } = useLocalStorage<Provider>("defaultProvider")
+
+    useEffect(() => {
+        const storedDefaultProvider = getItem()
+
+        if(storedDefaultProvider) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setCurrentProvider(storedDefaultProvider)
+        }
+    }, [])
+
+
     const {
         completion,
         handleSubmit,
@@ -59,7 +76,10 @@ export default function Page() {
         setCompletion,
         stop
     } = useCompletion({
-        streamProtocol: "text"
+        streamProtocol: "text",
+        body: {
+            currentProvider
+        }
     })
 
     if (isApplicationLoading) {
@@ -118,6 +138,27 @@ export default function Page() {
                                 />
                             </div>
 
+                            <div className="flex justify-center gap-5 flex-col items-center">                                
+                                <div className="flex gap-3">
+                                    <Toggle 
+                                        setProvider={setCurrentProvider} 
+                                        text="anthropic"
+                                        current={currentProvider}
+                                    >
+                                        <BsAnthropic size={20} />
+                                    </Toggle>
+
+                                    <Toggle 
+                                        setProvider={setCurrentProvider} 
+                                        text="openai"
+                                        current={currentProvider} 
+                                    >
+                                        <IconBrandOpenai size={20} />
+                                    </Toggle>
+                                </div>
+
+                            </div>
+
                             {data.content.length < 100 &&
                                 <div className="p-2 rounded-full bg-red-400">
                                     <p className="text-white text-xs">
@@ -168,13 +209,13 @@ export default function Page() {
                                         <div>
                                             <ActionButton
                                                 type="submit"
-                                                disabled={isCompletionLoading} 
+                                                disabled={isCompletionLoading}
                                                 variant="keep"
                                                 onClick={() => {
                                                     patchContent.mutate({
                                                         content: completion
                                                     })
-
+                                                    
                                                     setCompletion("")
                                                 }}
                                             />
@@ -342,8 +383,6 @@ export default function Page() {
                 </div>       
             </div>
         </>
-
-        
 
     )
 }
