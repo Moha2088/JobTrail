@@ -27,6 +27,7 @@ export default function UserPage(){
 
     useEffect(() => {
         const storedDefaultProvider = getItem()
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setCurrentProvider(storedDefaultProvider)
     }, [])
 

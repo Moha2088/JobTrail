@@ -61,6 +61,7 @@ export default function Page() {
         const storedDefaultProvider = getItem()
 
         if(storedDefaultProvider) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setCurrentProvider(storedDefaultProvider)
         }
     }, [])
