@@ -4,21 +4,23 @@ import { Flex, TextField } from "@radix-ui/themes/dist/cjs/components/index.js"
 import { usePutApplication } from "@/services/applications"
 import { useForm } from "react-hook-form"
 import { ApplicationStatus, StatusDropdownMenu } from "@/components/ui/controls/application/StatusDropdownMenu"
+import { OverlayWrapper } from "../OverlayWrapper"
 import { useEffect, useState } from "react"
 import { useApplicationContext } from "@/contexts/application/ApplicationContext"
+import { Input } from "@/components/ui/controls/Input"
+import { DialogProps } from "@radix-ui/react-dialog"
 
-interface EditApplicationDialogProps {
-    isOpen?: boolean
-    onOpenChange?: (open: boolean) => void
+interface EditApplicationDialogProps extends DialogProps{
+
 }
 
 
 export function EditApplicationDialog(props: EditApplicationDialogProps) {
-    const { isOpen, onOpenChange } = props
+    const { open, onOpenChange } = props
 
     return (
-        <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
-            < Content />
+        <Dialog.Root open={open} onOpenChange={onOpenChange}>
+            < Content onOpenChange={onOpenChange} />
         </Dialog.Root>
     )
 }
@@ -80,7 +82,7 @@ function Content(props: ContentProps) {
         }, {
             onSuccess: () => {
                 console.log("Application updated successfully")
-                onOpenChange?.(true)
+                onOpenChange?.(false)
             },
 
             onError: () => {
@@ -94,135 +96,133 @@ function Content(props: ContentProps) {
     }
 
     return (
-        <>
+        <OverlayWrapper>
             <form
                 onSubmit={handleSubmit(onSubmit)}>
-                <Dialog.Content className="mr-auto ml-auto w-200 bg-white p-5 rounded-xl z-10 absolute right-0 left-0">
-                    <Dialog.Title className="mb-3 text-2xl font-bold">Edit Application</Dialog.Title>
-                    <div className="p-2" />
-                    <Dialog.Description
-                        className="mb-5">
-                        Enter the details of the application you want to edit
-                    </Dialog.Description>
+                <Dialog.Title className="mb-3 text-2xl font-bold">Edit Application</Dialog.Title>
+                <div className="p-2" />
+                <Dialog.Description
+                    className="mb-5">
+                    Enter the details of the application you want to edit
+                </Dialog.Description>
 
-                    <Flex direction="column" gap="3">
-                        <label>
-                            <p>
-                                Name
+                <div className="flex flex-col gap-3">
+                    <label className="mb-3">
+                        <p>
+                            Name
+                        </p>
+                        <Input
+                            className="w-100"
+                            defaultValue=""
+                            placeholder="Enter the name of the company"
+                            {...register("companyName", {
+                                required: "Company name is required"
+                            })}
+                        />
+                        {errors.companyName && <p className="text-red-400">{errors.companyName.message}</p>}
+
+                    </label>
+                    <label className="mb-3">
+                        <p>
+                            Email
+                        </p>
+                        <Input
+                            className="w-100"
+                            placeholder="Enter the email of the company"
+                            {...register("email", {
+                                required: "Company email is required"
+                            })}
+                        />
+                        {errors.email && <p className="text-red-400">{errors.email.message}</p>}
+                    </label>
+                    <label className="mb-3">
+                        <p className="flex gap-1">
+                            Application Status:
+                            <p className="inline-block font-bold">
+                                {applicationStatus ? applicationStatus : "Select status"}
                             </p>
-                            <TextField.Root
-                                className="w-100"
-                                defaultValue=""
-                                placeholder="Enter the name of the company"
-                                {...register("companyName", {
-                                    required: "Company name is required"
-                                })}
-                            />
-                            {errors.companyName && <p className="text-red-400">{errors.companyName.message}</p>}
+                        </p>
 
-                        </label>
-                        <label>
-                            <p>
-                                Email
-                            </p>
-                            <TextField.Root
-                                className="w-100"
-                                placeholder="Enter the email of the company"
-                                {...register("email", {
-                                    required: "Company email is required"
-                                })}
-                            />
-                            {errors.email && <p className="text-red-400">{errors.email.message}</p>}
-                        </label>
-                        <label>
-                            <p className="flex gap-1">
-                                Application Status:
-                                <p className="inline-block font-bold">
-                                    {applicationStatus ? applicationStatus : "Select status"}
-                                </p>
-                            </p>
+                        <div className="p-3" />
 
-                            <div className="p-3" />
+                        <StatusDropdownMenu
+                            selectStatus={selectStatus}
+                            isOpen={isDropDownOpen}
+                            onOpenChange={setIsDropdownOpen}
+                            trigger={
+                                <Button
+                                    className="w-fit"
+                                    variant="light"
+                                    size="small"
+                                    type="button"
+                                >
+                                    Add status
+                                </Button>
+                            }
+                        />
+                    </label>
+                    <label className="mb-3">
+                        <p>
+                            Position
+                        </p>
+                        <Input
+                            className="w-100"
+                            defaultValue=""
+                            placeholder="Enter the position you are applying for"
+                            {...register("position", {
+                                required: "Position is required!"
+                            })}
+                        />
+                        {errors.position && <p className="text-red-400">{errors.position.message}</p>}
+                    </label>
 
-                            <StatusDropdownMenu
-                                selectStatus={selectStatus}
-                                isOpen={isDropDownOpen}
-                                onOpenChange={setIsDropdownOpen}
-                                trigger={
-                                    <Button
-                                        className="w-fit"
-                                        variant="light"
-                                        size="small"
-                                        type="button"
-                                    >
-                                        Add status
-                                    </Button>
-                                }
-                            />
-                        </label>
-                        <label>
-                            <p>
-                                Position
-                            </p>
-                            <TextField.Root
-                                className="w-100"
-                                defaultValue=""
-                                placeholder="Enter the position you are applying for"
-                                {...register("position", {
-                                    required: "Position is required!"
-                                })}
-                            />
-                            {errors.position && <p className="text-red-400">{errors.position.message}</p>}
-                        </label>
+                    <label className="mb-3">
+                        <p>
+                            Content
+                        </p>
+                        <textarea className="w-100 h-50 border-2"
+                            {...register("content", {
+                                required: "Content is required!"
+                            })} 
+                        />
+                        {errors.content && <p className="text-red-400">{errors.content.message}</p>}
+                    </label>
+                </div>
 
-                        <label>
-                            <p>
-                                Content
-                            </p>
-                            <textarea className="w-100 h-50 border-2"
-                                {...register("content", {
-                                    required: "Content is required!"
-                                })} 
-                            />
-                            {errors.content && <p className="text-red-400">{errors.content.message}</p>}
-                        </label>
-                    </Flex>
+                <div className="p-3" />
 
-                    <div className="p-3" />
+                <div className="flex justify-end gap-10" >
+                    <Dialog.Close asChild>
+                        <Button
+                            type="button"
+                            variant="light"
+                            size="small">
+                            Cancel
+                        </Button>
+                    </Dialog.Close>
+                    <Dialog.Close asChild>
+                        <Button
+                            disabled={!applicationStatus || !getValues("companyName") || !getValues("email") || !getValues("position") || !getValues("content")}
+                            onClick={() => {
+                                editApplication.mutate({
+                                    companyName: getValues("companyName"),
+                                    email: getValues("email"),
+                                    applicationStatus: applicationStatus,
+                                    position: getValues("position"),
+                                    content: getValues("content")
+                                }, {
+                                    onSuccess: () => {
 
-                    <div className="flex justify-end gap-10" >
-                        <Dialog.Close>
-                            <Button
-                                type="button"
-                                variant="light"
-                                size="small">
-                                Cancel
-                            </Button>
-                        </Dialog.Close>
-                        <Dialog.Close>
-                            <Button
-                                disabled={!applicationStatus || !getValues("companyName") || !getValues("email") || !getValues("position") || !getValues("content")}
-                                onClick={() => {
-                                    editApplication.mutate({
-                                        companyName: getValues("companyName"),
-                                        email: getValues("email"),
-                                        applicationStatus: applicationStatus,
-                                        position: getValues("position"),
-                                        content: getValues("content")
-                                    }, {
-                                        onSuccess: () => {
-
-                                        }
-                                    })
-                                }}
-                                size="small"
-                            >
-                                Save
-                            </Button>
-                        </Dialog.Close>
-                    </div>
-                </Dialog.Content>
+                                    }
+                                })
+                            }}
+                            size="small"
+                        >
+                            Save
+                        </Button>
+                    </Dialog.Close>
+                </div>
             </form>
-        </>
+        </OverlayWrapper>
     )
 }

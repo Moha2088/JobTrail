@@ -9,7 +9,7 @@ export function useDeleteFile(applicationId: number, key: string) {
             errorMessage: "Error deleting file!",
             successMessage: "File deleted successfully"
         },
-        mutationKey: ["files"],
+        mutationKey: ["files", key],
         mutationFn: async() => {
             const session = await getSession()
             await axios.delete(`http://localhost:3003/api/applications/${applicationId}/resume/${key}`, {

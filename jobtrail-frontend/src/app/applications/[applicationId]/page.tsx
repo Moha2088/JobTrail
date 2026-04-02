@@ -22,6 +22,7 @@ import { Toggle } from "@/components/ui/controls/ai/Toggle"
 
 import { BsAnthropic } from "react-icons/bs"
 import { useLocalStorage } from "@/hooks/useLocalStorage"
+import { DeleteFileDialog } from "@/components/ui/controls/application/files/DeleteFileDialog"
 
 export type Provider = "anthropic" | "openai"
 
@@ -40,6 +41,7 @@ export default function Page() {
 
     const [isEditApplicationDialogOpen, setIsEditApplicationDialogOpen] = useState<boolean>(false)
     const [isDeleteApplicationDialogOpen, setIsDeleteApplicationDialogOpen] = useState<boolean>(false)
+    const [isDeleteFileDialogOpen, setIsDeleteFileDialogOpen] = useState<boolean>(false)
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
 
@@ -53,7 +55,6 @@ export default function Page() {
     const { data: fileData } = useGetFile(data?.key as string)
     const uploadFile = useUploadFile()
 
-    const deleteFile = useDeleteFile(Number(data?.id), data?.key as string)
 
     const { getItem } = useLocalStorage<Provider>("defaultProvider")
 
@@ -106,13 +107,18 @@ export default function Page() {
 
             <ApplicationContext value={{ application: data! }}>
                 <EditApplicationDialog 
-                    isOpen={isEditApplicationDialogOpen}
-                    onOpenChange={() => setIsEditApplicationDialogOpen(true)} 
+                    open={isEditApplicationDialogOpen}
+                    onOpenChange={setIsEditApplicationDialogOpen} 
                 />
 
                 <DeleteApplicationDialog 
-                    isOpen={isDeleteApplicationDialogOpen}
-                    onOpenChange={() => setIsDeleteApplicationDialogOpen(true)}
+                    open={isDeleteApplicationDialogOpen}
+                    onOpenChange={setIsDeleteApplicationDialogOpen}
+                />
+
+                <DeleteFileDialog
+                    open={isDeleteFileDialogOpen}
+                    onOpenChange={setIsDeleteFileDialogOpen}
                 />
             </ApplicationContext>
 
@@ -328,7 +334,7 @@ export default function Page() {
                                             size="small"
                                             className="w-fit"
                                         >
-                                            <IconX color="red" onClick={() => deleteFile.mutate()} />
+                                            <IconX color="red" onClick={() => setIsDeleteFileDialogOpen(true)} />
                                         </Button>
                                     </div>
                                 </div>

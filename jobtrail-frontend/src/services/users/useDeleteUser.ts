@@ -2,17 +2,18 @@ import { elysiaApi } from "@/app/api/apiClients"
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import { useSession } from "../session/useSession"
+import { getSession } from "@/services/session/getSession"
 
 
 export function useDeleteUser(userId: number) {
-    const { data } = useSession()
-    
     return useMutation({
         mutationKey: ["users", userId],
         mutationFn: async() => {
-            await axios.delete("../../api/users/" + data?.userId, {
+            console.log("Entering delete user mutation function with user id: ", userId)
+            const session = await getSession()
+            await axios.delete("../../api/users/" + userId, {
                 headers: {
-                    Authorization: "Bearer " + data?.accessToken
+                    Authorization: "Bearer " + session?.accessToken
                 }
             })
         }

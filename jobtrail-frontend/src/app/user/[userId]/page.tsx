@@ -12,6 +12,7 @@ import { useEffect, useState } from "react"
 import { Toggle } from "@/components/ui/controls/ai/Toggle"
 import { BsAnthropic } from "react-icons/bs"
 import { useLocalStorage } from "@/hooks/useLocalStorage"
+import { DeleteUserDialog } from "@/components/ui/controls/user/DeleteUserDialog"
 
 
 export default function UserPage(){
@@ -22,6 +23,8 @@ export default function UserPage(){
     const router = useRouter()
 
     const [currentProvider, setCurrentProvider] = useState<Provider>()
+
+    const [isDeleteUserDialogOpen, setIsDeleteUserDialogOpen] = useState(false)
 
     const { setItem, getItem } = useLocalStorage<Provider>("defaultProvider")
 
@@ -47,6 +50,12 @@ export default function UserPage(){
 
     return (
         <div>
+            <DeleteUserDialog
+                open={isDeleteUserDialogOpen}
+                onOpenChange={setIsDeleteUserDialogOpen}
+            />
+
+
             <div className="bg-black h-50" />
             <div className="flex flex-col gap-5 items-center">
                 <div className="bg-white border-3 p-7 rounded-full absolute top-32">
@@ -121,11 +130,7 @@ export default function UserPage(){
                             size="small"
                             variant="destructive"
                             className="w-20"
-                            onClick={() => deleteUser.mutate(undefined, {
-                                onSuccess: () => {
-                                    router.push("/")
-                                }
-                            })}
+                            onClick={() => setIsDeleteUserDialogOpen(true)}
                         >
                             <IconTrash />
                         </Button>

@@ -53,7 +53,7 @@ export default function ApplicationsPage() {
     const acceptedCount = data.metrics.acceptedCount ?? 0
 
     return (
-        <div className={`h-screen ${isCreateApplicationDialogOpen ? "bg-black/70": ""} `}>
+        <div className="h-screen">
             <div className="p-5" />
             <div className="flex flex-row">
 
@@ -66,6 +66,7 @@ export default function ApplicationsPage() {
                         <Input
                             variant="pill"
                             placeholder="Search..."
+                            withDivider
                             className="text-xs"
                             iconStart={<IconSearch className=" ml-2" color="gray" size={20} />}
                             value={searchQuery}
@@ -113,7 +114,7 @@ export default function ApplicationsPage() {
             </div>
 
             <CreateApplicationDialog 
-                isOpen={isCreateApplicationDialogOpen} 
+                open={isCreateApplicationDialogOpen}
                 onOpenChange={setIsCreateApplicationDialogOpen}
             />
 
