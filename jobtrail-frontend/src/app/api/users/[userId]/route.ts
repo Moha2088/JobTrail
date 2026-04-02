@@ -3,8 +3,9 @@ import axios from "axios"
 import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
 
-export async function DELETE(req: NextRequest, { params }: { params: { userId: number } }) {
-    const { userId } = params
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ userId: number }> }) {
+    const { userId } = await params
+
 
     const cookieStore = await cookies()
     const sessionCookie = cookieStore.get("session")
