@@ -19,6 +19,7 @@ const eslintConfig = defineConfig([
             "indent": ["error", 4, { "SwitchCase": 1 }],
             "semi": ["error", "never"],
             "object-curly-spacing": ["error", "always"],
+            "@typescript-eslint/no-empty-object-type": "off"
         }
     }
 ])
