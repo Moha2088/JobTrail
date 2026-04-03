@@ -17,7 +17,7 @@ export async function proxy(req: NextRequest) {
     if (protectedRoutes.includes(currentPath) || protectedRoutes.some(route => currentPath.startsWith(route))) {
         if(!sessionToken) {
             console.log("Session token not found! Redirecting to login!")
-            return NextResponse.redirect("http://localhost:3000/login")
+            return NextResponse.redirect("http://localhost:3000/login?redirect=" + currentPath)
         }
 
         try {

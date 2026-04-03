@@ -1,5 +1,7 @@
 import { LoginForm } from "@/components/ui/controls/login/LoginForm"
 import { Metadata } from "next"
+import { Suspense } from "react"
+import { LoadingDots } from "@/components/ui/view/motion/LoadingDots"
 
 export const metadata: Metadata = {
     title: "Login",
@@ -19,7 +21,9 @@ export default function LoginPage() {
 
                 <div className="p-5" />
 
-                <LoginForm/>
+                <Suspense fallback={<LoadingDots />}>
+                    <LoginForm/>
+                </Suspense>
             </div>
         </>
     )
