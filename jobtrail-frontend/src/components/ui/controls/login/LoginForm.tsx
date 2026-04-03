@@ -2,8 +2,7 @@
 
 import { SubmitHandler, useForm } from "react-hook-form"
 import { Button } from "@/components/ui/controls/Button"
-import { useRouter } from "next/navigation"
-import { useLogin } from "@/services/auth/useLogin"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
 import axios from "axios"
 import { motion } from "motion/react"
@@ -27,13 +26,19 @@ export function LoginForm(){
     })
 
     const router = useRouter()
-
-    const login = useLogin()
+    const searchParams = useSearchParams()
+    const redirectPath = searchParams.get("redirect")
 
     const [passwordState, setPasswordState] = useState<PasswordState>("password")
 
     const onSubmit: SubmitHandler<LoginInput> = async(data) => {
         await axios.post("../../api/login", data)
+
+        if(redirectPath) {
+            router.replace(redirectPath)
+            return
+        }
+        
         router.replace("/applications")
     }
  
