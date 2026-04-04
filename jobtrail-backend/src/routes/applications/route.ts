@@ -1,16 +1,18 @@
 import Elysia from "elysia";
 import {
     postApplicationSchema, getApplicationSchema, putApplicationSchema, deleteApplicationsSchema,
-    getFileSchema, patchApplicationContentSchema
+    getFileSchema, patchApplicationContentSchema,
+    searchContentSchema
 } from "./schema";
 import { db } from "../../db/db";
 import { applicationsTable } from "../../db/schema";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { getClaims } from "../../utils/auth/getClaims"
 import { getApplication } from "../../utils/applications"
 import { Application } from "./types"
 import { StatusCodes } from "http-status-codes";
 import { uploadToR2, getFile, deleteFile, fileExists } from "../../utils/r2";
+import { searchContent } from "../../utils/search-engine/searchContent";
 
 
 const validate = async (
@@ -128,6 +130,17 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
 
     }, getApplicationSchema)
 
+
+    .get("/search", async({ query, set, headers: { authorization } }) => {
+        const { q } = query
+
+        const claims = await getClaims(authorization!)
+
+        const searchResults = await searchContent(q, claims.sub)
+
+        return searchResults
+        
+    }, searchContentSchema)
 
     .patch("/:id", async({ params, body, set, headers: { authorization } }) => {
         const id = Number(params.id)
