@@ -4,6 +4,7 @@ import { authRouter } from "./routes/auth/route";
 import openapi from "@elysiajs/openapi";
 import { cors } from "@elysiajs/cors"
 import { jwtConfig } from "./utils/auth/jwt";
+import { handleNotFoundError } from "./handlers/handleNotFound"
 
 const app = new Elysia()
     .use(cors({
@@ -13,6 +14,7 @@ const app = new Elysia()
     .use(openapi({
         path: "/docs"}
     ))
+    .use(handleNotFoundError)
     .group("/api", (app) => app
         .use(jwtConfig)
         .use(applicationRouter)
