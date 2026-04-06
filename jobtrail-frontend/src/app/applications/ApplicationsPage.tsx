@@ -6,7 +6,13 @@ import { ApplicationTable } from "@/components/ui/view/applications/ApplicationT
 import { Metrics } from "@/components/ui/view/applications/Metrics"
 import { useApplications } from "@/services/applications"
 import { useLogOut } from "@/services/auth/useLogOut"
-import { IconLogout, IconPlus, IconSearch, IconUser } from "@tabler/icons-react"
+import {
+    IconFileDescription,
+    IconLogout,
+    IconPlus,
+    IconSearch,
+    IconUser
+} from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { useSessionContext } from "@/contexts/session/SessionContext"
@@ -14,15 +20,21 @@ import Link from "next/link"
 import { useDebounce } from "@/hooks/useDebounce"
 import { Input } from "@/components/ui/controls/Input"
 import { LoadingDots } from "@/components/ui/view/motion/LoadingDots"
+import { useSearchContent } from "@/services/applications/useSearchContent"
+import { SearchResultsTable } from "@/components/ui/view/applications/SearchResultsTable"
 
 
 export default function ApplicationsPage() {
     const [isCreateApplicationDialogOpen, setIsCreateApplicationDialogOpen] = useState<boolean>(false)
     const [searchQuery, setSearchQuery] = useState<string>("")
 
+    const [isFullTextSearchEnabled, setIsFullTextSearchEnabled] = useState<boolean>(false)
+
     const debouncedSearchQuery = useDebounce(searchQuery)
 
     const { data, isLoading } = useApplications()
+
+    const { data: searchData } = useSearchContent(debouncedSearchQuery, isFullTextSearchEnabled)
 
     const router = useRouter()
     const session = useSessionContext()
@@ -62,17 +74,21 @@ export default function ApplicationsPage() {
                         Welcome back, {session?.name}!
                     </p>
 
-                    <div className="flex flex-col gap-3">
-                        <Input
-                            variant="pill"
-                            placeholder="Search..."
-                            withDivider
-                            className="text-xs"
-                            iconStart={<IconSearch className=" ml-2" color="gray" size={20} />}
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
+                    <div className="flex flex-col">
+                        <div className="flex flex-col gap-3">
+                            <Input
+                                variant="pill"
+                                placeholder={isFullTextSearchEnabled ? "Search by content..." : "Search by company name..."}
+                                withDivider
+                                className="text-xs"
+                                iconStart={<IconSearch className=" ml-2" color="gray" size={20} />}
+                                iconEnd={<IconFileDescription onClick={() => setIsFullTextSearchEnabled(!isFullTextSearchEnabled)} className={`cursor-pointer ${isFullTextSearchEnabled ? "text-black hover:text-gray-400" : "text-gray-400 hover:text-black"}`} />}
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                        </div>
                     </div>
+                    
 
                 </div>
 
@@ -128,9 +144,16 @@ export default function ApplicationsPage() {
 
             <div className="p-10" />
 
-            <ApplicationTable
-                applications={debouncedSearchQuery ? filteredApplications : data.applications}
-            />
+            {!isFullTextSearchEnabled &&
+                <ApplicationTable
+                    applications={debouncedSearchQuery && !isFullTextSearchEnabled ? filteredApplications : data.applications}
+                />
+            }
+
+            {isFullTextSearchEnabled &&
+                <SearchResultsTable applications={searchData} query={debouncedSearchQuery} />
+            }
+
         </div>
     )
 }

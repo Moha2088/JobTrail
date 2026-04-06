@@ -20,12 +20,13 @@ const inputStyles = cva(
 
 interface InputProps extends VariantProps<typeof inputStyles>, ComponentProps<"input"> {
     iconStart?: ReactNode
+    iconEnd?: ReactNode
     withDivider?: boolean
 }
 
 
 export function Input(props: InputProps) {
-    const { className, iconStart, variant, withDivider, ...rest } = props
+    const { className, iconStart, iconEnd, variant, withDivider, ...rest } = props
     return (
         <div
             className={`flex gap-3  ${cn(inputStyles({ variant }), className)}`}
@@ -35,6 +36,7 @@ export function Input(props: InputProps) {
                 <hr className="border h-5" />
             }
             <input className=" outline-0 w-full" {...rest} />
+            {iconEnd}
         </div>
     )
 }

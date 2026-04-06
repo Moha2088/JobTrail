@@ -16,6 +16,12 @@ export const getApplicationSchema = {
     })
 }
 
+export const searchContentSchema = {
+    query: t.Object({
+        q: t.String()
+    })
+}
+
 export const putApplicationSchema = {
     params: t.Object({
         id: t.Number()
