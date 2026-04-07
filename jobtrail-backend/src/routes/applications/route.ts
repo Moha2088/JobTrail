@@ -13,6 +13,7 @@ import { Application } from "./types"
 import { StatusCodes } from "http-status-codes";
 import { uploadToR2, getFile, deleteFile, fileExists } from "../../utils/r2";
 import { searchContent } from "../../utils/search-engine/searchContent";
+import { requestDeletionJob } from "../../messaging/applications/events/deleteApplication/requestDeletionJob";
 
 
 const validate = async (
@@ -74,8 +75,6 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         const results = await db.select()
             .from(applicationsTable)
             .where(eq(applicationsTable.userId, claims.sub))
-
-        console.log(results)
 
         const applications: Application[] = results.map(app => {
             return {
@@ -162,12 +161,15 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     .delete("/:id", async({params, set, headers: { authorization }}) => {
         const id = Number(params.id)
 
+        const { sub } = await getClaims(authorization!)
+
         const unauthorized = await validate(id, authorization!, set)
         if(unauthorized) {
             return unauthorized
         }
 
-        await db.delete(applicationsTable).where(eq(applicationsTable.id, id))
+        console.log("Deleting application with id: " + id)
+        requestDeletionJob(id, sub)
 
         set.status = StatusCodes.NO_CONTENT
     }, deleteApplicationsSchema)

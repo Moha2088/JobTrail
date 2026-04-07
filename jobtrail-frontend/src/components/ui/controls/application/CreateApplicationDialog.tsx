@@ -182,24 +182,7 @@ function Content(props: ContentProps) {
 
                     <Button
                         disabled={!applicationStatus || getValues("companyName") === "" || getValues("email") === "" || getValues("position") === "" || getValues("content") === ""}
-                        onClick={() => {
-                            createApplication.mutate({
-                                companyName: getValues("companyName"),
-                                email: getValues("email"),
-                                applicationStatus: applicationStatus,
-                                position: getValues("position"),
-                                content: getValues("content")
-                            }, {
-                                onSuccess: () => {
-                                    console.log("Application created successfully")
-
-                                },
-
-                                onError: () => {
-                                    alert("Failed to create application")
-                                }
-                            })
-                        }}
+                        type="submit"
                         size="small"
                     >
                         Save

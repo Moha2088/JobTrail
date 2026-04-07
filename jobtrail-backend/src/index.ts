@@ -5,6 +5,7 @@ import openapi from "@elysiajs/openapi";
 import { cors } from "@elysiajs/cors"
 import { jwtConfig } from "./utils/auth/jwt";
 import { handleNotFoundError } from "./handlers/handleNotFound"
+import "./messaging/applications/events/deleteApplication/requestDeletionJobHandler"
 
 const app = new Elysia()
     .use(cors({
