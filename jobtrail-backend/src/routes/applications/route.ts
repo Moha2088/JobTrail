@@ -13,7 +13,7 @@ import { Application } from "./types"
 import { StatusCodes } from "http-status-codes";
 import { uploadToR2, getFile, deleteFile, fileExists } from "../../utils/r2";
 import { searchContent } from "../../utils/search-engine/searchContent";
-import { requestDeletionJob } from "../../messaging/applications/events/deleteApplication/requestDeletionJob";
+import { requestDeletionJob } from "../../messaging/events/applications/deleteApplication/requestDeletionJob";
 
 
 const validate = async (
@@ -169,7 +169,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         }
 
         console.log("Deleting application with id: " + id)
-        requestDeletionJob(id, sub)
+        await requestDeletionJob(id, sub)
 
         set.status = StatusCodes.NO_CONTENT
     }, deleteApplicationsSchema)

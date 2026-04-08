@@ -5,7 +5,8 @@ import openapi from "@elysiajs/openapi";
 import { cors } from "@elysiajs/cors"
 import { jwtConfig } from "./utils/auth/jwt";
 import { handleNotFoundError } from "./handlers/handleNotFound"
-import "./messaging/applications/events/deleteApplication/requestDeletionJobHandler"
+import "./messaging/eventhandlers/applications/jobHandlers"
+import { logger } from "./logger";
 
 const app = new Elysia()
     .use(cors({
@@ -24,7 +25,7 @@ const app = new Elysia()
     )
     .listen(3003);
 
-console.log(
+logger.info(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
 );
 
