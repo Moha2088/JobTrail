@@ -1,19 +1,20 @@
-import { useQuery, UseQueryResult } from "@tanstack/react-query"
-import axios from "axios"
-import { User } from "@/services/users/types"
+import { useQuery } from "@tanstack/react-query"
 import { getSession } from "../session/getSession"
+import { elysiaApi } from "@/app/api/apiClients"
 
 
-export function useUser(id: number): UseQueryResult<User> {
+export function useUser(id: number) {
     return useQuery({
-        queryKey: ["users"],
+        queryKey: ["users", id],
         queryFn: async() => {
             const session = await getSession()
-            const { data } = await axios.get(`http://localhost:3003/api/users/${id}`, {
+            
+            const { data } = await elysiaApi.api.users({ id: id }).get({
                 headers: {
                     Authorization: "Bearer " + session?.accessToken
                 }
             })
+
             return data
         }
     })

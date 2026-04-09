@@ -11,7 +11,7 @@ import { logger } from "./logger";
 const app = new Elysia()
     .use(cors({
         origin: "http://localhost:3000",
-        credentials: true,
+        credentials: true
     }))
     .use(openapi({
         path: "/docs"}

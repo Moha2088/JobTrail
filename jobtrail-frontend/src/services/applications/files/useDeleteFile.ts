@@ -1,6 +1,7 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query"
 import { getSession } from "@/services/session/getSession"
 import axios from "axios"
+import { elysiaApi } from "@/app/api/apiClients"
 
 
 export function useDeleteFile(applicationId: number, key: string) {
@@ -12,7 +13,8 @@ export function useDeleteFile(applicationId: number, key: string) {
         mutationKey: ["files", key],
         mutationFn: async() => {
             const session = await getSession()
-            await axios.delete(`http://localhost:3003/api/applications/${applicationId}/resume/${key}`, {
+            
+            await elysiaApi.api.applications({ id: applicationId }).resume({ key: key }).delete({}, {
                 headers: {
                     Authorization: "Bearer " + session?.accessToken
                 }

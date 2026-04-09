@@ -1,7 +1,5 @@
-import { elysiaApi } from "@/app/api/apiClients"
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
-import { useSession } from "../session/useSession"
 import { getSession } from "@/services/session/getSession"
 
 
