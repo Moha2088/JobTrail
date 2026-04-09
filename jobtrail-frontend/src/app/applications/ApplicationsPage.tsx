@@ -34,7 +34,7 @@ export default function ApplicationsPage() {
 
     const { data, isLoading } = useApplications()
 
-    const { data: searchData } = useSearchContent(debouncedSearchQuery, isFullTextSearchEnabled)
+    const { data: searchData } = useSearchContent(debouncedSearchQuery)
 
     const router = useRouter()
     const session = useSessionContext()

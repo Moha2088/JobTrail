@@ -2,7 +2,8 @@ import Elysia from "elysia";
 import {
     postApplicationSchema, getApplicationSchema, putApplicationSchema, deleteApplicationsSchema,
     getFileSchema, patchApplicationContentSchema,
-    searchContentSchema
+    searchContentSchema,
+    cancelDeletionSchema
 } from "./schema";
 import { db } from "../../db/db";
 import { applicationsTable } from "../../db/schema";
@@ -13,6 +14,8 @@ import { Application } from "./types"
 import { StatusCodes } from "http-status-codes";
 import { uploadToR2, getFile, deleteFile, fileExists } from "../../utils/r2";
 import { searchContent } from "../../utils/search-engine/searchContent";
+import { requestDeletionJob } from "../../messaging/events/applications/deleteApplication/requestDeletionJob";
+import { cancelApplicationDeletion } from "../../messaging/events/applications/cancelApplicationDeletion/cancelApplicationDeletionJob";
 
 
 const validate = async (
@@ -75,8 +78,6 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
             .from(applicationsTable)
             .where(eq(applicationsTable.userId, claims.sub))
 
-        console.log(results)
-
         const applications: Application[] = results.map(app => {
             return {
                 id: app.id,
@@ -85,6 +86,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
                 applicationStatus: app.applicationStatus,
                 position: app.position,
                 content: app.content,
+                pendingDeletion: app.pendingDeletion
             }
         })
 
@@ -159,15 +161,40 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     }, putApplicationSchema)
 
 
+    .post("/cancel-deletion/:id", async({ params, set, headers: { authorization } }) => {
+        const { id } = params
+
+        const unauthorized = await validate(id, authorization!, set)
+        if(unauthorized) {
+            return unauthorized
+        }
+        
+        await cancelApplicationDeletion(id)
+
+        await db.update(applicationsTable)
+            .set({ pendingDeletion: false })
+            .where(eq(applicationsTable.id, id))
+
+        set.status = StatusCodes.NO_CONTENT
+    }, cancelDeletionSchema)
+
+
     .delete("/:id", async({params, set, headers: { authorization }}) => {
-        const id = Number(params.id)
+        const { id } = params
+
+        const { sub } = await getClaims(authorization!)
 
         const unauthorized = await validate(id, authorization!, set)
         if(unauthorized) {
             return unauthorized
         }
 
-        await db.delete(applicationsTable).where(eq(applicationsTable.id, id))
+        console.log("Deleting application with id: " + id)
+        await requestDeletionJob(id, sub)
+
+        await db.update(applicationsTable)
+            .set({ pendingDeletion: true })
+            .where(eq(applicationsTable.id, id))
 
         set.status = StatusCodes.NO_CONTENT
     }, deleteApplicationsSchema)
