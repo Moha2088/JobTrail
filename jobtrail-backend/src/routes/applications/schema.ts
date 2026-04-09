@@ -46,6 +46,11 @@ export const patchApplicationContentSchema = {
     })
 }
 
+export const cancelDeletionSchema = {
+    params: t.Object({
+        id: t.Number()
+    })
+}
 
 export const deleteApplicationsSchema = {
     params: t.Object({

@@ -2,7 +2,8 @@ import Elysia from "elysia";
 import {
     postApplicationSchema, getApplicationSchema, putApplicationSchema, deleteApplicationsSchema,
     getFileSchema, patchApplicationContentSchema,
-    searchContentSchema
+    searchContentSchema,
+    cancelDeletionSchema
 } from "./schema";
 import { db } from "../../db/db";
 import { applicationsTable } from "../../db/schema";
@@ -159,9 +160,9 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
 
     }, putApplicationSchema)
 
-    
+
     .post("/cancel-deletion/:id", async({ params, set, headers: { authorization } }) => {
-        const id = Number(params.id)
+        const { id } = params
 
         const unauthorized = await validate(id, authorization!, set)
         if(unauthorized) {
@@ -175,11 +176,11 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
             .where(eq(applicationsTable.id, id))
 
         set.status = StatusCodes.NO_CONTENT
-        
-    })
+    }, cancelDeletionSchema)
+
 
     .delete("/:id", async({params, set, headers: { authorization }}) => {
-        const id = Number(params.id)
+        const { id } = params
 
         const { sub } = await getClaims(authorization!)
 
