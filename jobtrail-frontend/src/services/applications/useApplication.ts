@@ -5,12 +5,13 @@ import { Application } from "./types"
 import { getSession } from "@/services/session/getSession"
 
 
-export function useApplication(applicationId: number): UseQueryResult<Application> {
+export function useApplication(applicationId: number) {
     return useQuery({
         queryKey: ["applications", applicationId],
         queryFn: async() => {
             const session = await getSession()
-            const { data } = await axios.get("http://localhost:3003/api/applications/" + applicationId, {
+
+            const { data } = await elysiaApi.api.applications({ id: applicationId }).get({
                 headers: {
                     Authorization: "Bearer " + session?.accessToken
                 }

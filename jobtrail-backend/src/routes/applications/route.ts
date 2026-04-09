@@ -28,7 +28,7 @@ const validate = async (
 
     if(claims.sub != application.userId) {
         set.status = StatusCodes.UNAUTHORIZED
-        return "Unauthorized"
+        return
     }
 }
 
@@ -45,15 +45,10 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     .post("/", async({ body, set, jwt, headers: { authorization } }) => {
         const { companyName, email, applicationStatus, position, content } = body
 
-        if(!authorization) {
-            set.status = StatusCodes.UNAUTHORIZED
-            return
-        }
-
         console.log("Body: ")
         console.log(body)
 
-        const claims = await getClaims(authorization)
+        const claims = await getClaims(authorization!)
 
         const result = await db.insert(applicationsTable)
             .values({
@@ -105,11 +100,8 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     .get("/:id", async({ params, set, headers: { authorization } }) => {
         const id = Number(params.id)
 
-        const unauthorized = await validate(id, authorization!, set)
-        if(unauthorized) {
-            return unauthorized
-        }
-
+        await validate(id, authorization!, set)
+        
         const result = await db.select()
             .from(applicationsTable)
             .where(eq(applicationsTable.id, id))
@@ -147,10 +139,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     .patch("/:id", async({ params, body, set, headers: { authorization } }) => {
         const id = Number(params.id)
 
-        const unauthorized = await validate(id, authorization!, set)
-        if(unauthorized) {
-            return unauthorized
-        }
+        await validate(id, authorization!, set)
 
         await db.update(applicationsTable)
             .set(body)
@@ -164,10 +153,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     .post("/cancel-deletion/:id", async({ params, set, headers: { authorization } }) => {
         const { id } = params
 
-        const unauthorized = await validate(id, authorization!, set)
-        if(unauthorized) {
-            return unauthorized
-        }
+        await validate(id, authorization!, set)
         
         await cancelApplicationDeletion(id)
 
@@ -184,10 +170,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
 
         const { sub } = await getClaims(authorization!)
 
-        const unauthorized = await validate(id, authorization!, set)
-        if(unauthorized) {
-            return unauthorized
-        }
+        await validate(id, authorization!, set)
 
         console.log("Deleting application with id: " + id)
         await requestDeletionJob(id, sub)
@@ -203,11 +186,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     .patch("/:id/content", async({ params, body, set, headers: { authorization } }) => {
         const { id } = params
         const { content } = body
-        const unauthorized = await validate(Number(params.id), authorization!, set)
-
-        if (unauthorized) {
-            return unauthorized
-        }
+        await validate(Number(params.id), authorization!, set)
 
         const result = await db.update(applicationsTable)
             .set({ content: body.content})

@@ -1,6 +1,7 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query"
 import { getSession } from "../session/getSession"
 import axios from "axios"
+import { elysiaApi } from "@/app/api/apiClients"
 
 interface CancelDeletionParams {
     applicationId: number
@@ -15,7 +16,8 @@ export function useCancelDeletion(): UseMutationResult<void, Error, CancelDeleti
         mutationKey: ["applications"],
         mutationFn: async(variables) => {
             const session = await getSession()
-            await axios.post("http://localhost:3003/api/applications/cancel-deletion/" + variables.applicationId, {}, {
+            
+            await elysiaApi.api.applications["cancel-deletion"]({ id: variables.applicationId }).post({}, {
                 headers: {
                     Authorization: "Bearer " + session?.accessToken
                 }
