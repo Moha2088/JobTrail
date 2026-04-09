@@ -10,7 +10,6 @@
         "@elysiajs/cors": "^1.4.1",
         "@elysiajs/jwt": "^1.4.0",
         "@elysiajs/openapi": "^1.4.14",
-        "@upstash/redis": "^1.37.0",
         "bullmq": "^5.73.0",
         "drizzle-orm": "^0.45.1",
         "elysia": "latest",
