@@ -6,7 +6,7 @@ import { logger } from "../../../logger";
 
 
 const applicationQueueEvents = new QueueEvents(applicationsQueueName, { connection })
-const applicationQueueWorker = new Worker<ApplicationQueueJobs>(applicationsQueueName, async job => { }, { connection })
+export const applicationQueueWorker = new Worker<ApplicationQueueJobs>(applicationsQueueName, async job => { }, { connection })
 
 applicationQueueEvents.on("active", async job => {
     logger.info("[QueueEvents] --- Processing job with id: " + job.jobId)

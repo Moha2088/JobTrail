@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/table"
 import { Application, useDeleteApplication } from "@/services/applications"
 import { useRouter } from "next/navigation"
-import { IconArrowNarrowRight, IconTrash } from "@tabler/icons-react"
-import { useEffect, useState } from "react"
+import { IconArrowBackUp, IconArrowNarrowRight, IconTrash } from "@tabler/icons-react"
+import { useCancelDeletion } from "@/services/applications/useCancelDeletion"
 
 
 interface ApplicationTableProps {
@@ -21,6 +21,8 @@ export function ApplicationTable(props: ApplicationTableProps) {
     const { applications } = props
 
     const deleteApplication = useDeleteApplication()
+    const cancelApplicationDeletion = useCancelDeletion()
+    
 
     const router = useRouter()
 
@@ -62,6 +64,18 @@ export function ApplicationTable(props: ApplicationTableProps) {
                                     })
                                 }}
                             />
+                        </TableCell>
+                        <TableCell>
+                            {app.pendingDeletion &&
+                                <IconArrowBackUp
+                                    size={20}
+                                    onClick={() => cancelApplicationDeletion.mutate({
+                                        applicationId: app.id
+                                    })} 
+                                    className="cursor-pointer"
+                                    color="red" 
+                                />
+                            }
                         </TableCell>
                     </TableRow>
                 ))}

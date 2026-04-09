@@ -1,5 +1,3 @@
-// TODO: Request delete user job
-
 import { JobsOptions } from "bullmq";
 import { applicationsQueue, usersQueue } from "../../../queue";
 

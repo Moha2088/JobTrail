@@ -8,6 +8,7 @@ export interface Application {
     createdAt?: Date
     content: string
     key?: string
+    pendingDeletion: boolean
 }
 
 export interface ApplicationData {
