@@ -5,7 +5,7 @@ export interface Application {
     email: string,
     applicationStatus: string,
     position: string,
-    createdAt?: Date
+    createdAt: Date
     content: string
     key?: string
     pendingDeletion: boolean

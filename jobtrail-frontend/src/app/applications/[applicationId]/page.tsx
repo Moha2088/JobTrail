@@ -4,7 +4,6 @@ import { DeleteApplicationDialog } from "@/components/ui/controls/application/De
 import { EditApplicationDialog } from "@/components/ui/controls/application/EditApplicationDialog"
 import { Button } from "@/components/ui/controls/Button"
 import { ApplicationContext } from "@/contexts/application/ApplicationContext"
-import { useApplication } from "@/services/applications/useApplication"
 import { IconBrandOpenai, IconDownload, IconEdit, IconFileCv, IconSparkles, IconTrash, IconX, IconZoomExclamationFilled } from "@tabler/icons-react"
 import { notFound, useParams } from "next/navigation"
 import { ChangeEvent, useEffect, useRef, useState } from "react"
@@ -14,12 +13,10 @@ import { LoadingDots } from "@/components/ui/view/motion/LoadingDots"
 import { StreamedTextOutput } from "@/components/ui/view/ai/StreamedTextOutput"
 import { createContentPrompt } from "@/providers/openAIProvider"
 import { ActionButton } from "@/components/ui/controls/ai/ActionButton"
-import { usePutApplication } from "@/services/applications"
-import { useUploadFile, useGetFile, useDeleteFile } from "@/services/applications/files"
+import { usePutApplication, useApplication, usePatchContent } from "@/services/applications"
+import { useUploadFile, useGetFile } from "@/services/applications/files"
 import { useSession } from "@/services/session/useSession"
-import { usePatchContent } from "@/services/applications/usePatchContent"
 import { Toggle } from "@/components/ui/controls/ai/Toggle"
-
 import { BsAnthropic } from "react-icons/bs"
 import { useLocalStorage } from "@/hooks/useLocalStorage"
 import { DeleteFileDialog } from "@/components/ui/controls/application/files/DeleteFileDialog"
@@ -95,8 +92,8 @@ export default function Page() {
         notFound()
     }
 
-    // const underLimit =  data?.content && data?.content.length < 100
-
+    const canPropmt: boolean = data!.content!.length >= 100
+    
     return (
         <>
 
@@ -137,7 +134,7 @@ export default function Page() {
                                         handleSubmit()
                                     }}
                                     variant="ghost"
-                                    disabled={isCompletionLoading}
+                                    disabled={isCompletionLoading || !canPropmt}
                                     size="small"
                                     iconStart={<IconSparkles />}
                                     className="w-20"
@@ -165,7 +162,7 @@ export default function Page() {
 
                             </div>
 
-                            {data.content.length < 100 &&
+                            {!canPropmt &&
                                 <div className="p-2 rounded-full bg-red-400">
                                     <p className="text-white text-xs">
                                         AI optimization requires more content!.
@@ -266,7 +263,7 @@ export default function Page() {
 
                 <div>
                     <div className="mb-10 mt-10">
-                        <p className="flex justify-center text-4xl font-bold">
+                        <p className="flex justify-center text-4xl font-bold text-blue-400 tracking-tighter">
                             {data?.companyName}
                         </p>
                     </div>

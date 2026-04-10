@@ -70,7 +70,7 @@ export default function ApplicationsPage() {
             <div className="flex flex-row">
 
                 <div className="flex justify-start items-center w-screen gap-25">
-                    <p className=" text-2xl font-bold ml-20">
+                    <p className=" text-2xl text-blue-400 tracking-tighter font-bold ml-20">
                         Welcome back, {session?.name}!
                     </p>
 
@@ -151,7 +151,7 @@ export default function ApplicationsPage() {
             }
 
             {isFullTextSearchEnabled &&
-                <SearchResultsTable applications={searchData} query={debouncedSearchQuery} />
+                <SearchResultsTable applications={searchData!} query={debouncedSearchQuery} />
             }
 
         </div>

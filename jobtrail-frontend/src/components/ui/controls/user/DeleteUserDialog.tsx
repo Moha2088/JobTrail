@@ -42,16 +42,15 @@ function Content({ onOpenChange }: ContentProps) {
 
     return (
         <OverlayWrapper>
-            <Dialog.Title className="text-2xl font-bold mb-5">Delete User</Dialog.Title>
-            <Dialog.Description className="flex mb-10" >Are you sure you want to delete your user! </Dialog.Description>
+            <Dialog.Title className="flex justify-center text-2xl tracking-tighter text-red-400 font-bold mb-5">Delete User</Dialog.Title>
+            <Dialog.Description className="flex justify-center font-bold mb-15" >Are you sure you want to delete your user?</Dialog.Description>
 
-            <div>
-                <div className="mb-5">
+            <div className="flex flex-col justify-center" >
+                <div className="flex justify-center mb-10">
                     <p>To confirm deletion, type <strong>{`"${data?.email}"`}</strong> in the box below.</p>
                 </div>
 
-                <div>
-
+                <div className="flex justify-center mb-10">
                     <Input
                         onChange={(e) => setConfirmationInput(e.target.value)}
                         value={confirmationInput}

@@ -1,12 +1,10 @@
 import { Dialog } from "radix-ui"
 import { Button } from "../Button"
-import { Flex, TextField } from "@radix-ui/themes/dist/cjs/components/index.js"
 import { usePostApplication } from "@/services/applications"
 import { useForm } from "react-hook-form"
 import { ApplicationStatus, StatusDropdownMenu } from "@/components/ui/controls/application/StatusDropdownMenu"
 import { OverlayWrapper } from "../OverlayWrapper"
-import { useEffect, useState } from "react"
-import { get } from "http"
+import { useState } from "react"
 import { Input } from "../Input"
 import { DialogProps } from "@radix-ui/react-dialog"
 
@@ -61,6 +59,7 @@ function Content(props: ContentProps) {
             applicationStatus: applicationStatus,
             position: data.position,
             content: data.content,
+            pendingDeletion: false
         }, {
             onSuccess: () => {
                 console.log("Application created successfully")
@@ -80,10 +79,8 @@ function Content(props: ContentProps) {
     return (
         <OverlayWrapper>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <Dialog.Title className="mb-3 text-2xl font-bold">Create Application</Dialog.Title>
-                <div className="p-2" />
-                <Dialog.Description
-                    className="mb-5">
+                <Dialog.Title className="flex justify-center mb-3 text-2xl text-blue-400 tracking-tighter font-bold">Create Application</Dialog.Title>
+                <Dialog.Description className="flex justify-center font-bold text-sm mb-5">
                     Enter the details of the application you want to create
                 </Dialog.Description>
 
@@ -93,7 +90,7 @@ function Content(props: ContentProps) {
                             Name
                         </p>
                         <Input
-                            className="w-100"
+                            className="w-100 bg-gray-100 text-sm"
                             defaultValue=""
                             placeholder="Enter the name of the company"
                             {...register("companyName", {
@@ -108,7 +105,7 @@ function Content(props: ContentProps) {
                             Email
                         </p>
                         <Input
-                            className="w-100"
+                            className="w-100 bg-gray-100 text-sm"
                             placeholder="Enter the email of the company"
                             {...register("email", {
                                 required: "Company email is required"
@@ -145,7 +142,7 @@ function Content(props: ContentProps) {
                             Position
                         </p>
                         <Input
-                            className="w-100"
+                            className="w-100 bg-gray-100 text-sm"
                             defaultValue=""
                             placeholder="Enter the position you are applying for"
                             {...register("position", {
@@ -159,10 +156,10 @@ function Content(props: ContentProps) {
                         <p>
                             Content
                         </p>
-                        <textarea className="w-100 h-50 border-2"
+                        <textarea className="w-100 bg-gray-100 h-50 rounded-xl p-3 text-sm"
                             {...register("content", {
                                 required: "Content is required!"
-                            })} 
+                            })}
                         />
                         {errors.content && <p className="text-red-400">{errors.content.message}</p>}
                     </label>
