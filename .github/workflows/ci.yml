@@ -23,8 +23,5 @@ jobs:
       - name: Install dependencies
         run: cd ${{ env.BACKEND_PATH }} && bun ci
 
-      - name: Build app
-        run: cd ${{ env.BACKEND_PATH }} && bun run build
-
       - name: Run migrations
         run: bun migrate
