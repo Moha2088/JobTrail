@@ -1,11 +1,9 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, UseQueryResult } from "@tanstack/react-query"
 import { elysiaApi } from "@/app/api/apiClients"
-import axios from "axios"
 import { getSession } from "@/services/session/getSession"
+import { ApplicationData } from "./types"
 
-axios.defaults.withCredentials = true
-
-export function useApplications() {
+export function useApplications(): UseQueryResult<ApplicationData | undefined> {
     return useQuery({
         queryKey: ["applications"],
         queryFn: async() => {
@@ -16,7 +14,10 @@ export function useApplications() {
                     Authorization: "Bearer " + session?.accessToken
                 }
             })
-            return data
+            
+            if (data != null) {
+                return data as ApplicationData
+            }
         }
     })
 }

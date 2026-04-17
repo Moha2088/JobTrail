@@ -22,7 +22,6 @@ export function DeleteApplicationDialog(props: DeleteApplicationDialogProps) {
 
 
 function Content() {
-
     const { application } = useApplicationContext()
 
     const deleteApplication = useDeleteApplication()
@@ -30,17 +29,17 @@ function Content() {
     const router = useRouter()
 
     return (
-        <OverlayWrapper>
-            <Dialog.Title className="mb-3 text-2xl font-bold">Delete Application</Dialog.Title>
-            <div className="p-2" />
+        <OverlayWrapper className="w-fit">
+            <Dialog.Title className="flex justify-center mb-5 text-xl tracking-tighter text-red-400 font-bold">
+                Delete Application
+            </Dialog.Title>
+            
             <Dialog.Description
-                className="mb-5">
+                className="flex justify-center mb-10 font-bold text-sm">
                 Are you sure you want to delete this application?.
             </Dialog.Description>
 
-            <div className="p-3" />
-
-            <div className="flex justify-end gap-10" >
+            <div className="flex justify-end gap-5" >
                 <Dialog.Close asChild>
                     <Button
                         type="button"
@@ -50,6 +49,7 @@ function Content() {
                     </Button>
                 </Dialog.Close>
                 <Button
+                    variant="destructive"
                     onClick={() => {
                         deleteApplication.mutate({
                             applicationId: application.id

@@ -3,7 +3,7 @@ import { PostApplication } from "./types"
 import { elysiaApi } from "@/app/api/apiClients"
 import { getSession } from "../session/getSession"
 
-type PutApplication = Omit<PostApplication, "id">
+type PutApplication = Omit<PostApplication, "id" | "pendingDeletion">
 
 export function usePutApplication(applicationId: number): UseMutationResult<void, Error, PutApplication> {
     return useMutation({

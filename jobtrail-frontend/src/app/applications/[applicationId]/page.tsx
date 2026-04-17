@@ -4,7 +4,6 @@ import { DeleteApplicationDialog } from "@/components/ui/controls/application/De
 import { EditApplicationDialog } from "@/components/ui/controls/application/EditApplicationDialog"
 import { Button } from "@/components/ui/controls/Button"
 import { ApplicationContext } from "@/contexts/application/ApplicationContext"
-import { useApplication } from "@/services/applications/useApplication"
 import { IconBrandOpenai, IconDownload, IconEdit, IconFileCv, IconSparkles, IconTrash, IconX, IconZoomExclamationFilled } from "@tabler/icons-react"
 import { notFound, useParams } from "next/navigation"
 import { ChangeEvent, useEffect, useRef, useState } from "react"
@@ -14,12 +13,10 @@ import { LoadingDots } from "@/components/ui/view/motion/LoadingDots"
 import { StreamedTextOutput } from "@/components/ui/view/ai/StreamedTextOutput"
 import { createContentPrompt } from "@/providers/openAIProvider"
 import { ActionButton } from "@/components/ui/controls/ai/ActionButton"
-import { usePutApplication } from "@/services/applications"
-import { useUploadFile, useGetFile, useDeleteFile } from "@/services/applications/files"
+import { usePutApplication, useApplication, usePatchContent } from "@/services/applications"
+import { useUploadFile, useGetFile } from "@/services/applications/files"
 import { useSession } from "@/services/session/useSession"
-import { usePatchContent } from "@/services/applications/usePatchContent"
 import { Toggle } from "@/components/ui/controls/ai/Toggle"
-
 import { BsAnthropic } from "react-icons/bs"
 import { useLocalStorage } from "@/hooks/useLocalStorage"
 import { DeleteFileDialog } from "@/components/ui/controls/application/files/DeleteFileDialog"
@@ -95,8 +92,6 @@ export default function Page() {
         notFound()
     }
 
-    // const underLimit =  data?.content && data?.content.length < 100
-
     return (
         <>
 
@@ -105,7 +100,7 @@ export default function Page() {
             </QuickTip>
 
 
-            <ApplicationContext value={{ application: data! }}>
+            <ApplicationContext value={{ application: data }}>
                 <EditApplicationDialog 
                     open={isEditApplicationDialogOpen}
                     onOpenChange={setIsEditApplicationDialogOpen} 
@@ -126,18 +121,18 @@ export default function Page() {
                 {data?.content &&
                     <div>
                         <div className="flex flex-col p-3 max-w-150 overflow-y-scroll h-screen gap-5">
-                            <label className="mr-auto ml-auto w-fit pl-5 pr-5 p-2 rounded-2xl bg-gray-100 font-bold text-xl">
+                            <label className="mr-auto ml-auto w-fit pl-5 pr-5 p-2 rounded-2xl text-blue-400 tracking-tighter font-bold text-2xl">
                                 Content
                             </label>
 
                             <div className="flex justify-center">
                                 <Button
                                     onClick={() => {
-                                        setInput(createContentPrompt(data?.content))
+                                        setInput(createContentPrompt(data!.content!))
                                         handleSubmit()
                                     }}
                                     variant="ghost"
-                                    disabled={isCompletionLoading}
+                                    disabled={isCompletionLoading || data.content.length < 100}
                                     size="small"
                                     iconStart={<IconSparkles />}
                                     className="w-20"
@@ -266,7 +261,7 @@ export default function Page() {
 
                 <div>
                     <div className="mb-10 mt-10">
-                        <p className="flex justify-center text-4xl font-bold">
+                        <p className="flex justify-center text-4xl font-bold text-blue-400 tracking-tighter">
                             {data?.companyName}
                         </p>
                     </div>

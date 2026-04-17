@@ -5,7 +5,7 @@ export interface Application {
     email: string,
     applicationStatus: string,
     position: string,
-    createdAt?: Date
+    createdAt: Date
     content: string
     key?: string
     pendingDeletion: boolean
@@ -20,4 +20,4 @@ export interface ApplicationData {
     }
 }
 
-export type PostApplication = Omit<Application, "id" | "createdAt">
+export type PostApplication = Omit<Application, "id" | "createdAt" | "pendingDeletion">

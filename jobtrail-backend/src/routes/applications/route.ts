@@ -37,7 +37,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     .onBeforeHandle(async({ set, headers: { authorization }, route}) => {
         if(!authorization) {
             set.status = StatusCodes.UNAUTHORIZED
-            return "Unauthorized"
+            return
         }
     })
 
@@ -119,7 +119,8 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
             position: result[0].position,
             createdAt: result[0].createdAt,
             content: result[0].content,
-            key: result[0].key
+            key: result[0].key,
+            pendingDeletion: result[0].pendingDeletion
         }
 
     }, getApplicationSchema)
