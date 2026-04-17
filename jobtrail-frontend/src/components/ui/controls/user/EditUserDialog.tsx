@@ -108,7 +108,7 @@ function Content(props: ContentProps) {
                                 required: "Email is required"
                             })}
                         />
-                        {errors.email && <p className="text-red-400 sm">{errors.email.message}</p>}
+                        {errors.email && <p className="text-red-400 text-sm">{errors.email.message}</p>}
                     </label>
                     <label className="mb-3">
                         <p>
