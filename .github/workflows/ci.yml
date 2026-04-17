@@ -24,4 +24,4 @@ jobs:
         run: cd ${{ env.BACKEND_PATH }} && bun ci
 
       - name: Run migrations
-        run: bun migrate
+        run: cd ${{ env.BACKEND_PATH }} && bun migrate
