@@ -1,0 +1,30 @@
+name: CI
+
+env:
+  BACKEND_PATH: jobtrail-backend
+
+on:
+  pull_request:
+    types: [ opened, synchronize ]
+  workflow_dispatch:
+
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: cd ${{ env.BACKEND_PATH }} && bun ci
+
+      - name: Run migrations
+        run: cd ${{ env.BACKEND_PATH }} && bun migrate
+        env:
+          NODE_ENV: production
+          NEON_DB_URL: ${{ secrets.NEON_DB_URL }}
