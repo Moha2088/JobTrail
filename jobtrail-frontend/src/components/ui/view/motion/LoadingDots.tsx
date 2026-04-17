@@ -15,7 +15,7 @@ export function LoadingDots() {
         }
     }
 
-    const dotStyles = "bg-stone-700 p-3 rounded-full"
+    const dotStyles = "bg-stone-700 p-2 rounded-full"
 
     return (
         <motion.div

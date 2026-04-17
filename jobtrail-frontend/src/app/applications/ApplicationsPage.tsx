@@ -34,7 +34,7 @@ export default function ApplicationsPage() {
 
     const { data, isLoading } = useApplications()
 
-    const { data: searchData } = useSearchContent(debouncedSearchQuery)
+    const { data: searchData, isLoading: isSearchLoading } = useSearchContent(debouncedSearchQuery)
 
     const router = useRouter()
     const session = useSessionContext()
@@ -89,7 +89,6 @@ export default function ApplicationsPage() {
                         </div>
                     </div>
                     
-
                 </div>
 
                 <div className="flex mr-10 gap-3">
@@ -150,8 +149,14 @@ export default function ApplicationsPage() {
                 />
             }
 
-            {isFullTextSearchEnabled &&
-                <SearchResultsTable applications={searchData!} query={debouncedSearchQuery} />
+            {isFullTextSearchEnabled && isSearchLoading &&
+                <div className="flex justify-center">
+                    <LoadingDots />
+                </div>
+            }
+
+            {isFullTextSearchEnabled && searchData &&
+                <SearchResultsTable applications={searchData} query={debouncedSearchQuery} />
             }
 
         </div>
