@@ -20,4 +20,4 @@ export interface ApplicationData {
     }
 }
 
-export type PostApplication = Omit<Application, "id" | "createdAt">
+export type PostApplication = Omit<Application, "id" | "createdAt" | "pendingDeletion">

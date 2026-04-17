@@ -13,6 +13,8 @@ import { Toggle } from "@/components/ui/controls/ai/Toggle"
 import { BsAnthropic } from "react-icons/bs"
 import { useLocalStorage } from "@/hooks/useLocalStorage"
 import { DeleteUserDialog } from "@/components/ui/controls/user/DeleteUserDialog"
+import { EditUserDialog } from "@/components/ui/controls/user/EditUserDialog"
+import { UserContext } from "@/contexts/user/UserContext"
 
 
 export default function UserPage(){
@@ -24,7 +26,8 @@ export default function UserPage(){
 
     const [currentProvider, setCurrentProvider] = useState<Provider>()
 
-    const [isDeleteUserDialogOpen, setIsDeleteUserDialogOpen] = useState(false)
+    const [isEditUserDialogOpen, setIsEditUserDialogOpen] = useState<boolean>(false)
+    const [isDeleteUserDialogOpen, setIsDeleteUserDialogOpen] = useState<boolean>(false)
 
     const { setItem, getItem } = useLocalStorage<Provider>("defaultProvider")
 
@@ -47,14 +50,19 @@ export default function UserPage(){
         )
     }
 
-
     return (
-        <div>
-            <DeleteUserDialog
-                open={isDeleteUserDialogOpen}
-                onOpenChange={setIsDeleteUserDialogOpen}
-            />
+        <div >
+            <UserContext value={{ user: userData! }}>
+                <EditUserDialog 
+                    open={isEditUserDialogOpen}
+                    onOpenChange={setIsEditUserDialogOpen}
+                />
 
+                <DeleteUserDialog
+                    open={isDeleteUserDialogOpen}
+                    onOpenChange={setIsDeleteUserDialogOpen}
+                />
+            </UserContext>
 
             <div className="bg-black h-50" />
             <div className="flex flex-col gap-5 items-center">
@@ -120,7 +128,7 @@ export default function UserPage(){
                         <Button
                             size="small"
                             className="w-20"
-                            onClick={() => { }}
+                            onClick={() => setIsEditUserDialogOpen(true)}
                         >
                             <IconEdit />
                         </Button>

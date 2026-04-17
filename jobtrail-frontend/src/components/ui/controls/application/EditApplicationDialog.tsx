@@ -57,18 +57,6 @@ function Content(props: ContentProps) {
         }
     })
 
-    useEffect(() => {
-        if(application) {
-            reset({
-                companyName: application?.companyName,
-                email: application?.email,
-                applicationStatus: application?.applicationStatus,
-                position: application?.position,
-                content: application?.content
-            })
-        }
-    }, [application, reset])
-
     const onSubmit = (data: EditApplicationInput) => {
         console.log("Entered edit function")
 

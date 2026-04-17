@@ -13,7 +13,7 @@ export const applicationsTable = pgTable("applications", {
     companyName: varchar("CompanyName", { length: 30 }).notNull(),
     email: varchar("Email", { length: 30 }).notNull(),
     applicationStatus: varchar("ApplicationStatus").notNull(),
-    position: varchar("Position", { length: 40 }).notNull(),
+    position: varchar("Position", { length: 70 }).notNull(),
     createdAt: timestamp("CreatedAt").defaultNow(),
     content: varchar("Content"),
     key: varchar("Key", { length: 100 }),

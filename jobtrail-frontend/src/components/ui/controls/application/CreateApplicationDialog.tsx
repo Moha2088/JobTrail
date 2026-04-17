@@ -58,8 +58,7 @@ function Content(props: ContentProps) {
             email: data.email,
             applicationStatus: applicationStatus,
             position: data.position,
-            content: data.content,
-            pendingDeletion: false
+            content: data.content
         }, {
             onSuccess: () => {
                 console.log("Application created successfully")

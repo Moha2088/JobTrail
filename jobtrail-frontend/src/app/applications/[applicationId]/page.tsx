@@ -92,8 +92,6 @@ export default function Page() {
         notFound()
     }
 
-    const canPropmt: boolean = data!.content!.length >= 100
-    
     return (
         <>
 
@@ -102,7 +100,7 @@ export default function Page() {
             </QuickTip>
 
 
-            <ApplicationContext value={{ application: data! }}>
+            <ApplicationContext value={{ application: data }}>
                 <EditApplicationDialog 
                     open={isEditApplicationDialogOpen}
                     onOpenChange={setIsEditApplicationDialogOpen} 
@@ -123,18 +121,18 @@ export default function Page() {
                 {data?.content &&
                     <div>
                         <div className="flex flex-col p-3 max-w-150 overflow-y-scroll h-screen gap-5">
-                            <label className="mr-auto ml-auto w-fit pl-5 pr-5 p-2 rounded-2xl bg-gray-100 font-bold text-xl">
+                            <label className="mr-auto ml-auto w-fit pl-5 pr-5 p-2 rounded-2xl text-blue-400 tracking-tighter font-bold text-2xl">
                                 Content
                             </label>
 
                             <div className="flex justify-center">
                                 <Button
                                     onClick={() => {
-                                        setInput(createContentPrompt(data?.content))
+                                        setInput(createContentPrompt(data!.content!))
                                         handleSubmit()
                                     }}
                                     variant="ghost"
-                                    disabled={isCompletionLoading || !canPropmt}
+                                    disabled={isCompletionLoading || data.content.length < 100}
                                     size="small"
                                     iconStart={<IconSparkles />}
                                     className="w-20"
@@ -162,7 +160,7 @@ export default function Page() {
 
                             </div>
 
-                            {!canPropmt &&
+                            {data.content.length < 100 &&
                                 <div className="p-2 rounded-full bg-red-400">
                                     <p className="text-white text-xs">
                                         AI optimization requires more content!.

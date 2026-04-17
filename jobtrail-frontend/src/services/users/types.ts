@@ -9,7 +9,7 @@ export interface User {
     applications: Application[]
 }
 
-export type PostUser = Omit<User, "id" | "applications"> & {
+export type PostUser = Omit<User, "id" | "applications" | "createdAt"> & {
     password: string
 }
 

@@ -6,6 +6,10 @@ import { getSession } from "../session/getSession"
 
 export function usePutUser(userId: number): UseMutationResult<void, Error, PutUser> {
     return useMutation({
+        meta: {
+            errorMessage: "Failed to update user. Please try again.",
+            successMessage: "User updated successfully!"
+        },
         mutationKey: ["users", userId],
         mutationFn: async(variables) => {
             const session = await getSession()

@@ -1,9 +1,10 @@
-import { useQuery } from "@tanstack/react-query"
+import { useQuery, UseQueryResult } from "@tanstack/react-query"
 import { getSession } from "../session/getSession"
 import { elysiaApi } from "@/app/api/apiClients"
+import { User } from "@/services/users/types"
 
 
-export function useUser(id: number) {
+export function useUser(id: number): UseQueryResult<User, Error> {
     return useQuery({
         queryKey: ["users", id],
         queryFn: async() => {
@@ -15,7 +16,7 @@ export function useUser(id: number) {
                 }
             })
 
-            return data
+            return data as User
         }
     })
 }

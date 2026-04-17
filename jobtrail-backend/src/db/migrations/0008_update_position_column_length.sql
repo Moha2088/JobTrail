@@ -1,0 +1,1 @@
+ALTER TABLE "applications" ALTER COLUMN "Position" SET DATA TYPE varchar(70);
