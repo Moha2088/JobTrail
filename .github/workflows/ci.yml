@@ -25,3 +25,5 @@ jobs:
 
       - name: Run migrations
         run: cd ${{ env.BACKEND_PATH }} && bun migrate
+        env:
+          NEON_DB_URL: ${{ secrets.NEON_DB_URL }}
