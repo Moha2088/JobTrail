@@ -4,7 +4,9 @@
   "scripts": {
     "dev": "bun run --watch src/index.ts",
     "ci": "bun install --frozen-lockfile",
-    "migrate": "drizzle-kit migrate"
+    "migrate": "drizzle-kit migrate",
+    "start": "bun dev",
+    "main": "src/index.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1018.0",
