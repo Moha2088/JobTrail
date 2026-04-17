@@ -50,19 +50,25 @@ export default function UserPage(){
         )
     }
 
-    return (
-        <div >
-            <UserContext value={{ user: userData! }}>
-                <EditUserDialog 
-                    open={isEditUserDialogOpen}
-                    onOpenChange={setIsEditUserDialogOpen}
-                />
+    if(!userData) {
+        return null
+    }
 
-                <DeleteUserDialog
-                    open={isDeleteUserDialogOpen}
-                    onOpenChange={setIsDeleteUserDialogOpen}
-                />
-            </UserContext>
+    return (
+        <div>
+            {userData &&
+                <UserContext value={{ user: userData }}>
+                    <EditUserDialog 
+                        open={isEditUserDialogOpen}
+                        onOpenChange={setIsEditUserDialogOpen}
+                    />
+
+                    <DeleteUserDialog
+                        open={isDeleteUserDialogOpen}
+                        onOpenChange={setIsDeleteUserDialogOpen}
+                    />
+                </UserContext>
+            }
 
             <div className="bg-black h-50" />
             <div className="flex flex-col gap-5 items-center">

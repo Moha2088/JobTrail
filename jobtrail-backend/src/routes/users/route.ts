@@ -33,7 +33,7 @@ export const userRouter = new Elysia({ prefix: "/users" })
         const { sub } = claims
         if(!sub) {
             set.status = StatusCodes.UNAUTHORIZED
-            return
+            return { message: "Unauthorized" }
         }
     })
     

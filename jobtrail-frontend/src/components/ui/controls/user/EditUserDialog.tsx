@@ -43,10 +43,6 @@ function Content(props: ContentProps) {
 
     const editUser = usePutUser(user?.id)
 
-    const [isDropDownOpen, setIsDropdownOpen] = useState<boolean>(false)
-    const [applicationStatus, setApplicationStatus] = useState<string>("")
-
-
     const { handleSubmit, register, reset, getValues, formState: { errors } } = useForm<EditUserInput>({
         defaultValues: {
             name: user?.name,
@@ -75,10 +71,6 @@ function Content(props: ContentProps) {
         })
     }
 
-    const selectStatus = (status: ApplicationStatus) => {
-        setApplicationStatus(status)
-    }
-
     return (
         <OverlayWrapper>
             <form
@@ -102,7 +94,7 @@ function Content(props: ContentProps) {
                                 required: "Name is required"
                             })}
                         />
-                        {errors.name && <p className="text-red-400">{errors.name.message}</p>}
+                        {errors.name && <p className="text-red-400 text-sm">{errors.name.message}</p>}
 
                     </label>
                     <label className="mb-3">
@@ -116,7 +108,7 @@ function Content(props: ContentProps) {
                                 required: "Email is required"
                             })}
                         />
-                        {errors.email && <p className="text-red-400">{errors.email.message}</p>}
+                        {errors.email && <p className="text-red-400 sm">{errors.email.message}</p>}
                     </label>
                     <label className="mb-3">
                         <p>
@@ -125,12 +117,13 @@ function Content(props: ContentProps) {
                         <Input
                             className="w-100 bg-gray-100"
                             defaultValue=""
+                            type="password"
                             placeholder="Enter the password for the user"
                             {...register("password", {
                                 required: "Password is required!"
                             })}
                         />
-                        {errors.password && <p className="text-red-400">{errors.password.message}</p>}
+                        {errors.password && <p className="text-red-400 text-sm">{errors.password.message}</p>}
                     </label>
 
                     <label className="mb-3">
@@ -140,13 +133,14 @@ function Content(props: ContentProps) {
                         <Input
                             className="w-100 bg-gray-100"
                             defaultValue=""
+                            type="password"
                             placeholder="Confirm the password for the user"
                             {...register("confirmPassword", {
                                 required: "Confirmed password is required!",
                                 validate: (value) => value === getValues("password") || "Passwords do not match"
                             })}
                         />
-                        {errors.confirmPassword && <p className="text-red-400">{errors.confirmPassword.message}</p>}
+                        {errors.confirmPassword && <p className="text-red-400 text-sm">{errors.confirmPassword.message}</p>}
                     </label>
                 </div>
 
@@ -159,20 +153,10 @@ function Content(props: ContentProps) {
                             Cancel
                         </Button>
                     </Dialog.Close>
-                    <Dialog.Close asChild>
-                        <Button
-                            onClick={() => {
-                                editUser.mutate({
-                                    name: getValues("name"),
-                                    email: getValues("email"),
-                                    password: getValues("password")
-                                })
-                            }}
-                            size="small"
-                        >
-                            Save
-                        </Button>
-                    </Dialog.Close>
+
+                    <Button size="small" >
+                        Save
+                    </Button>
                 </div>
             </form>
         </OverlayWrapper>
