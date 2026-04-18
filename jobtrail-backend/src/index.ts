@@ -10,7 +10,10 @@ import { logger } from "./logger";
 
 const app = new Elysia()
     .use(cors({
-        origin: "http://localhost:3000",
+        origin: [
+            Bun.env.FRONTEND_URL!, 
+            Bun.env.PROD_FRONTEND_URL!
+        ],
         credentials: true
     }))
     .use(openapi({
