@@ -5,9 +5,10 @@ import { ApplicationQueueJobs } from "./events/applications/jobTypes"
 export const applicationsQueueName = "applications"
 export const usersQueueName = "users"
 
+const isProduction = process.env.NODE_ENV === "production"
 
 export const connection: ConnectionOptions = {
-    host: "localhost",
+    host: isProduction ? process.env.UPSTASH_HOST : "localhost",
     port: 6379
 }
 
