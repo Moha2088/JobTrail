@@ -10,5 +10,6 @@ const url = isProduction ? process.env.PROD_NEXT_BACKEND_URL! : process.env.NEXT
 export const elysiaApi = treaty<App>(url)
 
 export const axiosClient = axios.create({
-    baseURL: url
+    baseURL: url,
+    timeout: 5000,
 })
