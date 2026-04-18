@@ -2,6 +2,7 @@ import { getSession } from "@/services/session/getSession"
 import axios from "axios"
 import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
+import { axiosClient } from "../../apiClients"
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ userId: number }> }) {
     const { userId } = await params
@@ -16,7 +17,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ u
 
     const session = await getSession()
 
-    await axios.delete(`http://localhost:3003/api/users/${userId}`, {
+    await axiosClient.delete(`/users/${userId}`, {
         headers: {
             Authorization: "Bearer " + session?.accessToken
         }

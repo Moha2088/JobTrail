@@ -2,6 +2,7 @@ import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 import axios from "axios"
 import { getSession } from "@/services/session/getSession"
+import { axiosClient } from "../apiClients"
 
 
 export async function POST() {
@@ -12,7 +13,7 @@ export async function POST() {
         return NextResponse.json(null)
     }
 
-    await axios.post("http://localhost:3003/api/auth/logout")
+    await axiosClient.post("/auth/logout")
 
     cookieStore.delete("session")
     return NextResponse.json(null)
