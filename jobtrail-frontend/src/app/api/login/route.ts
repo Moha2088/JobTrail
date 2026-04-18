@@ -4,6 +4,7 @@ import { NextRequest } from "next/server"
 import axios from "axios"
 import { decodeJwt } from "jose"
 import { signSession } from "@/services/session/signSession"
+import { axiosClient } from "../apiClients"
 
 export interface LoginData {
     accessToken: string
@@ -13,7 +14,7 @@ export interface LoginData {
 export async function POST(req: NextRequest) {
     const body = await req.json()
 
-    const { data } = await axios.post<LoginData>("http://localhost:3003/api/auth/login", body)
+    const { data } = await axiosClient.post<LoginData>("/auth/login", body)
     const { accessToken } = data
     const { sub, exp, name, email } = decodeJwt(accessToken)
 
