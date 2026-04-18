@@ -3,8 +3,7 @@ Web app for tracking job applications
 
 # Tech Stack
 
- ## Frontend
-
+## Frontend
  - Next.js
  - Radix UI
  - Tanstack Query
@@ -12,7 +11,7 @@ Web app for tracking job applications
  - Cypress
  - Vercel (Deployment)
 
- ## Backend
+## Backend
  - Bun
  - Cloudflare R2 & Amazon S3
  - ElysiaJS
