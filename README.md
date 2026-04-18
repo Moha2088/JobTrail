@@ -1,7 +1,10 @@
 # JobTrail
 Web app for tracking job applications
 
+<br/>
+
 # Tech Stack
+<br/>
 
 ## Frontend
  - Next.js
@@ -10,6 +13,8 @@ Web app for tracking job applications
  - TailwindCSS
  - Cypress
  - Vercel (Deployment)
+
+<br/>
 
 ## Backend
  - Bun
