@@ -39,12 +39,17 @@ export function SignupForm() {
             password: data.password
         }, {
             onSuccess: async() => {
+                console.log("User created successfully! Logging in...")
                 await axios.post("../../api/login", {
                     email: getValues("email"),
                     password: getValues("password")
                 })
 
                 router.push("/applications")
+            },
+
+            onError: (error) => {
+                console.error("Error creating user:", error)
             }
         })
     }
