@@ -1,6 +1,7 @@
 import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
 import { verifySession } from "@/services/session/verifySession"
+import { isProduction } from "./app/api/apiClients"
 
 
 export async function proxy(req: NextRequest) {
@@ -9,6 +10,7 @@ export async function proxy(req: NextRequest) {
         "/user"
     ]
 
+    const baseURL = isProduction ? process.env.PROD_FRONTEND_URL : "http://localhost:3000"
     const currentPath = req.nextUrl.pathname
 
     const cookieStore = await cookies()
@@ -17,7 +19,7 @@ export async function proxy(req: NextRequest) {
     if (protectedRoutes.includes(currentPath) || protectedRoutes.some(route => currentPath.startsWith(route))) {
         if(!sessionToken) {
             console.log("Session token not found! Redirecting to login!")
-            return NextResponse.redirect("http://localhost:3000/login?redirect=" + currentPath)
+            return NextResponse.redirect(`${baseURL}/login?redirect=${currentPath}`)
         }
 
         try {
@@ -27,14 +29,14 @@ export async function proxy(req: NextRequest) {
 
         catch (err) {
             console.log("Session invalid!: " + (err as Error).message)
-            return NextResponse.redirect(`http://localhost:3000/login`)
+            return NextResponse.redirect(`${baseURL}/login`)
         }
     }
 
     if(currentPath === "/login") {
         if(sessionToken) {
             console.log("Session found, redirecting to applications!")
-            return NextResponse.redirect("http://localhost:3000/applications")
+            return NextResponse.redirect(`${baseURL}/applications`)
         }
     }
 }
