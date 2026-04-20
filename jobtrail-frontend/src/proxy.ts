@@ -20,7 +20,8 @@ export async function proxy(req: NextRequest) {
     if (protectedRoutes.includes(currentPath) || protectedRoutes.some(route => currentPath.startsWith(route))) {
         if(!sessionToken) {
             console.log("Session token not found! Redirecting to login!")
-            return NextResponse.redirect(`${baseURL}/login?redirect=${currentPath}`)
+            const returnTo = `${req.nextUrl.pathname}${req.nextUrl.search}`
+            return NextResponse.redirect(`${baseURL}/login?redirect=${encodeURIComponent(returnTo)}`)
         }
 
         try {
