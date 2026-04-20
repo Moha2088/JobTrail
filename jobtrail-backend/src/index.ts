@@ -7,6 +7,7 @@ import { jwtConfig } from "./utils/auth/jwt";
 import { handleNotFoundError } from "./handlers/handleNotFound"
 import "./messaging/eventhandlers/applications/jobHandlers"
 import { logger } from "./logger";
+import { healthRouter } from "./routes/health/route";
 
 const app = new Elysia()
     .use(cors({
@@ -22,6 +23,7 @@ const app = new Elysia()
     .use(handleNotFoundError)
     .group("/api", (app) => app
         .use(jwtConfig)
+        .use(healthRouter)
         .use(applicationRouter)
         .use(userRouter)
         .use(authRouter)
