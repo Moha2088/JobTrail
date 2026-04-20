@@ -11,6 +11,7 @@ export async function proxy(req: NextRequest) {
     ]
 
     const baseURL = isProduction ? process.env.LOCAL_FRONTEND_URL ? "http://localhost:3000" : process.env.PROD_FRONTEND_URL : "http://localhost:3000"
+    console.log("----- BaseURL -----: " + baseURL)
     const currentPath = req.nextUrl.pathname
 
     const cookieStore = await cookies()
