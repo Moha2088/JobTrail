@@ -2,7 +2,7 @@ name: Frontend test
 
 env:
   NEXT_PATH: jobtrail-frontend
-  FRONTEND_URL: ${{ secrets.PROD_FRONTEND_URL }}
+  FRONTEND_URL: ${{ secrets.LOCAL_FRONTEND_URL }}
 
 on:
   pull_request:
