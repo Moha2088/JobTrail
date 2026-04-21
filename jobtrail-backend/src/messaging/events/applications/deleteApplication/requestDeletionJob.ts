@@ -8,7 +8,7 @@ export async function requestDeletionJob(applicationId: number, userId: number, 
             applicationId,
             userId
         }, {
-            delay: 60000,
+            delay: 10000,
             jobId: "delete_application-" + applicationId,
             ...jobOptions
         })
