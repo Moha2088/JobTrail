@@ -7,6 +7,7 @@ import { jwtConfig } from "./utils/auth/jwt";
 import "./messaging/eventhandlers/applications/jobHandlers"
 import { logger } from "./logger";
 import { healthRouter } from "./routes/health/route";
+import { handleNotFoundMiddleware } from "./middleware/handleNotFound.middleware";
 
 const app = new Elysia()
     .use(cors({
@@ -19,7 +20,7 @@ const app = new Elysia()
     .use(openapi({
         path: "/docs"}
     ))
-    .use(handleNotFoundError)
+    .use(handleNotFoundMiddleware)
     .group("/api", (app) => app
         .use(jwtConfig)
         .use(healthRouter)
