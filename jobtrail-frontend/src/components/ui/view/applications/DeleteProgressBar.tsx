@@ -12,7 +12,6 @@ interface DeleteProgressBarProps {
 
 
 export function DeleteProgressBar(props: DeleteProgressBarProps) {
-    const isFirstRender = useRef<boolean>(false)
 
     const { pendingDeletion, id } = props
 
@@ -23,18 +22,15 @@ export function DeleteProgressBar(props: DeleteProgressBarProps) {
     useEffect(() => {
         if (progress >= 100) return
 
-        if(!isFirstRender.current) {
-            toast.warning("Click the arrow to undo!", {
-                position: "top-right"
-            })
-
-            isFirstRender.current = true
-        }
+        toast.warning("Click the arrow to undo!", {
+            position: "top-right"
+        })
 
         const timer = setTimeout(() => {
             setProgress(prev => prev + 1)
-            return clearTimeout(timer)
         }, 100)
+
+        return () => clearTimeout(timer)
     }, [progress])
 
     return (
