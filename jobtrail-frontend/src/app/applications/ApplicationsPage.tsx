@@ -70,17 +70,12 @@ export default function ApplicationsPage() {
     }
 
     useEffect(() => {
-        document.addEventListener("keydown", (event) => {
-            handleKeyDown(event)
-        })
-
-        document.addEventListener("keyup", (e) => {
-            handleKeyUp(e)
-        })
+        document.addEventListener("keydown", handleKeyDown)
+        document.addEventListener("keyup", handleKeyUp)
 
         return () => {
-            document.removeEventListener("keydown", () => { })
-            document.removeEventListener("keyup", () => { })
+            document.removeEventListener("keydown", handleKeyDown)
+            document.removeEventListener("keyup", handleKeyUp)
         }
     }, [])
 
