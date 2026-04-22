@@ -14,7 +14,7 @@ import {
     IconUser
 } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useSessionContext } from "@/contexts/session/SessionContext"
 import Link from "next/link"
 import { useDebounce } from "@/hooks/useDebounce"
@@ -26,7 +26,11 @@ import { SearchResultsTable } from "@/components/ui/view/applications/SearchResu
 
 export default function ApplicationsPage() {
     const [isCreateApplicationDialogOpen, setIsCreateApplicationDialogOpen] = useState<boolean>(false)
+    
     const [searchQuery, setSearchQuery] = useState<string>("")
+    const isShiftPressed = useRef<boolean>(false)
+    const isSlashPressed = useRef<boolean>(false)
+    const searchInputRef = useRef<HTMLInputElement>(null)
 
     const [isFullTextSearchEnabled, setIsFullTextSearchEnabled] = useState<boolean>(false)
 
@@ -41,6 +45,44 @@ export default function ApplicationsPage() {
 
     const logOut = useLogOut()
 
+    const handleKeyDown = (event: KeyboardEvent) => {
+        if(event.key === "Shift") {
+            isShiftPressed.current = true
+        }
+        
+        if(event.key === "/") {
+            isSlashPressed.current = true
+        }
+
+        if(isShiftPressed.current && isSlashPressed.current) {
+            searchInputRef.current?.focus()
+        }
+    }
+
+    const handleKeyUp = (event: KeyboardEvent) => {
+        if(event.key === "Shift") {
+            isShiftPressed.current = false
+        }
+
+        if(event.key === "/") {
+            isSlashPressed.current = false
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener("keydown", (event) => {
+            handleKeyDown(event)
+        })
+
+        document.addEventListener("keyup", (e) => {
+            handleKeyUp(e)
+        })
+
+        return () => {
+            document.removeEventListener("keydown", () => { })
+            document.removeEventListener("keyup", () => { })
+        }
+    }, [])
 
     if(isLoading) {
         return (
@@ -77,6 +119,7 @@ export default function ApplicationsPage() {
                     <div className="flex flex-col">
                         <div className="flex flex-col gap-3">
                             <Input
+                                ref={searchInputRef}
                                 variant="pill"
                                 placeholder={isFullTextSearchEnabled ? "Search by content..." : "Search by company name..."}
                                 withDivider
