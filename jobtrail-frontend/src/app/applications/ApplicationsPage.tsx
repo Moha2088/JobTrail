@@ -87,13 +87,13 @@ export default function ApplicationsPage() {
         )
     }
 
-    if(!data) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <p className="text-lg">No applications found.</p>
-            </div>
-        )
-    }
+    // if(!data) {
+    //     return (
+    //         <div className="flex justify-center items-center h-screen">
+    //             <p className="text-lg">No applications found.</p>
+    //         </div>
+    //     )
+    // }
 
     const filteredApplications = data.applications.filter(app => app.companyName.toLowerCase().includes(debouncedSearchQuery.toLowerCase()))
 
