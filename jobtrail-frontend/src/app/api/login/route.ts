@@ -14,7 +14,7 @@ export interface LoginData {
 export async function POST(req: NextRequest) {
     const body = await req.json()
     console.log("Entered Next Login endpoint with body:", body)
-    const { data } = await axiosClient.post<LoginData>("/auth/login", body)
+    const { data } = await axiosClient.post<LoginData>("/api/auth/login", body)
     const { accessToken } = data
     const { sub, exp, name, email } = decodeJwt(accessToken)
 
