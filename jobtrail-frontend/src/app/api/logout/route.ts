@@ -13,7 +13,7 @@ export async function POST() {
         return NextResponse.json(null)
     }
 
-    await axiosClient.post("/auth/logout")
+    await axiosClient.post("/api/auth/logout")
 
     cookieStore.delete("session")
     return NextResponse.json(null)
