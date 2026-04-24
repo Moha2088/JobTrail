@@ -1,6 +1,8 @@
 "use client"
 
 import { MutationCache, QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client"
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister"
 import { TanStackDevtools } from "@tanstack/react-devtools"
 import { ReactNode, useState } from "react"
 import { toast } from "sonner"
@@ -57,10 +59,18 @@ export function ReactQueryClientProvider({ children }: ProviderProps) {
         return queryClient
     })
 
+    const persister = createAsyncStoragePersister({
+        storage: typeof window !== "undefined" ? window.localStorage : undefined
+    })
+
+
     return (
-        <QueryClientProvider client={queryClient}>
+        <PersistQueryClientProvider 
+            client={queryClient}
+            persistOptions={{ persister }}
+        >
             {/* <TanStackDevtools /> */}
             {children}
-        </QueryClientProvider>
+        </PersistQueryClientProvider>
     )
 }
