@@ -1,7 +1,7 @@
 import React from 'react'
 import { ApplicationTable } from '@/components/ui/view/applications/ApplicationTable'
 import { MockRouter } from "../../fixtures/mockRouter"
-import { ReactQueryClientProvider } from '@/providers/ReactQueryClientProvider'
+import { ReactQueryClientProvider } from '@/providers/PersistQueryClientProvider'
 import { TestProviders } from '../../fixtures/TestProviders'
 
 describe('<ApplicationTable />', () => {
