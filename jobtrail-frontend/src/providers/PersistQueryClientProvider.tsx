@@ -63,11 +63,18 @@ export function ReactQueryClientProvider({ children }: ProviderProps) {
         storage: typeof window !== "undefined" ? window.localStorage : undefined
     })
 
-
     return (
         <PersistQueryClientProvider 
             client={queryClient}
-            persistOptions={{ persister }}
+            persistOptions={{ 
+                persister,
+                dehydrateOptions: {
+                    shouldDehydrateQuery: (query) => {
+                        const queryKey = query?.queryKey[0] as string
+                        return !["session"].includes(queryKey)
+                    }
+                }
+            }}
         >
             {/* <TanStackDevtools /> */}
             {children}
