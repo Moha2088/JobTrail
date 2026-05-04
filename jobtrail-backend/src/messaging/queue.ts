@@ -15,8 +15,7 @@ export const connection: ConnectionOptions = {
     host: isProduction ? process.env.UPSTASH_HOST : "localhost",
     port: 6379,
     ...(isProduction ? {
-        password: process.env.UPSTASH_PASSWORD,
-        tls: {}
+        password: process.env.UPSTASH_PASSWORD
     }
     : {})
 }
