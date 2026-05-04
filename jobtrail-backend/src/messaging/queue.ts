@@ -9,7 +9,9 @@ const isProduction = process.env.NODE_ENV === "production"
 
 export const connection: ConnectionOptions = {
     host: isProduction ? process.env.UPSTASH_HOST : "localhost",
-    port: 6379
+    port: 6379,
+    password: process.env.UPSTASH_PASSWORD,
+    tls: {}
 }
 
 
