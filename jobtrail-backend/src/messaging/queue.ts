@@ -7,7 +7,7 @@ export const usersQueueName = "users"
 
 const isProduction = process.env.NODE_ENV === "production"
 
-if(isProduction && (!process.env.UPSTASH_HOST && !process.env.UPSTASH_PASSWORD)) {
+if(isProduction && (!process.env.UPSTASH_HOST || !process.env.UPSTASH_PASSWORD)) {
     throw new Error("Redis host and password is required!")
 }
 
