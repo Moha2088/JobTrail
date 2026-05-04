@@ -1,6 +1,6 @@
 "use client"
 
-import { MutationCache, QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { MutationCache, QueryClient, defaultShouldDehydrateQuery } from "@tanstack/react-query"
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client"
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister"
 import { TanStackDevtools } from "@tanstack/react-devtools"
@@ -70,8 +70,9 @@ export function ReactQueryClientProvider({ children }: ProviderProps) {
                 persister,
                 dehydrateOptions: {
                     shouldDehydrateQuery: (query) => {
-                        const queryKey = query?.queryKey[0] as string
-                        return !["session"].includes(queryKey)
+                        const queryKey = query.queryKey[0] as string
+                        if(queryKey == "session") return false
+                        return defaultShouldDehydrateQuery(query)
                     }
                 }
             }}
