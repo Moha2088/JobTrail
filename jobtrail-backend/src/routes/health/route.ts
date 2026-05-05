@@ -12,7 +12,7 @@ interface HealthCheckResponse {
 }
 
 
-const HEALTCHCHECK_TIMEOUT_MS = 5000
+const HEALTHCHECK_TIMEOUT_MS = 5000
 
 const withTimeout = <T>(promise: Promise<T>, ms: number): Promise<T> => {
     return new Promise<T>((resolve, reject) => {
@@ -36,7 +36,7 @@ export const healthRouter = new Elysia()
         let postgresStatus: Status = "UP"
         
         try {
-            await withTimeout(db.execute(sql`SELECT 1`), HEALTCHCHECK_TIMEOUT_MS)
+            await withTimeout(db.execute(sql`SELECT 1`), HEALTHCHECK_TIMEOUT_MS)
         }
 
         catch {
