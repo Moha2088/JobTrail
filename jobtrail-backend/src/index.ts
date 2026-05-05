@@ -28,7 +28,7 @@ const app = new Elysia()
         .use(userRouter)
         .use(authRouter)
     )
-    .listen(process.env.PORT || 3003);
+    .listen(3003);
 
 logger.info(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
