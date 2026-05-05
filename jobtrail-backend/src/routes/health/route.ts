@@ -12,7 +12,7 @@ interface HealthCheckResponse {
 }
 
 
-const HEALTHCHECK_TIMEOUT_MS = 8500
+const HEALTHCHECK_TIMEOUT_MS = 5000
 
 const withTimeout = <T>(promise: Promise<T>, ms: number): Promise<T> => {
     return new Promise<T>((resolve, reject) => {
