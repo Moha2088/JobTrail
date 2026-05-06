@@ -11,7 +11,7 @@ import {
 export const applicationsTable = pgTable("applications", {
     id: integer("Id").primaryKey().generatedAlwaysAsIdentity(),
     companyName: varchar("CompanyName", { length: 30 }).notNull(),
-    email: varchar("Email", { length: 30 }).notNull(),
+    email: varchar("Email", { length: 254 }).notNull(),
     applicationStatus: varchar("ApplicationStatus").notNull(),
     position: varchar("Position", { length: 70 }).notNull(),
     createdAt: timestamp("CreatedAt").defaultNow(),
