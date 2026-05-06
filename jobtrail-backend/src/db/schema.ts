@@ -17,7 +17,7 @@ export const applicationsTable = pgTable("applications", {
     createdAt: timestamp("CreatedAt").defaultNow(),
     content: varchar("Content"),
     key: varchar("Key", { length: 100 }),
-    userId: integer("UserId").references(() => usersTable.id)
+    userId: integer("UserId").references(() => usersTable.id, { onDelete: "cascade" })
 }, (table => [
         index("CompanyName_idx").on(table.companyName),
         index("Email_idx").on(table.email),
