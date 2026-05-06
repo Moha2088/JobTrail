@@ -17,7 +17,6 @@ export const applicationsTable = pgTable("applications", {
     createdAt: timestamp("CreatedAt").defaultNow(),
     content: varchar("Content"),
     key: varchar("Key", { length: 100 }),
-    pendingDeletion: boolean("PendingDeletion").default(false),
     userId: integer("UserId").references(() => usersTable.id)
 }, (table => [
         index("CompanyName_idx").on(table.companyName),

@@ -1,8 +1,6 @@
 import { ConnectionOptions, Queue } from "bullmq"
 import { UserQueueJobs } from "./events/users/jobTypes"
-import { ApplicationQueueJobs } from "./events/applications/jobTypes"
 
-export const applicationsQueueName = "applications"
 export const usersQueueName = "users"
 
 const isProduction = process.env.NODE_ENV === "production"
@@ -20,10 +18,6 @@ export const connection: ConnectionOptions = {
     : {})
 }
 
-
-export const applicationsQueue = new Queue<ApplicationQueueJobs>(applicationsQueueName, {
-    connection
-})
 
 export const usersQueue = new Queue<UserQueueJobs>(usersQueueName, {
     connection

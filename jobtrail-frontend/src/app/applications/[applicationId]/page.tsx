@@ -30,8 +30,6 @@ export default function Page() {
     const application = useApplication(parsedApplicationId)
     const { data, isLoading: isApplicationLoading, isError } = application
 
-    const updateApplication = usePutApplication(parsedApplicationId)
-
     const patchContent = usePatchContent(parsedApplicationId)
 
     const { userId } = useSession()?.data || {}

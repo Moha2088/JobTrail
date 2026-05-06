@@ -151,21 +151,6 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     }, putApplicationSchema)
 
 
-    .post("/cancel-deletion/:id", async({ params, set, headers: { authorization } }) => {
-        const { id } = params
-
-        await validate(id, authorization!, set)
-        
-        await cancelApplicationDeletion(id)
-
-        await db.update(applicationsTable)
-            .set({ pendingDeletion: false })
-            .where(eq(applicationsTable.id, id))
-
-        set.status = StatusCodes.NO_CONTENT
-    }, cancelDeletionSchema)
-
-
     .delete("/:id", async({params, set, headers: { authorization }}) => {
         const { id } = params
 
@@ -173,12 +158,8 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
 
         await validate(id, authorization!, set)
 
-        console.log("Deleting application with id: " + id)
-        await requestDeletionJob(id, sub)
-
-        await db.update(applicationsTable)
-            .set({ pendingDeletion: true })
-            .where(eq(applicationsTable.id, id))
+        await db.delete(applicationsTable)
+        .where(eq(applicationsTable.id, id))
 
         set.status = StatusCodes.NO_CONTENT
     }, deleteApplicationsSchema)

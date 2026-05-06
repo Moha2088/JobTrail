@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/table"
 import { Application, useDeleteApplication } from "@/services/applications"
 import { useRouter } from "next/navigation"
-import { DeleteProgressBar } from "./DeleteProgressBar"
 import { IconArrowNarrowRight, IconTrash } from "@tabler/icons-react"
 
 
@@ -21,8 +20,6 @@ export function ApplicationTable(props: ApplicationTableProps) {
     const { applications } = props
 
     const deleteApplication = useDeleteApplication()
-    
-
     const router = useRouter()
 
     return (
@@ -63,11 +60,6 @@ export function ApplicationTable(props: ApplicationTableProps) {
                                     })
                                 }}
                             />
-                        </TableCell>
-                        <TableCell>
-                            {app.pendingDeletion &&
-                                <DeleteProgressBar pendingDeletion={app.pendingDeletion} id={app.id} />
-                            }
                         </TableCell>
                     </TableRow>
                 ))}

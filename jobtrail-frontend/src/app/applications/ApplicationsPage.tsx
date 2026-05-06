@@ -26,7 +26,7 @@ import { SearchResultsTable } from "@/components/ui/view/applications/SearchResu
 
 export default function ApplicationsPage() {
     const [isCreateApplicationDialogOpen, setIsCreateApplicationDialogOpen] = useState<boolean>(false)
-    
+
     const [searchQuery, setSearchQuery] = useState<string>("")
     const isShiftPressed = useRef<boolean>(false)
     const isSlashPressed = useRef<boolean>(false)
