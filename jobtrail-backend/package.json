@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "bun run --watch src/index.ts",
     "ci": "bun install --frozen-lockfile",
+    "gen": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate",
     "start": "bun dev",
     "main": "src/index.ts"

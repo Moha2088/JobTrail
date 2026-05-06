@@ -17,7 +17,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ u
 
     const session = await getSession()
 
-    await axiosClient.delete(`/users/${userId}`, {
+    await axiosClient.delete(`/api/users/${userId}`, {
         headers: {
             Authorization: "Bearer " + session?.accessToken
         }

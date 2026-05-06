@@ -1,10 +1,12 @@
 import Elysia from "elysia";
-import { createUserSchema, deleteUserSchema, getUserSchema, putUserSchema } from "./schema";
+import { cancelUserDeletionSchema, createUserSchema, deleteUserSchema, getUserSchema, putUserSchema } from "./schema";
 import { db } from "../../db/db";
 import { applicationsTable, usersTable } from "../../db/schema";
 import { eq } from "drizzle-orm"
 import { getClaims } from "../../utils/auth/getClaims"
 import { StatusCodes } from "http-status-codes"
+import { requestDeleteUserJob } from "../../messaging/events/users/deleteUser/requestDeleteUserJob";
+import { cancelUserDeletion } from "../../messaging/events/users/cancelUserDeletion/cancelUserDeletion";
 
 
 export const userRouter = new Elysia({ prefix: "/users" })
@@ -18,13 +20,6 @@ export const userRouter = new Elysia({ prefix: "/users" })
             .returning()
 
         set.status = StatusCodes.CREATED
-        
-        // return {
-        //     id: result[0].id,
-        //     name: result[0].name,
-        //     email: result[0].email,
-        // }
-
     }, createUserSchema)
 
     // @ts-ignore
@@ -67,6 +62,7 @@ export const userRouter = new Elysia({ prefix: "/users" })
             name: result[0].users.name,
             email: result[0].users.email,
             createdAt: result[0].users.createdAt,
+            pendingDeletion: result[0].users.pendingDeletion,
             applications: [
                 result.map(s => s.applications)
             ]
@@ -95,8 +91,18 @@ export const userRouter = new Elysia({ prefix: "/users" })
 
     }, putUserSchema)
 
+    .post("/cancel-deletion/:id", async({set, params}) => {
+        
+        const id = Number(params.id)
+
+        await cancelUserDeletion(id)
+
+    }, cancelUserDeletionSchema)
+
     .delete("/:id", async({params, set, headers: { authorization }}) => {
         const claims = await getClaims(authorization!)
+
+        console.log("HIT DELETE ENDPOINT")
 
         if(!claims) {
             set.status = StatusCodes.UNAUTHORIZED
@@ -105,8 +111,13 @@ export const userRouter = new Elysia({ prefix: "/users" })
 
         const id = Number(params.id)
 
-        await db.delete(usersTable)
-            .where(eq(usersTable.id, id))
+        await requestDeleteUserJob(id)
+
+        await db.update(usersTable)
+        .set({ pendingDeletion: true })
+        .where(eq(usersTable.id, id))
+
+        console.log("Users is pending deletion!")
 
         set.status = StatusCodes.NO_CONTENT
     }, deleteUserSchema)

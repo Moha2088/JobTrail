@@ -19,6 +19,8 @@ export const connection: ConnectionOptions = {
 }
 
 
+
+
 export const usersQueue = new Queue<UserQueueJobs>(usersQueueName, {
     connection
 })
