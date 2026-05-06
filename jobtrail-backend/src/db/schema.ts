@@ -11,14 +11,13 @@ import {
 export const applicationsTable = pgTable("applications", {
     id: integer("Id").primaryKey().generatedAlwaysAsIdentity(),
     companyName: varchar("CompanyName", { length: 30 }).notNull(),
-    email: varchar("Email", { length: 30 }).notNull(),
+    email: varchar("Email", { length: 254 }).notNull(),
     applicationStatus: varchar("ApplicationStatus").notNull(),
     position: varchar("Position", { length: 70 }).notNull(),
     createdAt: timestamp("CreatedAt").defaultNow(),
     content: varchar("Content"),
     key: varchar("Key", { length: 100 }),
-    pendingDeletion: boolean("PendingDeletion").default(false),
-    userId: integer("UserId").references(() => usersTable.id)
+    userId: integer("UserId").references(() => usersTable.id, { onDelete: "cascade" })
 }, (table => [
         index("CompanyName_idx").on(table.companyName),
         index("Email_idx").on(table.email),

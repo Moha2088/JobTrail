@@ -1,7 +1,8 @@
+import { useLocalStorage } from "@/hooks/useLocalStorage"
 import { cn } from "@/lib/utils"
 import { IconBulbFilled, IconTrashFilled, IconX } from "@tabler/icons-react"
 import { motion } from "motion/react"
-import { ComponentProps, PropsWithChildren, useState } from "react"
+import { ComponentProps, PropsWithChildren, useEffect, useState } from "react"
 
 
 interface QuickTipProps extends PropsWithChildren, ComponentProps<"div"> {
@@ -12,10 +13,13 @@ interface QuickTipProps extends PropsWithChildren, ComponentProps<"div"> {
 export function QuickTip(props: QuickTipProps) {
     const { children, className, ...rest } = props
 
-    const [hideTip, setHideTip] = useState<boolean>()
+    const { setItem, getItem } = useLocalStorage("hide-tip")
+
+    const [hideTip, setHideTip] = useState<boolean>(!!getItem() || false)
 
     const dismissTip = () => {
         setHideTip(true)
+        setItem("true")
     }
 
     return (

@@ -14,8 +14,6 @@ import { Application } from "./types"
 import { StatusCodes } from "http-status-codes";
 import { uploadToR2, getFile, deleteFile, fileExists } from "../../utils/r2";
 import { searchContent } from "../../utils/search-engine/searchContent";
-import { requestDeletionJob } from "../../messaging/events/applications/deleteApplication/requestDeletionJob";
-import { cancelApplicationDeletion } from "../../messaging/events/applications/cancelApplicationDeletion/cancelApplicationDeletionJob";
 
 
 const validate = async (
@@ -28,7 +26,7 @@ const validate = async (
 
     if(claims.sub != application.userId) {
         set.status = StatusCodes.UNAUTHORIZED
-        return
+        throw "Unauthorized"
     }
 }
 
@@ -81,7 +79,6 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
                 applicationStatus: app.applicationStatus,
                 position: app.position,
                 content: app.content,
-                pendingDeletion: app.pendingDeletion
             }
         })
 
@@ -119,8 +116,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
             position: result[0].position,
             createdAt: result[0].createdAt,
             content: result[0].content,
-            key: result[0].key,
-            pendingDeletion: result[0].pendingDeletion
+            key: result[0].key
         }
 
     }, getApplicationSchema)
@@ -151,21 +147,6 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     }, putApplicationSchema)
 
 
-    .post("/cancel-deletion/:id", async({ params, set, headers: { authorization } }) => {
-        const { id } = params
-
-        await validate(id, authorization!, set)
-        
-        await cancelApplicationDeletion(id)
-
-        await db.update(applicationsTable)
-            .set({ pendingDeletion: false })
-            .where(eq(applicationsTable.id, id))
-
-        set.status = StatusCodes.NO_CONTENT
-    }, cancelDeletionSchema)
-
-
     .delete("/:id", async({params, set, headers: { authorization }}) => {
         const { id } = params
 
@@ -173,12 +154,8 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
 
         await validate(id, authorization!, set)
 
-        console.log("Deleting application with id: " + id)
-        await requestDeletionJob(id, sub)
-
-        await db.update(applicationsTable)
-            .set({ pendingDeletion: true })
-            .where(eq(applicationsTable.id, id))
+        await db.delete(applicationsTable)
+        .where(eq(applicationsTable.id, id))
 
         set.status = StatusCodes.NO_CONTENT
     }, deleteApplicationsSchema)

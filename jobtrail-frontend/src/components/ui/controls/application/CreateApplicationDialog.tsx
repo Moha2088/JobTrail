@@ -40,7 +40,7 @@ function Content(props: ContentProps) {
     const createApplication = usePostApplication()
 
     const [isDropDownOpen, setIsDropdownOpen] = useState<boolean>(false)
-    const [applicationStatus, setApplicationStatus] = useState<string>("")
+    const [applicationStatus, setApplicationStatus] = useState<string>("Select status")
 
     const { handleSubmit, register, getValues, formState: { errors } } = useForm<CreateApplicationInput>({
         defaultValues: {
@@ -73,6 +73,13 @@ function Content(props: ContentProps) {
 
     const selectStatus = (status: ApplicationStatus) => {
         setApplicationStatus(status)
+    }
+
+    const statusColorPairs: Record<ApplicationStatus, string> = {
+        ACCEPTED: "text-green-400",
+        REJECTED: "text-red-400",
+        PENDING: "text-yellow-400",
+        OFFER: "text-orange-400"
     }
 
     return (
@@ -113,12 +120,19 @@ function Content(props: ContentProps) {
                         {errors.email && <p className="text-red-400">{errors.email.message}</p>}
                     </label>
                     <label className="mb-3">
-                        <p className="flex gap-1 mb-3">
-                            Application Status:
-                            <p className="inline-block font-bold">
-                                {applicationStatus ? applicationStatus : "Select status"}
-                            </p>
-                        </p>
+                        <div className="flex gap-2">
+                            <div>
+                                <p className="flex gap-1 mb-3">
+                                    Application Status:
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <p className={`font-bold ${statusColorPairs[applicationStatus as ApplicationStatus] ?? "text-black"}`}>
+                                    {applicationStatus ? applicationStatus : "Select status"}
+                                </p>
+                            </div>
+                        </div>
 
                         <StatusDropdownMenu
                             selectStatus={selectStatus}
