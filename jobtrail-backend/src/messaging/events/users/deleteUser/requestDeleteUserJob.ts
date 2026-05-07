@@ -1,13 +1,16 @@
-import { JobsOptions } from "bullmq";
-import { usersQueue } from "../../../queue";
+import { delay, JobsOptions } from "bullmq";
+import { ioredis, usersQueue } from "../../../queue";
 
 export async function requestDeleteUserJob(userId: number, jobOptions: Partial<JobsOptions> = { }) {
+    const jobId = "delete_user_" + userId
+    const delay = 86400000
+
     await usersQueue.add("delete_user/" + userId, {
         type: "delete_user",
         userId
     }, {
-        delay: 86400000,
-        jobId: "delete_user_" + userId,
+        delay,
+        jobId,
         ...jobOptions
     })
 }

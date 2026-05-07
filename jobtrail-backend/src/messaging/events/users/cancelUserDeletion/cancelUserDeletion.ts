@@ -4,6 +4,7 @@ import { usersTable } from "../../../../db/schema";
 import { logger } from "../../../../logger";
 import { usersQueue } from "../../../queue";
 
+
 export async function cancelUserDeletion(userId: number) {
   const jobId = "delete_user_" + userId;
   const job = await usersQueue.getJob(jobId);
