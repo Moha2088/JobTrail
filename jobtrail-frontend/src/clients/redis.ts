@@ -1,4 +1,4 @@
-import { IRateLimiterOptions, IRateLimiterStoreOptions, RateLimiterMemory } from "rate-limiter-flexible"
+import { IRateLimiterOptions, IRateLimiterStoreOptions, RateLimiterRedis } from "rate-limiter-flexible"
 import Redis from "ioredis"
 import { isProduction } from "@/app/api/apiClients"
 
@@ -17,14 +17,10 @@ export const opts: IRateLimiterOptions & IRateLimiterStoreOptions = {
     storeClient
 }
 
-const rateLimiter = new RateLimiterMemory(opts)
+const rateLimiter = new RateLimiterRedis(opts)
 
 export async function checkRateLimit(userId: string): Promise<RateLimitResponse> {
     const { remainingPoints, msBeforeNext } = await rateLimiter.consume(userId)
-
-    console.log("Rate limit check passed for user with id: " + userId)
-    console.log("Ratelimit Payload")
-    console.log(remainingPoints, msBeforeNext)
 
     return {
         remainingPoints,

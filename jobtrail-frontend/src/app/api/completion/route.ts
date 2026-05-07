@@ -14,10 +14,13 @@ async function getRateLimitHeaders(remainingPoints: string, points: string, rese
         "X-RateLimit-Remaining": remainingPoints,
         "X-RateLimit-Limit": points,
         "X-RateLimit-Reset": reset,
-        "X-RateLimit-FOO": "BAR"
     }
 
     return rateLimitHeaders
+}
+
+function isRateLimiterErr(error: unknown): error is RateLimiterRes{
+    return !!error && typeof error == "object" && "remainingPoints" in error && "msBeforeNext" in error
 }
 
 
@@ -47,7 +50,7 @@ export async function POST(req: NextRequest) {
     try {
         const { remainingPoints, limit, reset } = await checkRateLimit(sub)
 
-        console.log("Rate limit check passed for user with id: " + sub)
+        console.log("Rate limit check passed for user")
 
         const result = streamText({
             model: currentProvider as Provider == "openai" ? openAIClient("gpt-5.2-chat-latest") : anthropicClient("claude-opus-4-6"),
@@ -61,15 +64,15 @@ export async function POST(req: NextRequest) {
     }
 
     catch(error) {
-        if(error as RateLimiterRes) {
-            console.log("Logging error!")
-            console.log(error)
+        if(isRateLimiterErr(error)) {
             const headers = await getRateLimitHeaders(error.remainingPoints.toString(), opts.points.toString(), new Date(Math.ceil(Date.now() + error.msBeforeNext) / 1000).toLocaleString())
-            return NextResponse.json(`Rate limit check failed for user with id: ` + sub, { status: HttpStatusCode.InternalServerError, headers: headers })   
+            return NextResponse.json("Too many requests has been made. Please wait a bit before trying again!", { status: HttpStatusCode.TooManyRequests, headers: headers })   
         }
 
         else {
-            return new Response(error)
+            return new Response(error, {
+                status: HttpStatusCode.InternalServerError
+            })
         }
     }
 }
