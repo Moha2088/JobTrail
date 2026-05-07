@@ -78,6 +78,11 @@ export default function Page() {
         }
     })
 
+    useEffect(() => {
+        console.log("Completion:")
+        console.log(completion)
+    }, [completion])
+
     if (isApplicationLoading) {
         return (
             <div className="flex justify-center items-center h-screen">

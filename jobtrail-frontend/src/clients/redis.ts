@@ -1,24 +1,34 @@
-import { Redis } from "@upstash/redis"
-import { Ratelimit } from "@upstash/ratelimit"
+import { IRateLimiterOptions, IRateLimiterStoreOptions, RateLimiterMemory } from "rate-limiter-flexible"
+import Redis from "ioredis"
+import { isProduction } from "@/app/api/apiClients"
+
+interface RateLimitResponse {
+    remainingPoints: number
+    limit: number
+    reset: string
+}
 
 
-const redis = new Redis({
-    url: process.env.UPSTASH_URL,
-    token: process.env.UPSTASH_TOKEN,
-})
+const storeClient = new Redis(isProduction ? process.env.RAILWAY_REDIS_PUBLIC_URL! : "127.0.0.1")
 
-export const rateLimiter = new Ratelimit({
-    redis: redis,
-    limiter: Ratelimit.fixedWindow(5, "1 h"),
-    analytics: true
-})
+export const opts: IRateLimiterOptions & IRateLimiterStoreOptions = {
+    points: 10,
+    duration: 3600,
+    storeClient
+}
 
-export async function checkRateLimit(userId: string) {
-    const { success, limit, reset } = await rateLimiter.limit(userId)
+const rateLimiter = new RateLimiterMemory(opts)
+
+export async function checkRateLimit(userId: string): Promise<RateLimitResponse> {
+    const { remainingPoints, msBeforeNext } = await rateLimiter.consume(userId)
+
+    console.log("Rate limit check passed for user with id: " + userId)
+    console.log("Ratelimit Payload")
+    console.log(remainingPoints, msBeforeNext)
 
     return {
-        success,
-        limit,
-        remaining: reset
+        remainingPoints,
+        limit: opts.points,
+        reset: new Date(Math.ceil(Date.now() + msBeforeNext) / 1000).toLocaleDateString()
     }
 }
