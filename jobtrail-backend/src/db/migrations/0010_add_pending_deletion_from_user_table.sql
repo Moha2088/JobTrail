@@ -1,1 +1,1 @@
-ALTER TABLE "users" ADD COLUMN "PendingDeletion" boolean DEFAULT false;
+ALTER TABLE "users" ADD COLUMN "PendingDeletion" boolean NOT NULL DEFAULT false;

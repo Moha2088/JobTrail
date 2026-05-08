@@ -91,9 +91,21 @@ export const userRouter = new Elysia({ prefix: "/users" })
 
     }, putUserSchema)
 
-    .post("/cancel-deletion/:id", async({set, params}) => {
+    .post("/cancel-deletion/:id", async({set, params, headers: { authorization }}) => {
         
+        const claims = await getClaims(authorization!)
+
+        if(!claims) {
+            set.status = StatusCodes.UNAUTHORIZED
+            return
+        }
+
         const id = Number(params.id)
+
+        if (id != claims.sub) {
+            set.status = StatusCodes.FORBIDDEN
+            return
+        }
 
         await cancelUserDeletion(id)
 
@@ -102,14 +114,17 @@ export const userRouter = new Elysia({ prefix: "/users" })
     .delete("/:id", async({params, set, headers: { authorization }}) => {
         const claims = await getClaims(authorization!)
 
-        console.log("HIT DELETE ENDPOINT")
-
         if(!claims) {
             set.status = StatusCodes.UNAUTHORIZED
             return
         }
 
         const id = Number(params.id)
+
+        if(claims.sub != id) {
+            set.status = StatusCodes.FORBIDDEN
+            return
+        }
 
         await requestDeleteUserJob(id)
 

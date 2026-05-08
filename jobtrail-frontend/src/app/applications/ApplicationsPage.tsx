@@ -83,10 +83,6 @@ export default function ApplicationsPage() {
         }
     }, [])
 
-    if(userData?.pendingDeletion) {
-        
-    }
-
     if(isLoading) {
         return (
             <div className="flex justify-center items-center h-screen">

@@ -39,7 +39,6 @@ export function ReactQueryClientProvider({ children }: ProviderProps) {
                         })
                     }
                     await queryClient.invalidateQueries({ queryKey: mutation.options.mutationKey })
-                    await queryClient.clear()
                 },
 
                 onError: async(data, variables, onMutateResult, mutation) => {

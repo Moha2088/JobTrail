@@ -73,15 +73,14 @@ function Content() {
                                 })
                             }}
                         >
-                            Reactive account
+                            Reactivate account
                         </Button>
                     </div>
 
                     <div>
                         <Button
                             onClick={() => {
-                                axios.post("../api/logout")
-                                router.replace("/")
+                                axios.post("/api/logout").then(() => router.replace("/"))
                             }}
                             variant="destructive"
                         >
