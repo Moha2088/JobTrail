@@ -1,6 +1,6 @@
 {
-  "id": "109a7188-ede7-4b83-b27a-b979d5acafc8",
-  "prevId": "760a8f88-d980-4c78-a758-377863cb5fd5",
+  "id": "0bbf5812-423b-4e5a-ab5c-49f0a65fc51f",
+  "prevId": "109a7188-ede7-4b83-b27a-b979d5acafc8",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -33,7 +33,7 @@
         },
         "Email": {
           "name": "Email",
-          "type": "varchar(30)",
+          "type": "varchar(254)",
           "primaryKey": false,
           "notNull": true
         },
@@ -67,13 +67,6 @@
           "type": "varchar(100)",
           "primaryKey": false,
           "notNull": false
-        },
-        "PendingDeletion": {
-          "name": "PendingDeletion",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
         },
         "UserId": {
           "name": "UserId",
@@ -185,7 +178,7 @@
           "columnsTo": [
             "Id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -245,7 +238,7 @@
           "name": "PendingDeletion",
           "type": "boolean",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": false
         }
       },
