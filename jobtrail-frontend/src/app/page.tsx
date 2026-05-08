@@ -115,7 +115,7 @@ export default function Home() {
                 </div>
             </div>
 
-            <div className="flex flex-row gap-80 mb-50">
+            <div className="flex flex-row gap-80 mb-30">
                 <div>
                     <Image 
                         alt=""
@@ -133,7 +133,7 @@ export default function Home() {
             </div>
 
 
-            <div className="flex flex-col justify-center items-center gap-3">
+            <div className="flex flex-col justify-center items-center gap-3 mb-20">
                 <div className="flex flex-row gap-2">
                     <p>Job application overview</p>
                     <IconCheck color="lightblue" size={30} />
@@ -145,20 +145,37 @@ export default function Home() {
                 </div>
             </div>
 
-            <div className="p-10" />
-
             {/* Footer  */}
 
-            <div className="text-white bg-blue-200 h-70 rounded-t-4xl">
+            <div className="mb-5">
+                <div className="flex flex-col mb-20 gap-2">
+                    <div className="flex justify-center mt-10">
+                        <h2 className="text-gray-400 font-bold text-sm">
+                            Company
+                        </h2>
+                    </div>
 
-                <div className="flex justify-center">
-                    <Link
-                        href="/privacy-policy"
-                        className="font-bold text-xl mt-10 mb-20  hover:underline"
-                    >
-                        Privacy Policy
-                    </Link>
+                    <div className="flex justify-center">
+                        <Link
+                            target="_blank"
+                            href="https://jobtrail-ai.betteruptime.com"
+                            className="font-bold text-md hover:underline"
+                        >
+                            Status
+                        </Link>
+                    </div>
+
+                    <div className="flex justify-center">
+                        <Link
+                            target="_blank"
+                            href="/privacy-policy"
+                            className="font-bold text-md hover:underline"
+                        >
+                            Privacy Policy
+                        </Link>
+                    </div>
                 </div>
+
 
                 <div className="flex justify-center font-bold">
                     @2026 JobTrail. All rights reserved
