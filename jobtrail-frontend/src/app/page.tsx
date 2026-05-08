@@ -158,6 +158,7 @@ export default function Home() {
                     <div className="flex justify-center">
                         <Link
                             target="_blank"
+                            rel="noopener noreferrer"
                             href="https://jobtrail-ai.betteruptime.com"
                             className="font-bold text-md hover:underline"
                         >
@@ -168,6 +169,7 @@ export default function Home() {
                     <div className="flex justify-center">
                         <Link
                             target="_blank"
+                            rel="noopener noreferrer"
                             href="/privacy-policy"
                             className="font-bold text-md hover:underline"
                         >
