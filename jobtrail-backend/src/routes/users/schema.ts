@@ -26,6 +26,12 @@ export const putUserSchema = {
     })
 }
 
+export const cancelUserDeletionSchema = {
+    params: t.Object({
+        id: t.Number()
+    })
+}
+
 export const deleteUserSchema = {
     params: t.Object({
         id: t.Number()

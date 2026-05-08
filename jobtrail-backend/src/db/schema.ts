@@ -32,5 +32,6 @@ export const usersTable = pgTable("users", {
     name: varchar("Name", { length: 30 }).notNull(),
     email: varchar("Email", { length: 30 }).notNull().unique(),
     password: varchar("Password").notNull(),
-    createdAt: timestamp("CreatedAt").defaultNow()
+    createdAt: timestamp("CreatedAt").defaultNow(),
+    pendingDeletion: boolean("PendingDeletion").notNull().default(false)
 })

@@ -22,6 +22,8 @@ import { Input } from "@/components/ui/controls/Input"
 import { LoadingDots } from "@/components/ui/view/motion/LoadingDots"
 import { useSearchContent } from "@/services/applications/useSearchContent"
 import { SearchResultsTable } from "@/components/ui/view/applications/SearchResultsTable"
+import { useUser } from "@/services/users/useUser"
+import { ReactivateUserDialog } from "@/components/ui/controls/ReactivateUserDialog"
 
 
 export default function ApplicationsPage() {
@@ -38,10 +40,12 @@ export default function ApplicationsPage() {
 
     const { data, isLoading } = useApplications()
 
+    const session = useSessionContext()
+    const { data: userData } = useUser(session?.userId)
+
     const { data: searchData, isLoading: isSearchLoading } = useSearchContent(debouncedSearchQuery)
 
     const router = useRouter()
-    const session = useSessionContext()
 
     const logOut = useLogOut()
 
@@ -105,6 +109,10 @@ export default function ApplicationsPage() {
         <div className="h-screen">
             <div className="p-5" />
             <div className="flex flex-row">
+
+                {userData?.pendingDeletion &&
+                    <ReactivateUserDialog open={true}/>
+                }
 
                 <div className="flex justify-start items-center w-screen gap-25">
                     <p className=" text-2xl text-blue-400 tracking-tighter font-bold ml-20">

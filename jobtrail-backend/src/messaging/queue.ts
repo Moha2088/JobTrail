@@ -1,5 +1,6 @@
 import { ConnectionOptions, Queue } from "bullmq"
 import { UserQueueJobs } from "./events/users/jobTypes"
+import Redis from "ioredis"
 
 export const usersQueueName = "users"
 
@@ -17,6 +18,15 @@ export const connection: ConnectionOptions = {
     }
     : {})
 }
+
+export const ioredis = new Redis({
+    host: connection.host,
+    port: 6379,
+    ...(isProduction ? {
+        password: process.env.RAILWAY_REDIS_PASSWORD
+    }
+    : {})
+})
 
 
 export const usersQueue = new Queue<UserQueueJobs>(usersQueueName, {
