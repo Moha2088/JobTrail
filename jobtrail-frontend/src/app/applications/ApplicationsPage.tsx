@@ -159,7 +159,7 @@ export default function ApplicationsPage() {
                     onClick={() => setIsCreateApplicationDialogOpen(true)}
                     iconEnd={<IconPlus />}
                 >
-                    Create
+                    <p className="pt-0.5">Create</p>
                 </Button>
             </div>
 
