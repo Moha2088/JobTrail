@@ -69,7 +69,7 @@ export default function UserPage(){
 
             <div className="bg-black h-35" />
             <div className="flex flex-col gap-5 items-center">
-                <div className="bg-white border-3 p-7 rounded-full absolute top-32">
+                <div className="bg-white border-3 p-7 rounded-full absolute top-15">
                     <IconUser size={90} />
                 </div>
 
