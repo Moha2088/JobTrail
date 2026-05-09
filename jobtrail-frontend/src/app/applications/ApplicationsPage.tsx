@@ -119,7 +119,7 @@ export default function ApplicationsPage() {
                         Welcome back, {session?.name}!
                     </p>
 
-                    <div className="flex flex-col">
+                    <div className="flex flex-col z-10">
                         <div className="flex flex-col gap-3">
                             <Input
                                 ref={searchInputRef}
@@ -135,42 +135,6 @@ export default function ApplicationsPage() {
                         </div>
                     </div>
                     
-                </div>
-
-                <div className="flex mr-10 gap-3">
-                    <div className="pt-2 p-2 mr-3 border-gray-100 border-2 rounded-full hover:bg-gray-200">
-                        <Link href={`/user/${session?.userId}`}>
-                            <IconUser size={28} />
-                        </Link>
-                    </div>
-
-                    <div>
-                        <Button
-                            className="w-fit"
-                            size="small"
-                            onClick={() => setIsCreateApplicationDialogOpen(true)}
-                            iconEnd={<IconPlus />}
-                        >
-                            Create
-                        </Button>
-                    </div>
-
-                    <div>
-                        <Button
-                            size="small"
-                            onClick={async() => logOut.mutate(undefined, {
-                                onSuccess: () => {
-                                    console.log("Logging out!")
-                                    router.replace("/")
-                                }
-                            })}
-                            variant="destructive"
-                            iconEnd={<IconLogout />}
-                            className=""
-                        >
-                            Log Out
-                        </Button>
-                    </div>
                 </div>                
             </div>
 
@@ -187,7 +151,17 @@ export default function ApplicationsPage() {
                 acceptedCount={acceptedCount ?? 0}
             />
 
-            <div className="p-10" />
+            <div className="flex justify-center mt-10 mb-10">
+                <Button
+                    className="w-fit"
+                    variant="ghost"
+                    size="small"
+                    onClick={() => setIsCreateApplicationDialogOpen(true)}
+                    iconEnd={<IconPlus />}
+                >
+                    <p className="pt-0.5">Create</p>
+                </Button>
+            </div>
 
             {!isFullTextSearchEnabled &&
                 <ApplicationTable

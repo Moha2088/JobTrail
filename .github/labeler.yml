@@ -1,0 +1,10 @@
+frontend:
+  - changed-files:
+    - any-glob-to-any-file: jobtrail-frontend/**
+
+backend:
+  - changed-files:
+    - any-glob-to-any-file: jobtrail-backend/**
+
+release:
+  - base-branch: "main"

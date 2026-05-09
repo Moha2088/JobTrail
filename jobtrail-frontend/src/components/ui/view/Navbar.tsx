@@ -1,24 +1,48 @@
 "use client"
 
+import { useSessionContext } from "@/contexts/session/SessionContext"
+import { IconLogout, IconUser } from "@tabler/icons-react"
 import Link from "next/link"
+import { Button } from "../controls/Button"
+import { useLogOut } from "@/services/auth/useLogOut"
+import { usePathname, useRouter } from "next/navigation"
 
 
 export function Navbar() {
-    return (
-        <div className="flex flex-row mr-auto ml-auto border-2 w-fit mt-3 p-3 rounded-full">
-            <div className="flex flex-row gap-5">
-            
-                <Link href="/login" className="font-bold text-black cursor-pointer hover:text-gray-400">
-                    Login
-                </Link>
+    const pathname = usePathname()
+    const session = useSessionContext()
+    const logOut = useLogOut()
+    const router = useRouter()
 
-                <Link
-                    href="/"
-                    className="font-bold text-black cursor-pointer hover:text-gray-400"
-                >
-                    Users
-                </Link>
-            </div>
+    return (
+        <div>
+            {session && pathname != "/" &&
+                <div className="flex absolute justify-end items-center w-screen mr-10 gap-1 p-3 ">
+                    {!pathname.startsWith("/user") && 
+                        <div className="p-2 mr-3 border-gray-100 border-2 rounded-full hover:bg-gray-200">
+                            <Link href={`/user/${session?.userId}`}>
+                                <IconUser size={28} />
+                            </Link>
+                        </div>
+                    }
+
+                    <div>
+                        <Button
+                            size="small"
+                            onClick={async() => logOut.mutate(undefined, {
+                                onSuccess: () => {
+                                    router.replace("/")
+                                }
+                            })}
+                            variant="ghost"
+                            iconEnd={<IconLogout color="red" />}
+                            className="w-fit"
+                        >
+                            
+                        </Button>
+                    </div>
+                </div>
+            }
         </div>
     )
 }
