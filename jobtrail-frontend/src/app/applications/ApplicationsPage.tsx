@@ -119,7 +119,7 @@ export default function ApplicationsPage() {
                         Welcome back, {session?.name}!
                     </p>
 
-                    <div className="flex flex-col">
+                    <div className="flex flex-col z-10">
                         <div className="flex flex-col gap-3">
                             <Input
                                 ref={searchInputRef}
