@@ -36,6 +36,7 @@ export default function RootLayout({
                         <Theme style={{ ["--default-font-family" as string]: "var(--font-google-sans)" }}>
                             {/* <Navbar /> */}
                             <Toaster />
+                            <Navbar />
                             {children}
                         </Theme>
                     </AuthProvider>

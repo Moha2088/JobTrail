@@ -20,9 +20,6 @@ import { UserContext } from "@/contexts/user/UserContext"
 export default function UserPage(){
     const { data } = useSession()
     const { data: userData, isLoading } = useUser(Number(data?.userId))
-    const deleteUser = useDeleteUser(Number(data?.userId))
-
-    const router = useRouter()
 
     const [currentProvider, setCurrentProvider] = useState<Provider>()
 
@@ -70,7 +67,7 @@ export default function UserPage(){
                 </UserContext>
             }
 
-            <div className="bg-black h-50" />
+            <div className="bg-black h-35" />
             <div className="flex flex-col gap-5 items-center">
                 <div className="bg-white border-3 p-7 rounded-full absolute top-32">
                     <IconUser size={90} />
