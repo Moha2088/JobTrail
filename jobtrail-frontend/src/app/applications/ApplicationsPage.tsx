@@ -153,11 +153,11 @@ export default function ApplicationsPage() {
 
             <div className="flex justify-center mt-10 mb-10">
                 <Button
-                    className="w-fit"
+                    className="w-fit text-blue-400 hover:bg-blue-50"
                     variant="ghost"
                     size="small"
                     onClick={() => setIsCreateApplicationDialogOpen(true)}
-                    iconEnd={<IconPlus />}
+                    iconEnd={<IconPlus className="text-blue-400" />}
                 >
                     <p className="pt-0.5">Create</p>
                 </Button>
