@@ -1,8 +1,10 @@
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 
 
 export function useLogOut() {
+    const queryClient = useQueryClient()
+
     return useMutation({
         meta: {
             successMessage: "You have successfully logged out!",
@@ -11,6 +13,7 @@ export function useLogOut() {
         mutationKey: ["logout"],
         mutationFn: async() => {
             await axios.post("../../api/logout")
+            queryClient.clear()
         }
     })
 }

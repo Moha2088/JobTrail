@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
         expires: new Date(exp! * 1000)
     })
 
-    return new Response(null, { 
-        status: 200 
+    return Response.json(sessionData, {
+        status: 200
     })
 }
