@@ -20,6 +20,8 @@ import { Toggle } from "@/components/ui/controls/ai/Toggle"
 import { BsAnthropic } from "react-icons/bs"
 import { useLocalStorage } from "@/hooks/useLocalStorage"
 import { DeleteFileDialog } from "@/components/ui/controls/application/files/DeleteFileDialog"
+import { statusColorPairs } from "@/components/ui/controls/application/CreateApplicationDialog"
+import { ApplicationStatus } from "@/components/ui/controls/application/StatusDropdownMenu"
 
 export type Provider = "anthropic" | "openai"
 
@@ -101,7 +103,7 @@ export default function Page() {
             <ApplicationContext value={{ application: data }}>
                 <EditApplicationDialog 
                     open={isEditApplicationDialogOpen}
-                    onOpenChange={setIsEditApplicationDialogOpen} 
+                    onOpenChange={setIsEditApplicationDialogOpen}
                 />
 
                 <DeleteApplicationDialog 
@@ -273,7 +275,7 @@ export default function Page() {
                         
                         <div className="flex justify-center p-3">
                             <label className="font-bold pr-1">Application Status:</label>
-                            <p>{data?.applicationStatus}</p>
+                            <p className={`font-bold text-sm rounded-full py-0.5 px-2 ${statusColorPairs[data?.applicationStatus as ApplicationStatus]}`} >{data?.applicationStatus}</p>
                         </div>
                         
                         <div className="flex justify-center p-3">

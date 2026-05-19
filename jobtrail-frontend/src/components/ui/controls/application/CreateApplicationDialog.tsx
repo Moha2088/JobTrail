@@ -35,6 +35,13 @@ interface ContentProps {
     onOpenChange?: (value: boolean) => void
 }
 
+export const statusColorPairs: Record<ApplicationStatus, string> = {
+    ACCEPTED: "text-green-600 bg-green-100",
+    REJECTED: "text-red-600 bg-red-100 ",
+    PENDING: "text-yellow-600 bg-yellow-100 ",
+    OFFER: "text-orange-600 bg-orange-100 "
+}
+
 function Content(props: ContentProps) {
     const { onOpenChange } = props
     const createApplication = usePostApplication()
@@ -73,13 +80,6 @@ function Content(props: ContentProps) {
 
     const selectStatus = (status: ApplicationStatus) => {
         setApplicationStatus(status)
-    }
-
-    const statusColorPairs: Record<ApplicationStatus, string> = {
-        ACCEPTED: "text-green-400",
-        REJECTED: "text-red-400",
-        PENDING: "text-yellow-400",
-        OFFER: "text-orange-400"
     }
 
     return (
@@ -128,7 +128,7 @@ function Content(props: ContentProps) {
                             </div>
                             
                             <div>
-                                <p className={`font-bold ${statusColorPairs[applicationStatus as ApplicationStatus] ?? "text-black"}`}>
+                                <p className={`font-bold text-[10px] rounded-full py-1 px-2 ${statusColorPairs[applicationStatus as ApplicationStatus] ?? "text-black"}`}>
                                     {applicationStatus ? applicationStatus : "Select status"}
                                 </p>
                             </div>
