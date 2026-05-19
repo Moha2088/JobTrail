@@ -35,11 +35,11 @@ interface ContentProps {
     onOpenChange?: (value: boolean) => void
 }
 
-export const statusColorPairs: Record<ApplicationStatus, string> = {
+export const statusColorMap: Record<ApplicationStatus, string> = {
     ACCEPTED: "text-green-600 bg-green-100",
-    REJECTED: "text-red-600 bg-red-100 ",
-    PENDING: "text-yellow-600 bg-yellow-100 ",
-    OFFER: "text-orange-600 bg-orange-100 "
+    REJECTED: "text-red-600 bg-red-100",
+    PENDING: "text-yellow-600 bg-yellow-100",
+    OFFER: "text-orange-600 bg-orange-100"
 }
 
 function Content(props: ContentProps) {
@@ -117,7 +117,9 @@ function Content(props: ContentProps) {
                                 required: "Company email is required"
                             })}
                         />
+                        
                         {errors.email && <p className="text-red-400">{errors.email.message}</p>}
+
                     </label>
                     <label className="mb-3">
                         <div className="flex gap-2">
@@ -126,9 +128,9 @@ function Content(props: ContentProps) {
                                     Application Status:
                                 </p>
                             </div>
-                            
+
                             <div>
-                                <p className={`font-bold text-[10px] rounded-full py-1 px-2 ${statusColorPairs[applicationStatus as ApplicationStatus] ?? "text-black"}`}>
+                                <p className={`font-bold  ${applicationStatus != "Select status" ? "rounded-full py-1 px-2 text-[12px] " : ""} ${statusColorMap[applicationStatus as ApplicationStatus] ?? "text-black"}`}>
                                     {applicationStatus ? applicationStatus : "Select status"}
                                 </p>
                             </div>

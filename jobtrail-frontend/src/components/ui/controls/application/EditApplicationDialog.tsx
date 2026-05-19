@@ -8,6 +8,7 @@ import { useEffect, useState } from "react"
 import { useApplicationContext } from "@/contexts/application/ApplicationContext"
 import { Input } from "@/components/ui/controls/Input"
 import { DialogProps } from "@radix-ui/react-dialog"
+import { statusColorMap } from "./CreateApplicationDialog"
 
 interface EditApplicationDialogProps extends DialogProps{
 
@@ -44,7 +45,7 @@ function Content(props: ContentProps) {
     const editApplication = usePutApplication(application?.id)
 
     const [isDropDownOpen, setIsDropdownOpen] = useState<boolean>(false)
-    const [applicationStatus, setApplicationStatus] = useState<string>("")
+    const [applicationStatus, setApplicationStatus] = useState<string>("Select status")
 
 
     const { handleSubmit, register, reset, getValues, formState: { errors } } = useForm<EditApplicationInput>({
@@ -124,8 +125,8 @@ function Content(props: ContentProps) {
                     <label className="mb-3">
                         <p className="flex gap-1">
                             Application Status:
-                            <p className="inline-block font-bold">
-                                {applicationStatus ? applicationStatus : "Select status"}
+                            <p className={`font-bold  ${applicationStatus != "Select status" ? "rounded-full py-1 px-2 text-[12px] " : ""} ${statusColorMap[applicationStatus as ApplicationStatus] ?? "text-black"}`}>
+                                {applicationStatus}
                             </p>
                         </p>
 
