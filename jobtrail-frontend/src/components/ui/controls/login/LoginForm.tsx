@@ -34,18 +34,8 @@ export function LoginForm(){
     const login = useLogIn()
 
     const onSubmit: SubmitHandler<LoginInput> = async(data) => {
-        // await axios.post("../../api/login", data)
-        login.mutate(data, {
-            onSuccess: () => {
-                router.replace("/applications")
-            }
-        })
-
-
-        if(redirectPath) {
-            router.replace(redirectPath)
-            return
-        }
+        await login.mutateAsync(data)
+        router.replace(redirectPath ?? "/applications")
     }
 
     return (
