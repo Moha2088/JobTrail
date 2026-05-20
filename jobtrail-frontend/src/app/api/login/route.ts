@@ -1,7 +1,6 @@
 import { cookies } from "next/headers"
 import { SessionData } from "./types"
 import { NextRequest } from "next/server"
-import axios from "axios"
 import { decodeJwt } from "jose"
 import { signSession } from "@/services/session/signSession"
 import { axiosClient } from "../apiClients"
@@ -36,7 +35,7 @@ export async function POST(req: NextRequest) {
         expires: new Date(exp! * 1000)
     })
 
-    return new Response(null, { 
-        status: 200 
+    return new Response(null, {
+        status : 200
     })
 }

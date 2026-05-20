@@ -4,10 +4,10 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import { Button } from "@/components/ui/controls/Button"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
-import axios from "axios"
 import { motion } from "motion/react"
 import Link from "next/link"
 import { IconEye, IconEyeClosed } from "@tabler/icons-react"
+import { useLogIn } from "@/services/auth/useLogin"
 
 type LoginInput = {
     email: string
@@ -31,17 +31,13 @@ export function LoginForm(){
 
     const [passwordState, setPasswordState] = useState<PasswordState>("password")
 
-    const onSubmit: SubmitHandler<LoginInput> = async(data) => {
-        await axios.post("../../api/login", data)
+    const login = useLogIn()
 
-        if(redirectPath) {
-            router.replace(redirectPath)
-            return
-        }
-        
-        router.replace("/applications")
+    const onSubmit: SubmitHandler<LoginInput> = async(data) => {
+        await login.mutateAsync(data)
+        router.replace(redirectPath ?? "/applications")
     }
- 
+
     return (
         <>
             <motion.form
