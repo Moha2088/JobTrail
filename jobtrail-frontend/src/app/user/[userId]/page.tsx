@@ -121,7 +121,7 @@ export default function UserPage(){
                         </div>
 
                         <div className="pt-1">
-                            Account created: {userData?.createdAt.toLocaleString()}
+                            Account created: {new Date(userData.createdAt).toLocaleString()}
                         </div>
                     </div>
                 </div>

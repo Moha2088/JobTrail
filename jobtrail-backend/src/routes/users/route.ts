@@ -89,6 +89,11 @@ export const userRouter = new Elysia({ prefix: "/users" })
             .set(body)
             .where(eq(usersTable.id, id))
 
+        return {
+            name: body.name,
+            email: body.email,
+        }
+
     }, putUserSchema)
 
     .post("/cancel-deletion/:id", async({set, params, headers: { authorization }}) => {
