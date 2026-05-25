@@ -195,6 +195,7 @@ function Content(props: ContentProps) {
                     <Button
                         disabled={!applicationStatus || getValues("companyName") === "" || getValues("email") === "" || getValues("position") === "" || getValues("content") === ""}
                         type="submit"
+                        isPending={createApplication.isPending}
                         size="small"
                     >
                         Save

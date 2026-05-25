@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation"
 import axios from "axios"
 import { IconEye, IconEyeClosed } from "@tabler/icons-react"
 import Link from "next/link"
+import { motion } from "motion/react"
 
 export function SignupForm() {
 
@@ -58,8 +59,13 @@ export function SignupForm() {
 
     return (
         <>
-            <form className="flex flex-col justify-center h-screen bg-blue-300" onSubmit={handleSubmit(onSubmit)}>
-                <div className="flex flex-col justify-center items-center gap-6 px-20 py-10 bg-white ml-auto mr-auto rounded-xl">
+            <form
+                className="flex flex-col justify-center h-screen bg-blue-300" onSubmit={handleSubmit(onSubmit)}>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{  duration : 0.5 }}
+                    className="flex flex-col justify-center items-center gap-6 px-20 py-10 bg-white ml-auto mr-auto rounded-xl">
                     <div className="flex flex-col gap-3">
                         <div className="mr-auto">
                             <h1 className="text-2xl font-bold mb-3">
@@ -161,7 +167,8 @@ export function SignupForm() {
                                     size="small"
                                     type="submit"
                                     className="w-25"
-                                    disabled={errors.email?.message?.trim() == "" && errors.password?.message?.trim() ==""}
+                                    isPending={createUser.isPending}
+                                    disabled={!!errors.email || !!errors.password || !!errors.confirmedPassword || createUser.isPending}
                                 >
                                     Sign Up
                                 </Button>
@@ -174,7 +181,7 @@ export function SignupForm() {
                             </div>
                         </div>
                     </div>
-                </div>
+                </motion.div>
             </form>
         </>
     )

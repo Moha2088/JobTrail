@@ -343,6 +343,7 @@ export default function Page() {
                         <div className="flex justify-center">
                             <Button
                                 disabled={!selectedFile || !userId}
+                                isPending={uploadFile.isPending}
                                 onClick={() => {
                                     if (!selectedFile || !userId) {
                                         return

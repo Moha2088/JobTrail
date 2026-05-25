@@ -111,7 +111,8 @@ export function LoginForm(){
                                 <Button
                                     type="submit"
                                     size="small"
-                                    className="w-25 "
+                                    className="w-25"
+                                    isPending={login.isPending}
                                     disabled={errors.email?.message?.trim() == "" && errors.password?.message?.trim() ==""}
                                 >
                                     Login
@@ -119,18 +120,22 @@ export function LoginForm(){
                             </div>
 
                             <div>
-                                <Button
-                                    className="w-fit"
-                                    variant="ghost"
-                                    type="button"
-                                    size="small"
-                                >
-                                    <Link
-                                        href="/signup"
-                                    >
-                                        Sign Up
-                                    </Link>
-                                </Button>
+                                <div className="flex pt-3 gap-1">
+                                    <div>
+                                        <p className="text-xs">
+                                            Don&apos;t have an account?
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <Link
+                                            className="text-xs font-bold hover:underline" 
+                                            href="/signup"
+                                        >
+                                            Create one now!
+                                        </Link>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -74,6 +74,7 @@ function Content({ onOpenChange }: ContentProps) {
                         disabled={confirmationInput !== data?.email}
                         variant="destructive"
                         size="small"
+                        isPending={deleteUser.isPending}
                         onClick={() => deleteUser.mutate()}
                     >
                         Delete

@@ -189,6 +189,7 @@ function Content(props: ContentProps) {
                     </Dialog.Close>
                     <Dialog.Close asChild>
                         <Button
+                            isPending={editApplication.isPending}
                             disabled={!applicationStatus || !getValues("companyName") || !getValues("email") || !getValues("position") || !getValues("content")}
                             onClick={() => {
                                 editApplication.mutate({
