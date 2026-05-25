@@ -113,7 +113,7 @@ export function LoginForm(){
                                     size="small"
                                     className="w-25"
                                     isPending={login.isPending}
-                                    disabled={errors.email?.message?.trim() == "" && errors.password?.message?.trim() ==""}
+                                    disabled={!!errors.email || !!errors.password || login.isPending}
                                 >
                                     Login
                                 </Button>

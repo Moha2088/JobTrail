@@ -25,6 +25,10 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{userI
 
     const session = await getSession()
 
+    if(!session) {
+        return new Response("No session found!", { status: 401 })
+    }
+
     const { data } = await axiosClient.put(`/api/users/${userId}`, body, {
         headers: {
             Authorization: "Bearer " + session?.accessToken
@@ -45,7 +49,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{userI
         name: "session",
         httpOnly: true,
         value: updatedSessionToken,
-        // expires: new Date(updatedSessionData.expiresAt * 1000)
+        expires: new Date(session.expiresAt)
     })
 
     return new Response(null, { status: 200 })
