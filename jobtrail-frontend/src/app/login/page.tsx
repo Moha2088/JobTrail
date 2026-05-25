@@ -10,17 +10,9 @@ export const metadata: Metadata = {
 export default function LoginPage() {
     return (
         <>
-            <div className="p-5 bg-blue-300" />
+            
 
             <div className=" bg-blue-300 h-screen">
-                <div className="flex justify-center">
-                    <h1 className="text-4xl font-bold text-white mb-5">
-                        Login
-                    </h1>
-                </div>
-
-                <div className="p-5" />
-
                 <Suspense fallback={<LoadingDots />}>
                     <LoginForm/>
                 </Suspense>

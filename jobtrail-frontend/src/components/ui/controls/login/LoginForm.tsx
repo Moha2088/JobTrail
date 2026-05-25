@@ -8,6 +8,7 @@ import { motion } from "motion/react"
 import Link from "next/link"
 import { IconEye, IconEyeClosed } from "@tabler/icons-react"
 import { useLogIn } from "@/services/auth/useLogin"
+import { Input } from "../Input"
 
 type LoginInput = {
     email: string
@@ -38,88 +39,108 @@ export function LoginForm(){
         router.replace(redirectPath ?? "/applications")
     }
 
+
     return (
         <>
             <motion.form
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{  duration : 0.5 }}
-                className="flex flex-col justify-center text-xs" onSubmit={handleSubmit(onSubmit)}
+                className="flex flex-col justify-center h-screen text-xs" onSubmit={handleSubmit(onSubmit)}
             >
-                <div className="flex flex-col justify-center items-center gap-5 border-stone-300  w-130 h-100 bg-white ml-auto mr-auto rounded-xl">
+                <div className="flex flex-col justify-center items-center gap-5 border-stone-300  w-fit h-fit px-15 py-15 bg-white ml-auto mr-auto rounded-xl">
                     <div>
-                        <input
-                            className="w-70 text-xs border-3 p-2 mb-1 rounded-lg"
-                            placeholder="Enter your email" 
-                            {...register("email", { 
-                                required: "Email is required!",
-                                validate:(value) =>{
-                                    if(!value.includes("@")) {
-                                        return "Email is not valid!"
-                                    }
+                        <div className="mb-5">
+                            <h1 className="text-2xl font-bold">
+                                Login
+                            </h1>
+                        </div>
 
-                                    return true
-                                } })}
-                        />
+                        <div className="mb-3">
+                            <Input
+                                className="w-70 text-xs border-3 p-2 mb-1 rounded-lg"
+                                placeholder="Enter your email" 
+                                {...register("email", { 
+                                    required: "Email is required!",
+                                    validate:(value) =>{
+                                        if(!value.includes("@")) {
+                                            return "Email is not valid!"
+                                        }
 
-                        {errors.email && <p className="text-red-400">{errors.email.message}</p>}
+                                        return true
+                                    } })}
+                            />
+
+                            {errors.email && <p className="text-red-400">{errors.email.message}</p>}
+                        </div>
+
+                        <div className="flex gap-3">
+                            <div className="mb-5">
+                                <Input
+                                    type={passwordState}
+                                    className="w-70 text-xs border-3 p-2 rounded-lg mb-1"
+                                    
+                                    placeholder="Enter your password"
+                                    {...register("password", { 
+                                        required: "Password is required!",
+                                        minLength: {
+                                            value: 8,
+                                            message: "Password must be at least 8 characters"
+                                        }
+                                    })}
+                                />
+
+                                {errors.password && <p className="text-red-400">{errors.password.message}</p>}
+                            </div>
+
+                            <div>
+                                <Button
+                                    variant="ghost"
+                                    type="button"
+                                    size="small"
+                                    className="w-fit"
+                                    onClick={() => setPasswordState(passwordState == "password" ? "text" : "password")}
+                                >
+                                    {passwordState == "password" ? <IconEyeClosed /> : <IconEye /> }
+                                </Button>
+                            </div>
+                        </div>
+
+                        <div className="flex gap-3">
+                            <div className="">
+                                <Button
+                                    type="submit"
+                                    size="small"
+                                    className="w-25"
+                                    isPending={login.isPending}
+                                    disabled={!!errors.email || !!errors.password || login.isPending}
+                                >
+                                    Login
+                                </Button>
+                            </div>
+
+                            <div>
+                                <div className="flex pt-3 gap-1">
+                                    <div>
+                                        <p className="text-xs">
+                                            Don&apos;t have an account?
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <Link
+                                            className="text-xs font-bold hover:underline" 
+                                            href="/signup"
+                                        >
+                                            Create one now!
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
-                    <div>
-                        <input
-                            type={passwordState}
-                            className="w-70 text-xs border-3 p-2 rounded-lg mb-1"
-                            placeholder="Enter your password"
-                            {...register("password", { 
-                                required: "Password is required!",
-                                minLength: {
-                                    value: 8,
-                                    message: "Password must be at least 8 characters"
-                                }
-                            })}
-                        />
-
-                        {errors.password && <p className="text-red-400">{errors.password.message}</p>}
-                    </div>
-
-                    <div>
-                        <Button
-                            variant="light"
-                            type="button"
-                            size="small"
-                            className="w-fit"
-                            onClick={() => setPasswordState(passwordState == "password" ? "text" : "password")}
-                        >
-                            {passwordState == "password" ? <IconEyeClosed /> : <IconEye /> }
-                        </Button>
-                    </div>
-
-                    <div>
-                        <Button
-                            type="submit"
-                            disabled={errors.email?.message?.trim() == "" && errors.password?.message?.trim() ==""}
-                        >
-                            Login
-                        </Button>
-                    </div>
-
-                    <hr className="border-1 w-70" />
-
-                    <Button
-                        className="w-fit"
-                        variant="ghost"
-                        type="button"
-                    >
-                        <Link
-                            href="/signup"
-                        >
-                            Sign Up
-                        </Link>
-                    </Button>
                 </div>
-
             </motion.form>
-
         </>
     )
 }

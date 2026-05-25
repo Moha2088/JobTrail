@@ -50,6 +50,7 @@ function Content() {
                 </Dialog.Close>
                 <Button
                     variant="destructive"
+                    isPending={deleteApplication.isPending}
                     onClick={() => {
                         deleteApplication.mutate({
                             applicationId: application.id

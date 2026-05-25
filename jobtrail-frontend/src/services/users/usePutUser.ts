@@ -1,7 +1,7 @@
-import { elysiaApi } from "@/app/api/apiClients"
-import { useMutation, UseMutationResult } from "@tanstack/react-query"
+import { useMutation, UseMutationResult, useQueryClient } from "@tanstack/react-query"
 import { PutUser } from "./types"
 import { getSession } from "../session/getSession"
+import axios from "axios"
 
 
 export function usePutUser(userId: number): UseMutationResult<void, Error, PutUser> {
@@ -13,11 +13,12 @@ export function usePutUser(userId: number): UseMutationResult<void, Error, PutUs
         mutationKey: ["users", userId],
         mutationFn: async(variables) => {
             const session = await getSession()
-            await elysiaApi.api.users({ id: userId }).put(variables, {
+            await axios.put(`/api/users/${userId}`, variables, {
                 headers: {
                     Authorization: "Bearer " + session?.accessToken
                 }
             })
+            
         }
     })
 }

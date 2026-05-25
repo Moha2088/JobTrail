@@ -49,6 +49,7 @@ function Content({ onOpenChange }: ContentProps) {
                 <Dialog.Close>
                     <Button
                         variant="destructive"
+                        isPending={deleteFile.isPending}
                         size="small"
                         onClick={() => deleteFile.mutate()}
                     >

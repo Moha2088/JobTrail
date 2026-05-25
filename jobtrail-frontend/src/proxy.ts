@@ -2,6 +2,7 @@ import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
 import { verifySession } from "@/services/session/verifySession"
 import { isProduction } from "./app/api/apiClients"
+import { decodeJwt } from "jose"
 
 
 export async function proxy(req: NextRequest) {
@@ -33,6 +34,17 @@ export async function proxy(req: NextRequest) {
             console.log("Session invalid!: " + (err as Error).message)
             return NextResponse.redirect(`${baseURL}/login`)
         }
+    }
+
+    if(currentPath === "/user") {
+        if(!sessionToken) {
+            console.log("Session token not found! Redirecting to login!")
+            const returnTo = `${req.nextUrl.pathname}${req.nextUrl.search}`
+            return NextResponse.redirect(`${baseURL}/login?redirect=${encodeURIComponent(returnTo)}`)
+        }
+        
+        const { sub } = decodeJwt(sessionToken)
+        return NextResponse.redirect(`${baseURL}/user/${sub}`)
     }
 
     if(currentPath === "/login") {

@@ -13,7 +13,7 @@ export function OverlayWrapper(props: OverlayWrapperProps) {
     
     return (
         <Dialog.Portal>
-            <Dialog.Overlay className="fixed inset-0 z-40 bg-black/60" />
+            <Dialog.Overlay className="fixed inset-0 z-40 backdrop-blur-xs bg-black/60" />
             <Dialog.Content
                 className={cn("fixed inset-0 z-50 m-auto h-fit w-[90vw] max-w-3xl max-h-[90vh] overflow-y-auto rounded-xl bg-white p-5", className)}
                 {...rest}

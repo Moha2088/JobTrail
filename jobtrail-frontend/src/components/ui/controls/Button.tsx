@@ -4,6 +4,7 @@ import { ReactNode } from "react"
 import { cn } from "@/lib/utils"
 import { ComponentProps } from "react"
 import { Slot } from "@radix-ui/react-slot"
+import { Spinner } from "../spinner"
 
 const buttonStyles = cva(
     "flex justify-center items-center font-bold text-sm rounded-lg cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
@@ -31,10 +32,11 @@ interface ButtonProps extends VariantProps<typeof buttonStyles>, ComponentProps<
     iconStart?: ReactNode
     iconEnd?: ReactNode
     asChild?: boolean
+    isPending?: boolean
  }
 
 
-export function Button({ variant, className, size, iconStart, iconEnd, asChild, children, ...props }: ButtonProps) { 
+export function Button({ variant, className, size, iconStart, iconEnd, asChild, isPending, children, ...props }: ButtonProps) { 
     const Comp = asChild ? Slot : "button"
 
     return (
@@ -48,8 +50,9 @@ export function Button({ variant, className, size, iconStart, iconEnd, asChild, 
                         {iconStart}
                     </div>
                 }
-                {children}
-                
+
+                {isPending ? <Spinner /> : children}
+
                 {iconEnd &&
                     <div>
                         {iconEnd}

@@ -67,6 +67,7 @@ function Content() {
                 <div className="flex gap-5">
                     <div>
                         <Button
+                            isPending={cancelDeletion.isPending}
                             onClick={() => {
                                 cancelDeletion.mutate(undefined, {
                                     onSuccess: () => router.push("/applications")
