@@ -85,13 +85,14 @@ export const userRouter = new Elysia({ prefix: "/users" })
             algorithm: "argon2d"
         })
 
-        await db.update(usersTable)
+        const updateResult = await db.update(usersTable)
             .set(body)
             .where(eq(usersTable.id, id))
+            .returning({ name: usersTable.name, email: usersTable.email })
 
         return {
-            name: body.name,
-            email: body.email,
+            name: updateResult[0].name,
+            email: updateResult[0].email,
         }
 
     }, putUserSchema)

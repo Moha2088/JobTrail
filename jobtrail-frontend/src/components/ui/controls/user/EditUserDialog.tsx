@@ -154,7 +154,10 @@ function Content(props: ContentProps) {
                         </Button>
                     </Dialog.Close>
 
-                    <Button size="small" >
+                    <Button
+                        size="small"
+                        isPending={editUser.isPending}
+                    >
                         Save
                     </Button>
                 </div>
