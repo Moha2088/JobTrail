@@ -30,7 +30,7 @@ function Content({ onOpenChange }: ContentProps) {
 
     const { application } = useApplicationContext()
 
-    const deleteFile = useDeleteFile(Number(application.id), application.key as string)
+    const deleteFile = useDeleteFile(Number(application?.id), application?.key as string)
 
     return(
         <OverlayWrapper>
