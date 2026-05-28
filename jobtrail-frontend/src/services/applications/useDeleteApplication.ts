@@ -1,7 +1,7 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query"
 import axios from "axios"   
 import { getSession } from "@/services/session/getSession"
-import { elysiaApi } from "@/app/api/apiClients"
+import { edenClient } from "@/app/api/apiClients"
 
 interface DeleteApplicationParams {
     applicationId: number
@@ -17,7 +17,7 @@ export function useDeleteApplication(): UseMutationResult<void, Error, DeleteApp
             const { applicationId } = variables
             const session = await getSession()
             
-            await elysiaApi.api.applications({ id: applicationId }).delete(variables, {
+            await edenClient.api.applications({ id: applicationId }).delete(variables, {
                 headers: {
                     Authorization: "Bearer " + session?.accessToken
                 }

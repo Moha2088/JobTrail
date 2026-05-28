@@ -1,4 +1,4 @@
-import { elysiaApi } from "@/app/api/apiClients"
+import { edenClient } from "@/app/api/apiClients"
 import { getSession } from "@/services/session/getSession"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
@@ -10,7 +10,7 @@ export function useGetFile(key: string) {
         queryFn: async() => {
             const session = await getSession()
             
-            const { data } = await elysiaApi.api.applications.resume({ key: key }).get({
+            const { data } = await edenClient.api.applications.resume({ key: key }).get({
                 headers: {
                     Authorization: "Bearer " + session?.accessToken
                 }

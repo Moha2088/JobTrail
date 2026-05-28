@@ -1,6 +1,6 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query"
 import { PostApplication } from "./types"
-import { elysiaApi } from "@/app/api/apiClients"
+import { edenClient } from "@/app/api/apiClients"
 import { getSession } from "@/services/session/getSession"
 
 
@@ -14,7 +14,7 @@ export function usePostApplication(): UseMutationResult<void, Error, PostApplica
         mutationFn: async (variables) => {
             const session = await getSession()
 
-            await elysiaApi.api.applications.post(variables, {
+            await edenClient.api.applications.post(variables, {
                 headers: {
                     Authorization: "Bearer " + session?.accessToken
                 }

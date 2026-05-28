@@ -1,7 +1,7 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query"
 import { getSession } from "@/services/session/getSession"
 import axios from "axios"
-import { elysiaApi } from "@/app/api/apiClients"
+import { edenClient } from "@/app/api/apiClients"
 
 
 interface PatchContentParams {
@@ -18,7 +18,7 @@ export function usePatchContent(applicationId: number): UseMutationResult<void, 
         mutationFn: async(variables) => {
             const session = await getSession()
             
-            await elysiaApi.api.applications({ id: applicationId }).content.patch(variables, {
+            await edenClient.api.applications({ id: applicationId }).content.patch(variables, {
                 headers: {
                     Authorization: "Bearer " + session?.accessToken
                 }

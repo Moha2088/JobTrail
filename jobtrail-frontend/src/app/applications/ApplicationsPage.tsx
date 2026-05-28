@@ -8,15 +8,12 @@ import { useApplications } from "@/services/applications"
 import { useLogOut } from "@/services/auth/useLogOut"
 import {
     IconFileDescription,
-    IconLogout,
     IconPlus,
     IconSearch,
-    IconUser
 } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { useSessionContext } from "@/contexts/session/SessionContext"
-import Link from "next/link"
 import { useDebounce } from "@/hooks/useDebounce"
 import { Input } from "@/components/ui/controls/Input"
 import { LoadingDots } from "@/components/ui/view/motion/LoadingDots"
@@ -24,6 +21,8 @@ import { useSearchContent } from "@/services/applications/useSearchContent"
 import { SearchResultsTable } from "@/components/ui/view/applications/SearchResultsTable"
 import { useUser } from "@/services/users/useUser"
 import { ReactivateUserDialog } from "@/components/ui/controls/ReactivateUserDialog"
+import { ApplicationTab, Tab } from "@/components/ui/view/applications/ApplicationTab"
+import { ExploreTab } from "@/components/ui/view/applications/ExploreTab"
 
 
 export default function ApplicationsPage() {
@@ -35,6 +34,7 @@ export default function ApplicationsPage() {
     const searchInputRef = useRef<HTMLInputElement>(null)
 
     const [isFullTextSearchEnabled, setIsFullTextSearchEnabled] = useState<boolean>(false)
+    const [tab, setTab] = useState<Tab>("applications")
 
     const debouncedSearchQuery = useDebounce(searchQuery)
 
@@ -44,10 +44,6 @@ export default function ApplicationsPage() {
     const { data: userData } = useUser(session?.userId)
 
     const { data: searchData, isLoading: isSearchLoading } = useSearchContent(debouncedSearchQuery)
-
-    const router = useRouter()
-
-    const logOut = useLogOut()
 
     const handleKeyDown = (event: KeyboardEvent) => {
         if(event.key === "Shift") {
@@ -105,80 +101,96 @@ export default function ApplicationsPage() {
     const rejectedCount = data.metrics.rejectedCount ?? 0
     const acceptedCount = data.metrics.acceptedCount ?? 0
 
+    const handleTabChange = (tab: Tab) => setTab(tab)
+
     return (
-        <div className="h-screen">
-            <div className="p-5" />
-            <div className="flex flex-row">
 
-                {userData?.pendingDeletion &&
-                    <ReactivateUserDialog open={true}/>
-                }
+        <div>
+            <div className="flex justify-center items-center">
+                <ApplicationTab
+                    className="absolute mt-8"
+                    setActiveTab={handleTabChange} />
+            </div>
 
-                <div className="flex justify-start items-center w-screen gap-25">
-                    <p className=" text-2xl text-blue-400 tracking-tighter font-bold ml-20">
-                        Welcome back, {session?.name}!
-                    </p>
+            {
+                tab == "applications" ?
+                    <div className="h-screen">
+                        <div className="p-5" />
+                        <div className="flex flex-row">
 
-                    <div className="flex flex-col z-10">
-                        <div className="flex flex-col gap-3">
-                            <Input
-                                ref={searchInputRef}
-                                variant="pill"
-                                placeholder={isFullTextSearchEnabled ? "Search by content..." : "Search by company name..."}
-                                withDivider
-                                className="text-xs"
-                                iconStart={<IconSearch className=" ml-2" color="gray" size={20} />}
-                                iconEnd={<IconFileDescription onClick={() => setIsFullTextSearchEnabled(!isFullTextSearchEnabled)} className={`cursor-pointer ${isFullTextSearchEnabled ? "text-black hover:text-gray-400" : "text-gray-400 hover:text-black"}`} />}
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
+                            {userData?.pendingDeletion &&
+                                <ReactivateUserDialog open={true}/>
+                            }
+
+                            <div className="flex justify-start items-center w-screen gap-25">
+                                <p className=" text-2xl text-blue-400 tracking-tighter font-bold ml-20">
+                                    Welcome back, {session?.name}!
+                                </p>
+
+                                <div className="flex flex-col z-10">
+                                    <div className="flex flex-col gap-3">
+                                        <Input
+                                            ref={searchInputRef}
+                                            variant="pill"
+                                            placeholder={isFullTextSearchEnabled ? "Search by content..." : "Search by company name..."}
+                                            withDivider
+                                            className="text-xs"
+                                            iconStart={<IconSearch className=" ml-2" color="gray" size={20} />}
+                                            iconEnd={<IconFileDescription onClick={() => setIsFullTextSearchEnabled(!isFullTextSearchEnabled)} className={`cursor-pointer ${isFullTextSearchEnabled ? "text-black hover:text-gray-400" : "text-gray-400 hover:text-black"}`} />}
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
+
+                        <CreateApplicationDialog
+                            open={isCreateApplicationDialogOpen}
+                            onOpenChange={setIsCreateApplicationDialogOpen}
+                        />
+
+                        <div className="p-5" />
+
+                        <Metrics
+                            pendingCount={pendingCount ?? 0}
+                            rejectedCount={rejectedCount ?? 0}
+                            acceptedCount={acceptedCount ?? 0}
+                        />
+
+                        <div className="flex justify-center mt-10 mb-10">
+                            <Button
+                                className="w-fit text-blue-400 hover:bg-blue-50"
+                                variant="ghost"
+                                size="small"
+                                onClick={() => setIsCreateApplicationDialogOpen(true)}
+                                iconEnd={<IconPlus className="text-blue-400" />}
+                            >
+                                <p className="pt-0.5">Create</p>
+                            </Button>
+                        </div>
+
+                        {!isFullTextSearchEnabled &&
+                            <ApplicationTable
+                                applications={debouncedSearchQuery && !isFullTextSearchEnabled ? filteredApplications : data.applications}
+                            />
+                        }
+
+                        {isFullTextSearchEnabled && isSearchLoading &&
+                            <div className="flex justify-center">
+                                <LoadingDots />
+                            </div>
+                        }
+
+                        {isFullTextSearchEnabled && searchData &&
+                            <SearchResultsTable applications={searchData} query={debouncedSearchQuery} />
+                        }
+
                     </div>
-                    
-                </div>                
-            </div>
 
-            <CreateApplicationDialog 
-                open={isCreateApplicationDialogOpen}
-                onOpenChange={setIsCreateApplicationDialogOpen}
-            />
-
-            <div className="p-5" />
-
-            <Metrics
-                pendingCount={pendingCount ?? 0}
-                rejectedCount={rejectedCount ?? 0}
-                acceptedCount={acceptedCount ?? 0}
-            />
-
-            <div className="flex justify-center mt-10 mb-10">
-                <Button
-                    className="w-fit text-blue-400 hover:bg-blue-50"
-                    variant="ghost"
-                    size="small"
-                    onClick={() => setIsCreateApplicationDialogOpen(true)}
-                    iconEnd={<IconPlus className="text-blue-400" />}
-                >
-                    <p className="pt-0.5">Create</p>
-                </Button>
-            </div>
-
-            {!isFullTextSearchEnabled &&
-                <ApplicationTable
-                    applications={debouncedSearchQuery && !isFullTextSearchEnabled ? filteredApplications : data.applications}
-                />
+                    : <ExploreTab />
             }
-
-            {isFullTextSearchEnabled && isSearchLoading &&
-                <div className="flex justify-center">
-                    <LoadingDots />
-                </div>
-            }
-
-            {isFullTextSearchEnabled && searchData &&
-                <SearchResultsTable applications={searchData} query={debouncedSearchQuery} />
-            }
-
         </div>
     )
 }

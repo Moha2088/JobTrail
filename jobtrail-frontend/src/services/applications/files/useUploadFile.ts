@@ -1,4 +1,4 @@
-import { elysiaApi } from "@/app/api/apiClients"
+import { edenClient } from "@/app/api/apiClients"
 import { getSession } from "@/services/session/getSession"
 import { useMutation, UseMutationResult } from "@tanstack/react-query"
 import axios from "axios"
@@ -25,7 +25,7 @@ export function useUploadFile(): UseMutationResult<void, Error, UploadFileParams
             formData.append("applicationId", applicationId.toString())
 
 
-            await elysiaApi.api.applications.resume.post(variables, {
+            await edenClient.api.applications.resume.post(variables, {
                 headers: {
                     Authorization: "Bearer " + session?.accessToken
                 }

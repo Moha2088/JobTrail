@@ -30,6 +30,7 @@ const withTimeout = <T>(promise: Promise<T>, ms: number): Promise<T> => {
     })
 }
 
+
 export const healthRouter = new Elysia()
     .get("/health", async({ set }): Promise<HealthCheckResponse> =>  {
     

@@ -1,6 +1,6 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query"
 import { PostUser } from "./types"
-import { elysiaApi } from "@/app/api/apiClients"
+import { edenClient } from "@/app/api/apiClients"
 
 
 export function usePostUser(): UseMutationResult<void, Error, PostUser> {
@@ -12,7 +12,7 @@ export function usePostUser(): UseMutationResult<void, Error, PostUser> {
         },
         mutationKey: ["users"],
         mutationFn: async(variables) => {
-            await elysiaApi.api.users.post(variables)
+            await edenClient.api.users.post(variables)
         },
     })
 }

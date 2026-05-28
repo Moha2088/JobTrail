@@ -1,23 +1,21 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query"
+import { JobPostingData } from "./types"
+import { getSession } from "../session/getSession"
 import { edenClient } from "@/app/api/apiClients"
-import axios from "axios"
-import { Application } from "./types"
-import { getSession } from "@/services/session/getSession"
 
 
-export function useApplication(applicationId: number) {
+export function useJobPostings(): UseQueryResult<JobPostingData[], Error> {
     return useQuery({
-        queryKey: ["applications", applicationId],
+        queryKey: ["jobPostings"],
         queryFn: async() => {
             const session = await getSession()
-
-            const { data } = await edenClient.api.applications({ id: applicationId }).get({
+            const { data } = await edenClient.api.jobPostings.get({
                 headers: {
                     Authorization: "Bearer " + session?.accessToken
                 }
             })
 
-            return data
+            return data as JobPostingData[]
         }
     })
 }

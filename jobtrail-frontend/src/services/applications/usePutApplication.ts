@@ -1,6 +1,6 @@
 import { useMutation, UseMutationResult } from "@tanstack/react-query"
 import { PostApplication } from "./types"
-import { elysiaApi } from "@/app/api/apiClients"
+import { edenClient } from "@/app/api/apiClients"
 import { getSession } from "../session/getSession"
 
 type PutApplication = Omit<PostApplication, "id" | "pendingDeletion">
@@ -14,7 +14,7 @@ export function usePutApplication(applicationId: number): UseMutationResult<void
         mutationKey: ["applications", applicationId],
         mutationFn: async(variables) => {
             const session = await getSession()            
-            await elysiaApi.api.applications({ id: applicationId }).patch(variables, {
+            await edenClient.api.applications({ id: applicationId }).patch(variables, {
                 headers: {
                     Authorization: "Bearer " + session?.accessToken
                 }
