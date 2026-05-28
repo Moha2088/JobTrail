@@ -18,7 +18,7 @@ export function JobPosting(props: JobPostingProps) {
             </div>
 
             <div className="flex justify-center text-sm">
-                <Link target="_blank" className="max-w-100 font-bold hover:underline" href={jobPostingLink}>
+                <Link target="_blank" rel="noopener noreferrer" className="max-w-100 font-bold hover:underline" href={jobPostingLink}>
                     {jobPostingLink}
                 </Link>
             </div>

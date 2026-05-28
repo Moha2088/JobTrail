@@ -31,7 +31,7 @@ export function ExploreTab() {
                 </p>
             </div>
 
-            {!data && !isLoading &&
+            {data?.length == 0 && !isLoading &&
                 <div>
                     No job postings are available at the moment. Check again later!
                 </div>
