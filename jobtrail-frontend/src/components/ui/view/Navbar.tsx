@@ -19,7 +19,7 @@ export function Navbar() {
             {session && pathname != "/" &&
                 <div className="flex absolute justify-end items-center w-screen mr-10 gap-1 p-3 ">
                     {!pathname.startsWith("/user") && 
-                        <div className="p-2 mr-3 border-gray-100 border-2 rounded-full hover:bg-gray-200">
+                        <div className="p-2 mr-3 border-gray-100 border-2 rounded-full">
                             <Link href={`/user/${session?.userId}`}>
                                 <IconUser size={28} />
                             </Link>
@@ -38,7 +38,6 @@ export function Navbar() {
                             iconEnd={<IconLogout color="red" />}
                             className="w-fit"
                         >
-                            
                         </Button>
                     </div>
                 </div>

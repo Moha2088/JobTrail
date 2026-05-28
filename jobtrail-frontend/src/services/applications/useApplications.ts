@@ -1,5 +1,5 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query"
-import { elysiaApi } from "@/app/api/apiClients"
+import { edenClient } from "@/app/api/apiClients"
 import { getSession } from "@/services/session/getSession"
 import { ApplicationData } from "./types"
 
@@ -9,7 +9,7 @@ export function useApplications(): UseQueryResult<ApplicationData | undefined> {
         queryFn: async() => {
             const session = await getSession()
 
-            const { data }  = await elysiaApi.api.applications.get({
+            const { data }  = await edenClient.api.applications.get({
                 headers: {
                     Authorization: "Bearer " + session?.accessToken
                 }

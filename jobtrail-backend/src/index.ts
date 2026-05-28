@@ -8,6 +8,7 @@ import "./messaging/eventhandlers/users/jobHandlers"
 import { logger } from "./logger";
 import { healthRouter } from "./routes/health/route";
 import { handleNotFoundMiddleware } from "./middleware/handleNotFound.middleware";
+import { jobPostingRouter } from "./routes/jobPostings/route";
 
 const app = new Elysia()
     .use(cors({
@@ -27,6 +28,7 @@ const app = new Elysia()
         .use(applicationRouter)
         .use(userRouter)
         .use(authRouter)
+        .use(jobPostingRouter)
     )
     .listen(3003);
 

@@ -1,6 +1,6 @@
 import { useQuery, UseQueryResult } from "@tanstack/react-query"
 import { getSession } from "../session/getSession"
-import { elysiaApi } from "@/app/api/apiClients"
+import { edenClient } from "@/app/api/apiClients"
 import { User } from "@/services/users/types"
 
 
@@ -10,7 +10,7 @@ export function useUser(id: number): UseQueryResult<User, Error> {
         queryFn: async() => {
             const session = await getSession()
             
-            const { data } = await elysiaApi.api.users({ id: id }).get({
+            const { data } = await edenClient.api.users({ id: id }).get({
                 headers: {
                     Authorization: "Bearer " + session?.accessToken
                 }

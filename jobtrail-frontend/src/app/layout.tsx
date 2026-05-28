@@ -29,7 +29,7 @@ export default function RootLayout({
 }>) {
 
     return (
-        <html lang="en">
+        <html suppressHydrationWarning lang="en">
             <body className={`${googleSans.className} antialiased`}>
                 <ReactQueryClientProvider>
                     <AuthProvider>

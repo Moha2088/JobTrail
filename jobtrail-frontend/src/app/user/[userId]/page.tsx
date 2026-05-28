@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/controls/Button"
 import { useSession } from "@/services/session/useSession"
 import { useDeleteUser } from "@/services/users/useDeleteUser"
 import { useUser } from "@/services/users/useUser"
-import { IconBrandOpenai, IconClockHour3, IconEdit, IconMail, IconTrash, IconUser } from "@tabler/icons-react"
+import { IconArrowBack, IconBrandOpenai, IconClockHour3, IconEdit, IconMail, IconTrash, IconUser } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
 import { LoadingDots } from "@/components/ui/view/motion/LoadingDots"
 import { Provider } from "@/app/applications/[applicationId]/page"
@@ -15,6 +15,7 @@ import { useLocalStorage } from "@/hooks/useLocalStorage"
 import { DeleteUserDialog } from "@/components/ui/controls/user/DeleteUserDialog"
 import { EditUserDialog } from "@/components/ui/controls/user/EditUserDialog"
 import { UserContext } from "@/contexts/user/UserContext"
+import Link from "next/link"
 
 
 export default function UserPage(){
@@ -27,6 +28,8 @@ export default function UserPage(){
     const [isDeleteUserDialogOpen, setIsDeleteUserDialogOpen] = useState<boolean>(false)
 
     const { setItem, getItem } = useLocalStorage<Provider>("defaultProvider")
+
+    const router = useRouter()
 
     useEffect(() => {
         const storedDefaultProvider = getItem()
@@ -67,7 +70,18 @@ export default function UserPage(){
                 </UserContext>
             }
 
+            <div className="absolute p-2">
+                <Button
+                    variant="ghost"
+                    className="w-10 h-10"
+                    onClick={() => router.back()}
+                >
+                    <IconArrowBack color="white" />
+                </Button>
+            </div>
+
             <div className="bg-black h-35" />
+
             <div className="flex flex-col gap-5 items-center">
                 <div className="bg-white border-3 p-7 rounded-full absolute top-15">
                     <IconUser size={90} />
