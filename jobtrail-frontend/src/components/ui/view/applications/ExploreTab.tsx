@@ -7,7 +7,7 @@ export function ExploreTab() {
 
     return (
         <div>
-            <div className="flex justify-center mt-10 mb-10">
+            <div className="flex justify-center mt-15 mb-10">
                 <h1 className="font-bold text-3xl text-blue-400 tracking-tighter">
                     Explore View
                 </h1>

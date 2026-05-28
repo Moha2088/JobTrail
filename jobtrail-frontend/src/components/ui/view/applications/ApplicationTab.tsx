@@ -6,16 +6,16 @@ import { ComponentProps } from "react"
 export type Tab = "applications" | "explore"
 
 
-interface ApplicationTabProps extends ComponentProps<"div"> {
+interface ApplicationTabProps {
     setActiveTab: (tab: Tab) => void
 }
 
 export function ApplicationTab(props: ApplicationTabProps) {
-    const { setActiveTab, className } = props
+    const { setActiveTab } = props
 
     
     return (
-        <Tabs className={cn(className)} defaultValue="applications">
+        <Tabs className="absolute mt-10" defaultValue="applications">
             <TabsList variant="line">
                 <TabsTrigger className="hover:cursor-pointer" onClick={() => setActiveTab("applications")} value="applications">Applications <IconArticle /></TabsTrigger>
                 <TabsTrigger className="hover:cursor-pointer" onClick={() => setActiveTab("explore")} value="explore">Explore <IconFlameFilled color="red" /> </TabsTrigger>

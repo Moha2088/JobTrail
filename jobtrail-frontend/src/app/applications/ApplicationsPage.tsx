@@ -108,7 +108,6 @@ export default function ApplicationsPage() {
         <div>
             <div className="flex justify-center items-center">
                 <ApplicationTab
-                    className="absolute mt-8"
                     setActiveTab={handleTabChange} />
             </div>
 
@@ -127,7 +126,7 @@ export default function ApplicationsPage() {
                                     Welcome back, {session?.name}!
                                 </p>
 
-                                <div className="flex flex-col z-10">
+                                <div className="flex flex-col z-10 mt-5">
                                     <div className="flex flex-col gap-3">
                                         <Input
                                             ref={searchInputRef}
