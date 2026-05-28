@@ -1,4 +1,7 @@
 import Link from "next/link"
+import { Button } from "../../controls/Button"
+import { IconArrowRight } from "@tabler/icons-react"
+import { motion } from "motion/react"
 
 
 interface JobPostingProps {
@@ -17,10 +20,20 @@ export function JobPosting(props: JobPostingProps) {
                 </h1>
             </div>
 
-            <div className="flex justify-center text-sm">
-                <Link target="_blank" rel="noopener noreferrer" className="max-w-100 font-bold hover:underline" href={jobPostingLink}>
-                    {jobPostingLink}
-                </Link>
+            <div className="flex flex-row gap-3 justify-center text-sm">
+                <div className="mt-2">
+                    <p className="font-bold">
+                        Go to
+                    </p>
+                </div>
+
+                <motion.div
+                    whileHover={{ x: 5 }}
+                    className="bg-white p-2 rounded-full hover:bg-gray-300">
+                    <Link target="_blank" rel="noopener noreferrer" href={jobPostingLink}>
+                        <IconArrowRight color="black"/>    
+                    </Link>
+                </motion.div>
             </div>
         </div>
     )
