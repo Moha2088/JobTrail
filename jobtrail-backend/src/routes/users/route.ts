@@ -7,17 +7,40 @@ import { getClaims } from "../../utils/auth/getClaims"
 import { StatusCodes } from "http-status-codes"
 import { requestDeleteUserJob } from "../../messaging/events/users/deleteUser/requestDeleteUserJob";
 import { cancelUserDeletion } from "../../messaging/events/users/cancelUserDeletion/cancelUserDeletion";
+import { emailExists } from "../../utils/users/emailExists";
+import { DatabaseError } from "pg";
 
 
 export const userRouter = new Elysia({ prefix: "/users" })
     .post("/", async({ body, set }) => {
+        const UNIQUE_CONSTRAINT_VIOLATION_CODE = "23505"
+        
+        if(await emailExists(body.email)) {
+            set.status = StatusCodes.CONFLICT
+            return {
+                message: "User with that email exists"
+            }
+        }
+        
         body.password = await Bun.password.hash(body.password, {
             algorithm: "argon2d"
         })
 
-        const result = await db.insert(usersTable)
+        try {
+            await db.insert(usersTable)
             .values(body)
-            .returning()
+        }
+
+        catch(error) {
+            if(error instanceof DatabaseError && error.code == UNIQUE_CONSTRAINT_VIOLATION_CODE) {
+                set.status = StatusCodes.CONFLICT
+                return {
+                    message: "User with that email exists"
+                }
+            }
+
+            throw error
+        }
 
         set.status = StatusCodes.CREATED
     }, createUserSchema)
