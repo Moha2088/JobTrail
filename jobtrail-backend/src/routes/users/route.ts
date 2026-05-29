@@ -7,10 +7,15 @@ import { getClaims } from "../../utils/auth/getClaims"
 import { StatusCodes } from "http-status-codes"
 import { requestDeleteUserJob } from "../../messaging/events/users/deleteUser/requestDeleteUserJob";
 import { cancelUserDeletion } from "../../messaging/events/users/cancelUserDeletion/cancelUserDeletion";
+import { emailExists } from "../../utils/users/emailExists";
 
 
 export const userRouter = new Elysia({ prefix: "/users" })
     .post("/", async({ body, set }) => {
+        if(await emailExists(body.email)) {
+            throw new Error("User with that email exists")
+        }
+        
         body.password = await Bun.password.hash(body.password, {
             algorithm: "argon2d"
         })
