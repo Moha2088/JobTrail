@@ -13,6 +13,7 @@ import { emailExists } from "../../utils/users/emailExists";
 export const userRouter = new Elysia({ prefix: "/users" })
     .post("/", async({ body, set }) => {
         if(await emailExists(body.email)) {
+            set.status = StatusCodes.CONFLICT
             throw new Error("User with that email exists")
         }
         
