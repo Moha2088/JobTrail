@@ -14,6 +14,7 @@ interface ProviderProps {
 export interface MutationMetaOptions {
     successMessage?: string
     errorMessage?: string
+    conflictErrorMessage?: string
 }
 
 
@@ -44,14 +45,26 @@ export function ReactQueryClientProvider({ children }: ProviderProps) {
                 onError: async(data, variables, onMutateResult, mutation) => {
                     const options = mutation.meta as MutationMetaOptions
 
-                    if(options?.errorMessage) {
-                        toast.error(options.errorMessage, {
+                    if(options.conflictErrorMessage) {
+                        toast.error(options.conflictErrorMessage, {
                             position: "top-right",
                             action: {
                                 label: "Cancel",
                                 onClick: () => { }
                             }
                         })
+                    }
+
+                    else {
+                        if(options?.errorMessage) {
+                            toast.error(options.errorMessage, {
+                                position: "top-right",
+                                action: {
+                                    label: "Cancel",
+                                    onClick: () => { }
+                                }
+                            })
+                        }
                     }
                 }
             })

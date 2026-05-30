@@ -135,7 +135,13 @@ export default function ApplicationsPage() {
                                             withDivider
                                             className="text-xs"
                                             iconStart={<IconSearch className=" ml-2" color="gray" size={20} />}
-                                            iconEnd={<IconFileDescription onClick={() => setIsFullTextSearchEnabled(!isFullTextSearchEnabled)} className={`cursor-pointer ${isFullTextSearchEnabled ? "text-black hover:text-gray-400" : "text-gray-400 hover:text-black"}`} />}
+                                            iconEnd=
+                                                {
+                                                    <IconFileDescription 
+                                                        onClick={() => setIsFullTextSearchEnabled(!isFullTextSearchEnabled)} 
+                                                        className={`cursor-pointer ${isFullTextSearchEnabled ? "text-black hover:text-gray-400" : "text-gray-400 hover:text-black"}`} 
+                                                    />
+                                                }
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
                                         />
