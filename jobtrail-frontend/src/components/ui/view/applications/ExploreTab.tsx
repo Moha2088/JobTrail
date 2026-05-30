@@ -1,9 +1,34 @@
 import { useJobPostings } from "@/services/notion/useJobPostings"
 import { LoadingDots } from "../motion/LoadingDots"
 import { JobPosting } from "./JobPosting"
+import { Input } from "@/components/ui/controls/Input"
+import { IconSearch, IconX } from "@tabler/icons-react"
+import { useRef, useState } from "react"
+import { useDebounce } from "@/hooks/useDebounce"
 
 export function ExploreTab() {
     const { data, isLoading } = useJobPostings()
+
+    const [searchString, setSearchString] = useState<string>("")
+
+    const debouncedSearchString = useDebounce(searchString)
+
+    const filteredJobPostings = data?.filter((p, i) => {
+        if(!debouncedSearchString) {
+            return
+        }
+
+        return p.properties.Position.title[0].plain_text.toLowerCase().includes(debouncedSearchString.trim().toLowerCase())
+    })
+
+    const inputRef = useRef<HTMLInputElement>(null)
+
+    const clearInput = () => {
+        setSearchString("")
+        if (inputRef.current) {
+            inputRef.current.value = ""
+        }
+    }
 
     return (
         <div>
@@ -31,6 +56,24 @@ export function ExploreTab() {
                 </p>
             </div>
 
+            <div className="flex justify-center mb-10">
+                <Input
+                    ref={inputRef}
+                    placeholder="Enter position"
+                    withDivider
+                    className="w-70 text-xs"
+                    variant="pill"
+                    onChange={(e) => setSearchString(e.target.value)}
+                    iconStart={<IconSearch className="mt-0.5" color="gray" size={20}/>}
+                    iconEnd=
+                        {searchString &&
+                            <IconX className={" cursor-pointer hover:text-gray-200"} size={20} onClick={clearInput} />
+                        }
+                >
+                </Input>
+            </div>
+
+
             {data?.length == 0 && !isLoading &&
                 <div>
                     No job postings are available at the moment. Check again later!
@@ -43,12 +86,22 @@ export function ExploreTab() {
                 </div>
             }
 
-            {data &&
+            {data && !debouncedSearchString &&
                 data.map((p) => (
                     <JobPosting
                         key={p.id}
                         position={p.properties.Position.title[0].plain_text} 
                         jobPostingLink={p.properties.JobPostingLink.url} 
+                    />
+                ))
+            }
+
+            {data && debouncedSearchString && filteredJobPostings &&
+                filteredJobPostings.map((p) => (
+                    <JobPosting
+                        key={p.id}
+                        position={p.properties.Position.title[0].plain_text}
+                        jobPostingLink={p.properties.JobPostingLink.url}
                     />
                 ))
             }
