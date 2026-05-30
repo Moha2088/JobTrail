@@ -9,7 +9,7 @@ import { useDebounce } from "@/hooks/useDebounce"
 export function ExploreTab() {
     const { data, isLoading } = useJobPostings()
 
-    const [searchString, setSearchString] = useState<string>()
+    const [searchString, setSearchString] = useState<string>("")
 
     const debouncedSearchString = useDebounce(searchString)
 
