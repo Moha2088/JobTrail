@@ -25,7 +25,9 @@ export function ExploreTab() {
 
     const clearInput = () => {
         setSearchString("")
-        inputRef!.current!.value = ""
+        if (inputRef.current) {
+            inputRef.current.value = ""
+        }
     }
 
     return (
