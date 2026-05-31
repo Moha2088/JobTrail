@@ -4,7 +4,7 @@ import { DeleteApplicationDialog } from "@/components/ui/controls/application/De
 import { EditApplicationDialog } from "@/components/ui/controls/application/EditApplicationDialog"
 import { Button } from "@/components/ui/controls/Button"
 import { ApplicationContext } from "@/contexts/application/ApplicationContext"
-import { IconBrandOpenai, IconDownload, IconEdit, IconFileCv, IconSparkles, IconTrash, IconX, IconZoomExclamationFilled } from "@tabler/icons-react"
+import { IconBrandOpenai, IconCheck, IconCopy, IconDownload, IconEdit, IconFileCv, IconSparkles, IconTrash, IconX, IconZoomExclamationFilled } from "@tabler/icons-react"
 import { notFound, useParams } from "next/navigation"
 import { ChangeEvent, useEffect, useRef, useState } from "react"
 import { QuickTip } from "@/components/ui/view/QuickTip"
@@ -13,7 +13,7 @@ import { LoadingDots } from "@/components/ui/view/motion/LoadingDots"
 import { StreamedTextOutput } from "@/components/ui/view/ai/StreamedTextOutput"
 import { createContentPrompt } from "@/providers/openAIProvider"
 import { ActionButton } from "@/components/ui/controls/ai/ActionButton"
-import { usePutApplication, useApplication, usePatchContent } from "@/services/applications"
+import { useApplication, usePatchContent } from "@/services/applications"
 import { useUploadFile, useGetFile } from "@/services/applications/files"
 import { useSession } from "@/services/session/useSession"
 import { Toggle } from "@/components/ui/controls/ai/Toggle"
@@ -43,6 +43,8 @@ export default function Page() {
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
 
     const [currentProvider, setCurrentProvider] = useState<Provider>("openai")
+
+    const [isCopied, setIsCopied] = useState<boolean>(false)
 
     const fileUploadRef = useRef<HTMLInputElement>(null)
 
@@ -139,7 +141,7 @@ export default function Page() {
                                 />
                             </div>
 
-                            <div className="flex justify-center gap-5 flex-col items-center">                                
+                            <div className="flex justify-center gap-5 flex-col items-center mb-5">                                
                                 <div className="flex gap-3">
                                     <Toggle 
                                         setProvider={setCurrentProvider} 
@@ -159,6 +161,42 @@ export default function Page() {
                                 </div>
 
                             </div>
+
+                            {data.content &&
+                                <div className="mr-auto ml-auto">
+
+                                    {!isCopied &&
+                                        <Button
+                                            variant="ghost"
+                                            className="w-fit h-fit"
+                                            onClick={async() => {
+                                                await navigator.clipboard.writeText(data.content!)
+                                                setIsCopied(true)
+                                                
+                                                setTimeout(() => {
+                                                    setIsCopied(false)
+                                                }, 5000)
+                                            }}
+                                        >
+                                            <IconCopy size={18} />
+                                        </Button>
+                                    }
+
+                                    {isCopied &&
+                                        <div className="flex flex-col gap-2">
+                                            <div className="flex justify-center">
+                                                <IconCheck  />
+                                            </div>
+
+                                            <div>
+                                                <p className="font-bold text-xs">
+                                                    Content copied
+                                                </p>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
 
                             {data.content.length < 100 &&
                                 <div className="p-2 rounded-full bg-red-400">
