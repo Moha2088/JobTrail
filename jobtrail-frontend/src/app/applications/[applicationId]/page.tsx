@@ -82,6 +82,16 @@ export default function Page() {
         }
     })
 
+    useEffect(() => {
+        if(isCopied) {
+            const timer = setTimeout(() => {
+                setIsCopied(false)
+            }, 5000)
+
+            return () => clearTimeout(timer)
+        }
+    }, [isCopied])
+
     if (isApplicationLoading) {
         return (
             <div className="flex justify-center items-center h-screen">
@@ -172,10 +182,6 @@ export default function Page() {
                                             onClick={async() => {
                                                 await navigator.clipboard.writeText(data.content!)
                                                 setIsCopied(true)
-                                                
-                                                setTimeout(() => {
-                                                    setIsCopied(false)
-                                                }, 5000)
                                             }}
                                         >
                                             <IconCopy size={18} />
