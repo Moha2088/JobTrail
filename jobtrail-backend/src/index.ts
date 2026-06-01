@@ -4,7 +4,6 @@ import { authRouter } from "./routes/auth/route";
 import openapi from "@elysiajs/openapi";
 import { cors } from "@elysiajs/cors"
 import { jwtConfig } from "./utils/auth/jwt";
-import "./messaging/eventhandlers/users/jobHandlers"
 import { logger } from "./logger";
 import { healthRouter } from "./routes/health/route";
 import { handleNotFoundMiddleware } from "./middleware/handleNotFound.middleware";
