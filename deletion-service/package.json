@@ -1,0 +1,20 @@
+{
+  "name": "deletion-service",
+  "version": "1.0.50",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "bun run --watch src/index.ts"
+  },
+  "dependencies": {
+    "@types/pg": "^8.20.0",
+    "bullmq": "^5.77.7",
+    "drizzle-orm": "^0.45.2",
+    "elysia": "latest",
+    "pg": "^8.21.0"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "drizzle-kit": "^0.31.10"
+  },
+  "module": "src/index.js"
+}

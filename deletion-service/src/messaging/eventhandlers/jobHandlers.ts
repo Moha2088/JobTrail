@@ -1,16 +1,14 @@
 import { QueueEvents, Worker } from "bullmq"
-import { connection, usersQueueName } from "../../queue"
-import { UserQueueJobs } from "../../events/users/jobTypes"
-import { deleteUser } from "../../events/users/deleteUser/deleteUser"
-import { logger } from "../../../logger"
+
+
+import { UserQueueJobs } from "../events/users/jobTypes"
+import { connection, usersQueueName } from "../queue"
+import { deleteUser } from "./users/deleteUser/deleteUser"
 
 
 const userQueueEvents = new QueueEvents(usersQueueName, { connection })
 const userQueueWorker = new Worker<UserQueueJobs>(usersQueueName, async job => { }, { connection })
 
-userQueueEvents.on("delayed", async job => {
-    logger.info(`User queue job with id: ${job.jobId} is now delayed!`)
-})
 
 userQueueEvents.on("active", async job => {
     console.log(`User queue job with id: ${job.jobId} is being processed!`)
