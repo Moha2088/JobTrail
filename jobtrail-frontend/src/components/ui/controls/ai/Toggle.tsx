@@ -16,6 +16,7 @@ export function Toggle(props: ToggleProps) {
     const [isToggled, setIsToggled] = useState<boolean>(false)
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsToggled(current == text)
     }, [current, text])
 

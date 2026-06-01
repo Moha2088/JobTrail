@@ -45,7 +45,7 @@ export function ReactQueryClientProvider({ children }: ProviderProps) {
                 onError: async(data, variables, onMutateResult, mutation) => {
                     const options = mutation.meta as MutationMetaOptions
 
-                    if(options.conflictErrorMessage) {
+                    if(options?.conflictErrorMessage) {
                         toast.error(options.conflictErrorMessage, {
                             position: "top-right",
                             action: {
