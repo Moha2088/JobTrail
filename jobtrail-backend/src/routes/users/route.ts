@@ -155,13 +155,22 @@ export const userRouter = new Elysia({ prefix: "/users" })
             return
         }
 
+        const user = await db.select().from(usersTable)
+        .where(eq(usersTable.id, id))
+
+        if(user.length == 0) {
+            set.status = StatusCodes.NOT_FOUND
+            return
+        }
+
         await requestDeleteUserJob(id)
 
         await db.update(usersTable)
         .set({ pendingDeletion: true })
         .where(eq(usersTable.id, id))
 
-        console.log("Users is pending deletion!")
+
+        console.log(`User with id: ${id} is scheduled for deletion`)
 
         set.status = StatusCodes.NO_CONTENT
     }, deleteUserSchema)
