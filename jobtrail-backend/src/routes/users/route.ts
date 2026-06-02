@@ -170,7 +170,7 @@ export const userRouter = new Elysia({ prefix: "/users" })
         .where(eq(usersTable.id, id))
 
 
-        console.log(`User with id: ${id} is scheduled for deletion`)
+        console.log(`User with id: ${id}, ${user[0].name} is scheduled for deletion`)
 
         set.status = StatusCodes.NO_CONTENT
     }, deleteUserSchema)
