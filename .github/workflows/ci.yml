@@ -27,4 +27,4 @@ jobs:
         run: cd ${{ env.BACKEND_PATH }} && bun migrate
         env:
           NODE_ENV: production
-          NEON_DB_URL: ${{ secrets.NEON_DB_URL }}
+          RAILWAY_X: ${{ secrets.RAILWAY_DATABASE_URL }}
