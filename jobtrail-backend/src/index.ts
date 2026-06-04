@@ -35,5 +35,7 @@ logger.info(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
 );
 
+logger.info("Environment: " + Bun.env.NODE_ENV)
+
 
 export type App = typeof app
