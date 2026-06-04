@@ -1,4 +1,4 @@
-import { ConnectionOptions, Queue } from "bullmq"
+import { ConnectionOptions, DefaultJobOptions, Queue, QueueOptions } from "bullmq"
 import { UserQueueJobs } from "./events/users/jobTypes"
 import Redis from "ioredis"
 
@@ -19,16 +19,12 @@ export const connection: ConnectionOptions = {
     : {})
 }
 
-export const ioredis = new Redis({
-    host: connection.host,
-    port: 6379,
-    ...(isProduction ? {
-        password: process.env.RAILWAY_REDIS_PASSWORD
-    }
-    : {})
-})
-
+const defaultJobOptions: DefaultJobOptions = {
+    removeOnComplete: true,
+    removeOnFail: true
+}
 
 export const usersQueue = new Queue<UserQueueJobs>(usersQueueName, {
-    connection
+    connection,
+    defaultJobOptions
 })
