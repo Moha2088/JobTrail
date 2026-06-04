@@ -1,6 +1,5 @@
 import { ConnectionOptions, DefaultJobOptions, Queue, QueueOptions } from "bullmq"
 import { UserQueueJobs } from "./events/users/jobTypes"
-import Redis from "ioredis"
 
 export const usersQueueName = "users"
 
