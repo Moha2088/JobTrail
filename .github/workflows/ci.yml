@@ -26,5 +26,5 @@ jobs:
       - name: Run migrations
         run: cd ${{ env.BACKEND_PATH }} && bun migrate
         env:
-          NODE_ENV: production
-          DATABASE_URL: ${{ secrets.RAILWAY_DATABASE_URL }}
+          NODE_ENV: CI
+          RAILWAY_PUBLIC_DATABASE_URL: ${{ secrets.RAILWAY_PUBLIC_DATABASE_URL }}
