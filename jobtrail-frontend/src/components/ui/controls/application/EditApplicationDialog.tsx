@@ -48,7 +48,7 @@ function Content(props: ContentProps) {
 
     const [isDropDownOpen, setIsDropdownOpen] = useState<boolean>(false)
     const [applicationStatus, setApplicationStatus] = useState<string>(application?.applicationStatus)
-    const [currentLength, setCurrentLength] = useState<number>(application?.content.length ?? 0)
+    const [currentLength, setCurrentLength] = useState<number>(application?.content.trim().length ?? 0)
 
     const { handleSubmit, register, reset, watch, formState: { errors } } = useForm<EditApplicationInput>({
         defaultValues: {
