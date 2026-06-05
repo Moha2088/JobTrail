@@ -178,7 +178,7 @@ function Content(props: ContentProps) {
                             {...register("content", {
                                 required: "Content is required!"
                             })}
-                            onChange={(e) => setCurrentLength(e.target.value.length)}
+                            onChange={(e) => setCurrentLength(e.target.value.trim().length)}
                         />
                         {errors.content && <p className="text-red-400">{errors.content.message}</p>}
                     </label>

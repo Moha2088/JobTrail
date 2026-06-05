@@ -182,7 +182,7 @@ function Content(props: ContentProps) {
                             {...register("content", {
                                 required: "Content is required!"
                             })}
-                            onChange={(e) => setCurrentLength(e.target.value.length)}
+                            onChange={(e) => setCurrentLength(e.target.value.trim().length)}
                         />
 
                         <div className="flex justify-center">
