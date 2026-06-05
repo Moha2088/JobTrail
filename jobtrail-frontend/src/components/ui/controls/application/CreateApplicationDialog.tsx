@@ -7,6 +7,7 @@ import { OverlayWrapper } from "../OverlayWrapper"
 import { useState } from "react"
 import { Input } from "../Input"
 import { DialogProps } from "@radix-ui/react-dialog"
+import { CurrentTextLength } from "../../view/applications/CurrentTextLength"
 
 interface CreateApplicationDialogProps extends DialogProps{
 
@@ -48,8 +49,9 @@ function Content(props: ContentProps) {
 
     const [isDropDownOpen, setIsDropdownOpen] = useState<boolean>(false)
     const [applicationStatus, setApplicationStatus] = useState<string>("Select status")
+    const [currentLength, setCurrentLength] = useState<number>(0)
 
-    const { handleSubmit, register, getValues, formState: { errors } } = useForm<CreateApplicationInput>({
+    const { handleSubmit, register, watch, formState: { errors } } = useForm<CreateApplicationInput>({
         defaultValues: {
             companyName: "",
             email: "",
@@ -58,6 +60,11 @@ function Content(props: ContentProps) {
             content: ""
         }
     })
+
+    const companyNameInputValue = watch("companyName")
+    const emailInputValue = watch("email")
+    const positionInputValue = watch("position")
+    const contentInputValue = watch("content")
 
     const onSubmit = (data: CreateApplicationInput) => {
         createApplication.mutate({
@@ -175,7 +182,12 @@ function Content(props: ContentProps) {
                             {...register("content", {
                                 required: "Content is required!"
                             })}
+                            onChange={(e) => setCurrentLength(e.target.value.length)}
                         />
+
+                        <div className="flex justify-center">
+                            <CurrentTextLength currentLength={currentLength} />    
+                        </div>
                         {errors.content && <p className="text-red-400">{errors.content.message}</p>}
                     </label>
                 </div>
@@ -193,7 +205,7 @@ function Content(props: ContentProps) {
                     </Dialog.Close>
 
                     <Button
-                        disabled={!applicationStatus || getValues("companyName") === "" || getValues("email") === "" || getValues("position") === "" || getValues("content") === ""}
+                        disabled={applicationStatus == "Select status" || !companyNameInputValue || !emailInputValue || !positionInputValue || !contentInputValue || currentLength < 100}
                         type="submit"
                         isPending={createApplication.isPending}
                         size="small"

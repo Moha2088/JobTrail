@@ -9,6 +9,8 @@ import { useApplicationContext } from "@/contexts/application/ApplicationContext
 import { Input } from "@/components/ui/controls/Input"
 import { DialogProps } from "@radix-ui/react-dialog"
 import { statusColorMap } from "./CreateApplicationDialog"
+import { TextField } from "@radix-ui/themes"
+import { CurrentTextLength } from "../../view/applications/CurrentTextLength"
 
 interface EditApplicationDialogProps extends DialogProps{
 
@@ -45,10 +47,10 @@ function Content(props: ContentProps) {
     const editApplication = usePutApplication(application?.id)
 
     const [isDropDownOpen, setIsDropdownOpen] = useState<boolean>(false)
-    const [applicationStatus, setApplicationStatus] = useState<string>("Select status")
+    const [applicationStatus, setApplicationStatus] = useState<string>(application?.applicationStatus)
+    const [currentLength, setCurrentLength] = useState<number>(application?.content.length ?? 0)
 
-
-    const { handleSubmit, register, reset, getValues, formState: { errors } } = useForm<EditApplicationInput>({
+    const { handleSubmit, register, reset, watch, formState: { errors } } = useForm<EditApplicationInput>({
         defaultValues: {
             companyName: application?.companyName,
             email: application?.email,
@@ -57,6 +59,11 @@ function Content(props: ContentProps) {
             content: application?.content
         }
     })
+
+    const companyNameInputValue = watch("companyName")
+    const emailInputValue = watch("email")
+    const positionInputValue = watch("position")
+    const contentInputValue = watch("content")
 
     const onSubmit = (data: EditApplicationInput) => {
         console.log("Entered edit function")
@@ -170,10 +177,15 @@ function Content(props: ContentProps) {
                         <textarea className="w-100 bg-gray-100 h-50 rounded-xl p-3"
                             {...register("content", {
                                 required: "Content is required!"
-                            })} 
+                            })}
+                            onChange={(e) => setCurrentLength(e.target.value.length)}
                         />
                         {errors.content && <p className="text-red-400">{errors.content.message}</p>}
                     </label>
+                </div>
+
+                <div className="flex justify-center">
+                    <CurrentTextLength currentLength={currentLength} />
                 </div>
 
                 <div className="p-3" />
@@ -190,18 +202,14 @@ function Content(props: ContentProps) {
                     <Dialog.Close asChild>
                         <Button
                             isPending={editApplication.isPending}
-                            disabled={!applicationStatus || !getValues("companyName") || !getValues("email") || !getValues("position") || !getValues("content")}
+                            disabled={!applicationStatus || !companyNameInputValue || !emailInputValue || !emailInputValue || !contentInputValue || currentLength < 100}
                             onClick={() => {
                                 editApplication.mutate({
-                                    companyName: getValues("companyName"),
-                                    email: getValues("email"),
+                                    companyName: companyNameInputValue,
+                                    email: emailInputValue,
                                     applicationStatus: applicationStatus,
-                                    position: getValues("position"),
-                                    content: getValues("content")
-                                }, {
-                                    onSuccess: () => {
-
-                                    }
+                                    position: positionInputValue,
+                                    content: contentInputValue
                                 })
                             }}
                             size="small"
