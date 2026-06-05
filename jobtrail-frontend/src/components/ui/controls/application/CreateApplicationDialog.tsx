@@ -51,7 +51,7 @@ function Content(props: ContentProps) {
     const [applicationStatus, setApplicationStatus] = useState<string>("Select status")
     const [currentLength, setCurrentLength] = useState<number>(0)
 
-    const { handleSubmit, register, getValues, formState: { errors } } = useForm<CreateApplicationInput>({
+    const { handleSubmit, register, watch, formState: { errors } } = useForm<CreateApplicationInput>({
         defaultValues: {
             companyName: "",
             email: "",
@@ -60,6 +60,11 @@ function Content(props: ContentProps) {
             content: ""
         }
     })
+
+    const companyNameInputValue = watch("companyName")
+    const emailInputValue = watch("email")
+    const positionInputValue = watch("position")
+    const contentInputValue = watch("content")
 
     const onSubmit = (data: CreateApplicationInput) => {
         createApplication.mutate({
@@ -200,7 +205,7 @@ function Content(props: ContentProps) {
                     </Dialog.Close>
 
                     <Button
-                        disabled={!applicationStatus || getValues("companyName") === "" || getValues("email") === "" || getValues("position") === "" || getValues("content") === "" || currentLength < 100}
+                        disabled={applicationStatus == "Select status" || !companyNameInputValue || !emailInputValue || !positionInputValue || !contentInputValue || currentLength < 100}
                         type="submit"
                         isPending={createApplication.isPending}
                         size="small"

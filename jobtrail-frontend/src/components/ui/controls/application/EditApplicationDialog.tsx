@@ -50,7 +50,7 @@ function Content(props: ContentProps) {
     const [applicationStatus, setApplicationStatus] = useState<string>(application?.applicationStatus)
     const [currentLength, setCurrentLength] = useState<number>(application?.content.length ?? 0)
 
-    const { handleSubmit, register, reset, getValues, formState: { errors } } = useForm<EditApplicationInput>({
+    const { handleSubmit, register, reset, watch, formState: { errors } } = useForm<EditApplicationInput>({
         defaultValues: {
             companyName: application?.companyName,
             email: application?.email,
@@ -59,6 +59,11 @@ function Content(props: ContentProps) {
             content: application?.content
         }
     })
+
+    const companyNameInputValue = watch("companyName")
+    const emailInputValue = watch("email")
+    const positionInputValue = watch("position")
+    const contentInputValue = watch("content")
 
     const onSubmit = (data: EditApplicationInput) => {
         console.log("Entered edit function")
@@ -197,18 +202,14 @@ function Content(props: ContentProps) {
                     <Dialog.Close asChild>
                         <Button
                             isPending={editApplication.isPending}
-                            disabled={!applicationStatus || !getValues("companyName") || !getValues("email") || !getValues("position") || !getValues("content") || currentLength < 100}
+                            disabled={!applicationStatus || !companyNameInputValue || !emailInputValue || !emailInputValue || !contentInputValue || currentLength < 100}
                             onClick={() => {
                                 editApplication.mutate({
-                                    companyName: getValues("companyName"),
-                                    email: getValues("email"),
+                                    companyName: companyNameInputValue,
+                                    email: emailInputValue,
                                     applicationStatus: applicationStatus,
-                                    position: getValues("position"),
-                                    content: getValues("content")
-                                }, {
-                                    onSuccess: () => {
-
-                                    }
+                                    position: positionInputValue,
+                                    content: contentInputValue
                                 })
                             }}
                             size="small"
