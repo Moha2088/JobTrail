@@ -26,8 +26,8 @@ const validate = async (
     const claims = await getClaims(authorization)
 
     if(claims.sub != application.userId) {
-        set.status = StatusCodes.UNAUTHORIZED
-        throw "Unauthorized"
+        set.status = StatusCodes.FORBIDDEN
+        throw "Forbidden"
     }
 }
 

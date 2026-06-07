@@ -1,4 +1,4 @@
-name: Create Pull Request to Master
+name: Create Pull Request to main branch
 
 on:
     push:
@@ -15,5 +15,6 @@ jobs:
             - name: Create Pull Request
               uses: peter-evans/create-pull-request@v8.1.1
               with:
-                branch: "main"
+                branch: staging
+                base: main
                 title: "Release to Prod"
