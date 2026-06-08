@@ -4,9 +4,9 @@ interface TextLengthProps {
 
 export function CurrentTextLength(props: TextLengthProps) {
     const { currentLength } = props
-    const limit: number = 100
+    const minLimit: number = 500
 
-    const hasReachedLimit = currentLength >= limit
+    const hasReachedLimit = currentLength >= minLimit
 
     return (
         <div className={`flex gap-0.5 ${hasReachedLimit ? "text-green-400" : "text-red-400"}`}>
@@ -24,7 +24,7 @@ export function CurrentTextLength(props: TextLengthProps) {
 
             <div className="mt-0.5">
                 <p className="text-xs">
-                    {limit}
+                    {minLimit}
                 </p>
             </div>
         </div>
