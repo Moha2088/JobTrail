@@ -181,7 +181,7 @@ function Content(props: ContentProps) {
                             {...register("content", {
                                 required: "Content is required!"
                             })}
-                            onChange={(e) => setCurrentLength(e.target.value.trim().length)}
+                            onChange={(e) => setCurrentLength(e.target.value.length)}
                         />
 
                         <div className="flex justify-center gap-1">
@@ -226,7 +226,7 @@ function Content(props: ContentProps) {
                     <Dialog.Close asChild>
                         <Button
                             isPending={editApplication.isPending}
-                            disabled={!applicationStatus || !companyNameInputValue || !emailInputValue || !emailInputValue || !contentInputValue || currentLength < 100 || 
+                            disabled={!applicationStatus || !companyNameInputValue || !emailInputValue || !contentInputValue ||
                                 currentLength < minLimit || currentLength > maxLimit}
                             onClick={() => {
                                 editApplication.mutate({

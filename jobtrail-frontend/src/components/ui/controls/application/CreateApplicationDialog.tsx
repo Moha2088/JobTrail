@@ -9,7 +9,6 @@ import { Input } from "../Input"
 import { DialogProps } from "@radix-ui/react-dialog"
 import { CurrentTextLength } from "../../view/applications/CurrentTextLength"
 import { ProgressCircle } from "@/components/ui/progress-circle"
-import { IconCircleCheck, IconCircleCheckFilled } from "@tabler/icons-react"
 
 interface CreateApplicationDialogProps extends DialogProps{
 
