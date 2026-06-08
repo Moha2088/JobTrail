@@ -11,6 +11,7 @@ import { DialogProps } from "@radix-ui/react-dialog"
 import { statusColorMap } from "./CreateApplicationDialog"
 import { TextField } from "@radix-ui/themes"
 import { CurrentTextLength } from "../../view/applications/CurrentTextLength"
+import { ProgressCircle } from "../../progress-circle"
 
 interface EditApplicationDialogProps extends DialogProps{
 
@@ -49,8 +50,10 @@ function Content(props: ContentProps) {
     const [isDropDownOpen, setIsDropdownOpen] = useState<boolean>(false)
     const [applicationStatus, setApplicationStatus] = useState<string>(application?.applicationStatus)
     const [currentLength, setCurrentLength] = useState<number>(application?.content.trim().length ?? 0)
+    const minLimit: number = 500
+    const maxLimit: number = 2500
 
-    const { handleSubmit, register, reset, watch, formState: { errors } } = useForm<EditApplicationInput>({
+    const { handleSubmit, register, watch, formState: { errors } } = useForm<EditApplicationInput>({
         defaultValues: {
             companyName: application?.companyName,
             email: application?.email,
@@ -180,13 +183,34 @@ function Content(props: ContentProps) {
                             })}
                             onChange={(e) => setCurrentLength(e.target.value.trim().length)}
                         />
+
+                        <div className="flex justify-center gap-1">
+                            {currentLength <= maxLimit ? 
+                                <div>
+                                    <CurrentTextLength currentLength={currentLength} />
+                                </div>
+
+                                : <p className="text-red-400 text-xs">
+                                    -{currentLength - maxLimit}
+                                </p>
+                            }
+
+                            {currentLength < maxLimit &&
+                                <div>
+                                    <ProgressCircle
+                                        maxValue={2500}
+                                        value={currentLength}
+                                        className={currentLength < minLimit ? "text-red-400" : "text-green-400"}
+                                    />
+                                </div>
+                            }
+
+                        </div>
+                        
                         {errors.content && <p className="text-red-400">{errors.content.message}</p>}
                     </label>
                 </div>
 
-                <div className="flex justify-center">
-                    <CurrentTextLength currentLength={currentLength} />
-                </div>
 
                 <div className="p-3" />
 
@@ -202,7 +226,8 @@ function Content(props: ContentProps) {
                     <Dialog.Close asChild>
                         <Button
                             isPending={editApplication.isPending}
-                            disabled={!applicationStatus || !companyNameInputValue || !emailInputValue || !emailInputValue || !contentInputValue || currentLength < 100}
+                            disabled={!applicationStatus || !companyNameInputValue || !emailInputValue || !emailInputValue || !contentInputValue || currentLength < 100 || 
+                                currentLength < minLimit || currentLength > maxLimit}
                             onClick={() => {
                                 editApplication.mutate({
                                     companyName: companyNameInputValue,
