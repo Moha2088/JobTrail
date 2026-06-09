@@ -20,16 +20,14 @@ export function SwitchComponent(props: SwitchProps) {
                     </p>
                 </div>
 
-                <div>
-                    <p className="text-gray-400">
-                        <p className="text-xs">
-                            {text}
-                        </p>
+                <div className="max-w-40">
+                    <p className="text-gray-400 text-xs">
+                        {text}
                     </p>
                 </div>
             </div>
 
-            <div>
+            <div className="ml-10">
                 <Switch 
                     checked={isChecked}
                     onClick={() => {
