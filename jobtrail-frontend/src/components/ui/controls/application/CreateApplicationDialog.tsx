@@ -9,6 +9,7 @@ import { Input } from "../Input"
 import { DialogProps } from "@radix-ui/react-dialog"
 import { CurrentTextLength } from "../../view/applications/CurrentTextLength"
 import { ProgressCircle } from "@/components/ui/progress-circle"
+import { SwitchComponent } from "../../view/applications/SwitchComponent"
 
 interface CreateApplicationDialogProps extends DialogProps{
 
@@ -51,6 +52,8 @@ function Content(props: ContentProps) {
     const [isDropDownOpen, setIsDropdownOpen] = useState<boolean>(false)
     const [applicationStatus, setApplicationStatus] = useState<string>("Select status")
     const [currentLength, setCurrentLength] = useState<number>(0)
+    const [ignoreContent, setIgnoreContent] = useState<boolean>(false)
+    
     const minLimit: number = 500
     const maxLimit: number = 2500
 
@@ -75,7 +78,7 @@ function Content(props: ContentProps) {
             email: data.email,
             applicationStatus: applicationStatus,
             position: data.position,
-            content: data.content
+            content: !ignoreContent ? data.content : "TODO: Fill this out!"
         }, {
             onSuccess: () => {
                 console.log("Application created successfully")
@@ -179,14 +182,30 @@ function Content(props: ContentProps) {
 
                     <label>
                         <p>
-                            Content
+                            {ignoreContent ? <s className="text-gray-400">Content</s> : "Content"}
                         </p>
-                        <textarea className="w-100 bg-gray-100 h-50 rounded-xl p-3 text-sm"
-                            {...register("content", {
-                                required: "Content is required!"
-                            })}
-                            onChange={(e) => setCurrentLength(e.target.value.length)}
-                        />
+
+                        <div className="flex gap-10">
+                            <div>
+                                <textarea placeholder={ignoreContent ? "TODO: Fill this out!" : ""} className="w-100 bg-gray-100 h-50 rounded-xl p-3 text-sm disabled:opacity-50"
+                                    {...register("content", {
+                                        required: !ignoreContent ? "Content is required!" : false
+                                    })}
+                                    onChange={(e) => setCurrentLength(e.target.value.length)}
+                                    disabled={ignoreContent}
+                                />
+                            </div>
+
+                            <div className="flex items-center ">
+                                <div>
+                                    <SwitchComponent 
+                                        header="Skip content"
+                                        text="Skip content for now, and come back to it later"
+                                        setIgnoreContent={setIgnoreContent}
+                                    />
+                                </div>
+                            </div>
+                        </div>
 
                         <div className="flex justify-center gap-1">
                             {currentLength <= maxLimit ? 
@@ -208,7 +227,6 @@ function Content(props: ContentProps) {
                                     />
                                 </div>
                             }
-
                         </div>
 
                         {errors.content && <p className="text-red-400">{errors.content.message}</p>}
@@ -228,8 +246,8 @@ function Content(props: ContentProps) {
                     </Dialog.Close>
 
                     <Button
-                        disabled={applicationStatus == "Select status" || !companyNameInputValue || !emailInputValue || 
-                            !positionInputValue || !contentInputValue || currentLength < minLimit || currentLength > maxLimit}
+                        disabled={applicationStatus == "Select status" || !companyNameInputValue || !emailInputValue ||
+                            !positionInputValue || !contentInputValue && !ignoreContent || currentLength < minLimit && !ignoreContent || currentLength > maxLimit && !ignoreContent}
                         type="submit"
                         isPending={createApplication.isPending}
                         size="small"
