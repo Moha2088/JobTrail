@@ -9,7 +9,6 @@ import { Input } from "../Input"
 import { DialogProps } from "@radix-ui/react-dialog"
 import { CurrentTextLength } from "../../view/applications/CurrentTextLength"
 import { ProgressCircle } from "@/components/ui/progress-circle"
-import { OptionalContentTooltip } from "../../view/applications/OptionalContentTooltip"
 import { SwitchComponent } from "../../view/applications/SwitchComponent"
 
 interface CreateApplicationDialogProps extends DialogProps{
@@ -199,10 +198,6 @@ function Content(props: ContentProps) {
 
                             <div className="flex items-center ">
                                 <div>
-                                    {/* <OptionalContentTooltip trigger={
-                                        <input className=" accent-black" onChange={(e) => setIgnoreContent(e.target.checked)} type="checkbox" />
-                                    } /> */}
-
                                     <SwitchComponent 
                                         header="Skip content"
                                         text="Skip content for now, and come back to it later"

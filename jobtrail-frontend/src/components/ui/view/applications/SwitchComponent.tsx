@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { Switch } from "../../switch"
 
 interface SwitchProps {
@@ -9,7 +8,6 @@ interface SwitchProps {
 
 export function SwitchComponent(props: SwitchProps) {
     const { header, text, setIgnoreContent } = props
-    const [isChecked, setIsChecked] = useState<boolean>(false)
 
     return (
         <div className="flex">
@@ -28,13 +26,7 @@ export function SwitchComponent(props: SwitchProps) {
             </div>
 
             <div className="ml-10">
-                <Switch 
-                    checked={isChecked}
-                    onClick={() => {
-                        setIsChecked(!isChecked)
-                        setIgnoreContent(!isChecked)
-                    }} 
-                />
+                <Switch onCheckedChange={(e) => setIgnoreContent(e)} />
             </div>
         </div>
     )
