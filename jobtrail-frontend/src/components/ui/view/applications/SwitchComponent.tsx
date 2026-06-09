@@ -26,7 +26,7 @@ export function SwitchComponent(props: SwitchProps) {
             </div>
 
             <div className="ml-10">
-                <Switch onCheckedChange={(e) => setIgnoreContent(e)} />
+                <Switch className="cursor-pointer" onCheckedChange={(e) => setIgnoreContent(e)} />
             </div>
         </div>
     )

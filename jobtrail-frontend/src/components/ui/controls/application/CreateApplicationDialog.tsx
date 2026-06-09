@@ -207,27 +207,29 @@ function Content(props: ContentProps) {
                             </div>
                         </div>
 
-                        <div className="flex justify-center gap-1">
-                            {currentLength <= maxLimit ? 
-                                <div>
-                                    <CurrentTextLength currentLength={currentLength} />
-                                </div>
+                        {!ignoreContent &&
+                            <div className="flex justify-center gap-1">
+                                {currentLength <= maxLimit ? 
+                                    <div>
+                                        <CurrentTextLength currentLength={currentLength} />
+                                    </div>
 
-                                : <p className="text-red-400 text-xs">
-                                    -{currentLength - maxLimit}
-                                </p>
-                            }
+                                    : <p className="text-red-400 text-xs">
+                                        -{currentLength - maxLimit}
+                                    </p>
+                                }
 
-                            {currentLength < maxLimit &&
-                                <div>
-                                    <ProgressCircle
-                                        maxValue={2500}
-                                        value={currentLength}
-                                        className={currentLength < minLimit ? "text-red-400" : "text-green-400"}
-                                    />
-                                </div>
-                            }
-                        </div>
+                                {currentLength < maxLimit &&
+                                    <div>
+                                        <ProgressCircle
+                                            maxValue={2500}
+                                            value={currentLength}
+                                            className={currentLength < minLimit ? "text-red-400" : "text-green-400"}
+                                        />
+                                    </div>
+                                }
+                            </div>
+                        }
 
                         {errors.content && <p className="text-red-400">{errors.content.message}</p>}
                     </label>
@@ -247,7 +249,8 @@ function Content(props: ContentProps) {
 
                     <Button
                         disabled={applicationStatus == "Select status" || !companyNameInputValue || !emailInputValue ||
-                            !positionInputValue || !contentInputValue && !ignoreContent || currentLength < minLimit && !ignoreContent || currentLength > maxLimit && !ignoreContent}
+                            !positionInputValue || !contentInputValue && !ignoreContent || currentLength < minLimit && !ignoreContent || 
+                            currentLength > maxLimit && !ignoreContent}
                         type="submit"
                         isPending={createApplication.isPending}
                         size="small"
