@@ -1,5 +1,4 @@
 import { resendClient } from "../../clients/resendClient";
-import { emailExists } from "../users/emailExists";
 import { getUser } from "../users/getUser";
 import { MailOptions } from "./types";
 import { validateEmail } from "./validateEmail";
@@ -12,12 +11,6 @@ export async function sendDeleteRequestMail(options: MailOptions) {
 
     if (!user) {
         throw new Error(`User with id: ${id} doesn't exist!`)
-    }
-
-    const mailExists = await emailExists(email)
-
-    if(!mailExists) {
-        throw new Error(`User with email: ${email} does not exist!`)
     }
 
     if(!validateEmail({ id, email })) {
