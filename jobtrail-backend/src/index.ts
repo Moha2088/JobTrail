@@ -8,6 +8,8 @@ import { logger } from "./logger";
 import { healthRouter } from "./routes/health/route";
 import { handleNotFoundMiddleware } from "./middleware/handleNotFound.middleware";
 import { jobPostingRouter } from "./routes/jobPostings/route";
+import { workbench } from "@getworkbench/elysia";
+import { usersQueue } from "./messaging/queue";
 
 const app = new Elysia()
     .use(cors({
@@ -21,6 +23,14 @@ const app = new Elysia()
         path: "/docs"}
     ))
     .use(handleNotFoundMiddleware)
+    .mount("/jobs", workbench({
+        queues: [usersQueue],
+        basePath: "/jobs",
+        auth: {
+          username: Bun.env.BULL_USERNAME!,
+          password: Bun.env.BULL_PASSWORD!
+        },
+      }))
     .group("/api", (app) => app
         .use(jwtConfig)
         .use(healthRouter)
