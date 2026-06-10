@@ -7,6 +7,7 @@ import { useSession } from "@/services/session/useSession"
 import { LoadingDots } from "@/components/ui/view/motion/LoadingDots"
 import { Input } from "@/components/ui/controls/Input"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 interface DeleteUserDialogProps extends DialogProps {
 
@@ -33,6 +34,8 @@ function Content({ onOpenChange }: ContentProps) {
     const [confirmationInput, setConfirmationInput] = useState<string>("")
 
     const deleteUser = useDeleteUser(Number(data?.userId))
+
+    const router = useRouter()
 
     if(isLoading) {
         return(
@@ -75,7 +78,10 @@ function Content({ onOpenChange }: ContentProps) {
                         variant="destructive"
                         size="small"
                         isPending={deleteUser.isPending}
-                        onClick={() => deleteUser.mutate()}
+                        onClick={() => {
+                            deleteUser.mutate()
+                            router.replace("/")
+                        }}
                     >
                         Delete
                     </Button>

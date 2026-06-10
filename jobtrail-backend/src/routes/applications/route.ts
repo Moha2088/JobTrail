@@ -14,7 +14,6 @@ import { Application } from "./types"
 import { StatusCodes } from "http-status-codes";
 import { uploadToR2, getFile, deleteFile, fileExists } from "../../utils/r2";
 import { searchContent } from "../../utils/search-engine/searchContent";
-import { getJobPostings } from "../../utils/jobPostings/getJobPostings";
 
 
 const validate = async (

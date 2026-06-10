@@ -9,7 +9,7 @@ export function useCancelUserDeletion(id: number) {
             errorMessage: "Error reactivating user",
             successMessage: "Successfully reactivated user!",
         },
-        mutationKey: ["cancel-user", id], // ???,
+        mutationKey: ["users", id],
         mutationFn: async() => {
             const session = await getSession()
 
