@@ -2,6 +2,7 @@ import { resendClient } from "../../clients/resendClient";
 import { emailExists } from "../users/emailExists";
 import { getUser } from "../users/getUser";
 import { MailOptions } from "./types";
+import { validateEmail } from "./validateEmail";
 
 
 export async function sendDeleteRequestMail(options: MailOptions) {
@@ -17,6 +18,10 @@ export async function sendDeleteRequestMail(options: MailOptions) {
 
     if(!mailExists) {
         throw new Error(`User with email: ${email} does not exist!`)
+    }
+
+    if(!validateEmail({ id, email })) {
+        throw new Error("Email doesn't belong to user!")
     }
 
     const { error } = await resendClient.emails.send({

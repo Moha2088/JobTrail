@@ -11,6 +11,7 @@ export async function getUser(userId: number) {
     return {
         sub: result[0].id,
         name: result[0].name,
+        email: result[0].email,
         pendingDeletion: result[0].pendingDeletion
     }
 }

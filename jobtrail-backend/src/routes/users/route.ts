@@ -139,14 +139,12 @@ export const userRouter = new Elysia({ prefix: "/users" })
             return
         }
 
-        const user = await getUser(id)
+        const { email, pendingDeletion } = await getUser(id)
 
-        if (!user.pendingDeletion) {
-            console.error(`User with id: ${id} not pending deletion!`)
-            return
+        if (!pendingDeletion) {
+            set.status = StatusCodes.CONFLICT
+            return { message: "User is not pending deletion" }
         }
-
-        const { email } = claims
 
         await cancelUserDeletion(id)
         await sendDeletionCancelledMail({
@@ -171,15 +169,8 @@ export const userRouter = new Elysia({ prefix: "/users" })
             return
         }
 
-        const user = await db.select().from(usersTable)
-        .where(eq(usersTable.id, id))
+        const { email } = await getUser(id)
 
-        if(user.length == 0) {
-            set.status = StatusCodes.NOT_FOUND
-            return
-        }
-
-        const { email } = claims
 
         await requestDeleteUserJob(id)
         await sendDeleteRequestMail({
