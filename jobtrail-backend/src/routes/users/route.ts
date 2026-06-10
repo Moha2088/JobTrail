@@ -9,6 +9,9 @@ import { requestDeleteUserJob } from "../../messaging/events/users/deleteUser/re
 import { cancelUserDeletion } from "../../messaging/events/users/cancelUserDeletion/cancelUserDeletion";
 import { emailExists } from "../../utils/users/emailExists";
 import { DatabaseError } from "pg";
+import { sendDeleteRequestMail } from "../../utils/mail/sendDeleteRequestMail";
+import { sendDeletionCancelledMail } from "../../utils/mail/sendDeletionCancelledMail";
+import { getUser } from "../../utils/users/getUser";
 
 
 export const userRouter = new Elysia({ prefix: "/users" })
@@ -136,7 +139,20 @@ export const userRouter = new Elysia({ prefix: "/users" })
             return
         }
 
+        const user = await getUser(id)
+
+        if (!user.pendingDeletion) {
+            console.error(`User with id: ${id} not pending deletion!`)
+            return
+        }
+
+        const { email } = claims
+
         await cancelUserDeletion(id)
+        await sendDeletionCancelledMail({
+            id,
+            email
+        })
 
     }, cancelUserDeletionSchema)
 
@@ -163,7 +179,13 @@ export const userRouter = new Elysia({ prefix: "/users" })
             return
         }
 
+        const { email } = claims
+
         await requestDeleteUserJob(id)
+        await sendDeleteRequestMail({
+            id,
+            email
+        })
 
         await db.update(usersTable)
         .set({ pendingDeletion: true })

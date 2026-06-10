@@ -10,7 +10,7 @@ export async function getUser(userId: number) {
 
     return {
         sub: result[0].id,
-        name: result[0].name
-
+        name: result[0].name,
+        pendingDeletion: result[0].pendingDeletion
     }
 }
