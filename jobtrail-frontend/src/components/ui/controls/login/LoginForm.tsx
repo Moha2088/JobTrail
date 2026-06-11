@@ -56,26 +56,39 @@ export function LoginForm(){
                             </h1>
                         </div>
 
-                        <div className="mb-3">
-                            <Input
-                                className="w-full text-xs border-3 p-2 mb-1 rounded-lg"
-                                placeholder="Enter your email" 
-                                {...register("email", { 
-                                    required: "Email is required!",
-                                    validate:(value) =>{
-                                        if(!value.includes("@")) {
-                                            return "Email is not valid!"
-                                        }
+                        <div className="flex gap-3">
+                            <div className="mb-3 flex-1">
+                                <Input
+                                    className="w-full text-xs border-3 p-2 mb-1 rounded-lg"
+                                    placeholder="Enter your email" 
+                                    {...register("email", { 
+                                        required: "Email is required!",
+                                        validate:(value) =>{
+                                            if(!value.includes("@")) {
+                                                return "Email is not valid!"
+                                            }
 
-                                        return true
-                                    } })}
-                            />
+                                            return true
+                                        } })}
+                                />
 
-                            {errors.email && <p className="text-red-400">{errors.email.message}</p>}
+                                {errors.email && <p className="text-red-400">{errors.email.message}</p>}
+                            </div>
+
+                            <div className="invisible">
+                                <Button
+                                    variant="ghost"
+                                    type="button"
+                                    size="small"
+                                    className="w-fit"
+                                >
+                                    <IconEyeClosed />
+                                </Button>
+                            </div>
                         </div>
 
                         <div className="flex gap-3">
-                            <div className="mb-5">
+                            <div className="mb-5 flex-1">
                                 <Input
                                     type={passwordState}
                                     className="w-full text-xs border-3 p-2 rounded-lg mb-1"

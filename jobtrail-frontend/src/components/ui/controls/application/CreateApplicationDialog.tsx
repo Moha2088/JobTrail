@@ -4,7 +4,7 @@ import { usePostApplication } from "@/services/applications"
 import { useForm } from "react-hook-form"
 import { ApplicationStatus, StatusDropdownMenu } from "@/components/ui/controls/application/StatusDropdownMenu"
 import { OverlayWrapper } from "../OverlayWrapper"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { Input } from "../Input"
 import { DialogProps } from "@radix-ui/react-dialog"
 import { CurrentTextLength } from "../../view/applications/CurrentTextLength"
@@ -53,7 +53,9 @@ function Content(props: ContentProps) {
     const [applicationStatus, setApplicationStatus] = useState<string>("Select status")
     const [currentLength, setCurrentLength] = useState<number>(0)
     const [ignoreContent, setIgnoreContent] = useState<boolean>(false)
-    
+
+    const contentTextRef = useRef<HTMLTextAreaElement>(null)
+
     const minLimit: number = 500
     const maxLimit: number = 2500
 
@@ -187,20 +189,24 @@ function Content(props: ContentProps) {
 
                         <div className="flex flex-col md:flex-row gap-5 md:gap-10">
                             <div className="flex-1">
-                                <textarea placeholder={ignoreContent ? "TODO: Fill this out!" : ""} className="w-full bg-gray-100 h-50 rounded-xl p-3 text-sm disabled:opacity-50"
+                                <textarea
+                                    placeholder={ignoreContent ? "TODO: Fill this out!" : ""} 
+                                    className="w-full bg-gray-100 h-50 rounded-xl p-3 text-sm disabled:opacity-50"
                                     {...register("content", {
                                         required: !ignoreContent ? "Content is required!" : false
                                     })}
                                     onChange={(e) => setCurrentLength(e.target.value.length)}
                                     disabled={ignoreContent}
+                                    ref={contentTextRef}
                                 />
                             </div>
 
-                            <div className="flex items-center ">
+                            <div className="flex items-center">
                                 <div>
-                                    <SwitchComponent 
+                                    <SwitchComponent
                                         header="Skip content"
                                         text="Skip content for now, and come back to it later"
+                                        contentTextAreaRef={contentTextRef}
                                         setIgnoreContent={setIgnoreContent}
                                     />
                                 </div>
