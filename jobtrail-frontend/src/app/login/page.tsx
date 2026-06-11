@@ -12,7 +12,7 @@ export default function LoginPage() {
         <>
             
 
-            <div className=" bg-blue-300 h-screen">
+            <div className=" bg-blue-300 min-h-screen">
                 <Suspense fallback={<LoadingDots />}>
                     <LoginForm/>
                 </Suspense>

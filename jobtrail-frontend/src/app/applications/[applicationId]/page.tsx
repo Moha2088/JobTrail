@@ -129,10 +129,10 @@ export default function Page() {
                 />
             </ApplicationContext>
 
-            <div className={`flex flex-row justify-center items-center gap-30 ${isEditApplicationDialogOpen} ? "bg-black/70" : ""`}>
+            <div className={`flex flex-col lg:flex-row justify-center items-center gap-5 lg:gap-30 ${isEditApplicationDialogOpen} ? "bg-black/70" : ""`}>
                 {data?.content &&
                     <div>
-                        <div className="flex flex-col p-3 max-w-150 overflow-y-scroll h-screen gap-5">
+                        <div className="flex flex-col p-3 w-full max-w-xl lg:max-w-150 overflow-y-auto lg:overflow-y-scroll gap-5">
                             <label className="mr-auto ml-auto w-fit pl-5 pr-5 p-2 rounded-2xl text-blue-400 tracking-tighter font-bold text-2xl">
                                 Content
                             </label>
@@ -286,7 +286,7 @@ export default function Page() {
                 }
 
                 {!data?.content &&
-                    <div className="flex flex-row gap-5">
+                    <div className="flex flex-col md:flex-row gap-5 items-center">
                         <div className="flex flex-col justify-center items-center">
                             <div className="flex justify-center items-center mb-5">
                                 <IconZoomExclamationFilled />
@@ -298,7 +298,7 @@ export default function Page() {
                         </div>
                         
                         <div>
-                            <hr className="border h-screen"/>
+                            <hr className="hidden md:block border h-screen"/>
                         </div>
                     </div>
                 }
@@ -310,7 +310,7 @@ export default function Page() {
                         </p>
                     </div>
 
-                    <div className=" bg-gray-50 mr-auto ml-auto w-fit p-5 mb-5 rounded-xl">
+                    <div className=" bg-gray-50 mr-auto ml-auto w-full md:w-fit max-w-lg p-5 mb-5 rounded-xl mx-4">
 
                         <div className="flex justify-center p-3">
                             <label className="font-bold pr-1">Email:</label>

@@ -17,7 +17,7 @@ export function Navbar() {
     return (
         <div>
             {session && pathname != "/" &&
-                <div className="flex absolute justify-end items-center w-screen mr-10 gap-1 p-3 ">
+                <div className="flex absolute justify-end items-center w-full gap-1 p-3 pr-4 md:pr-10">
                     {!pathname.startsWith("/user") && 
                         <div className="p-2 mr-3 border-gray-100 border-2 rounded-full">
                             <Link href={`/user/${session?.userId}`}>

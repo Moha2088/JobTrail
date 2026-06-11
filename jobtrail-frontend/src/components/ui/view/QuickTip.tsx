@@ -26,7 +26,7 @@ export function QuickTip(props: QuickTipProps) {
         <>
             {!hideTip &&
                 <motion.div
-                    className={`absolute w-fit p-3 bg-yellow-50 max-w-120 border ml-10 rounded-xl text-sm ${cn(className)}`}
+                    className={`absolute w-full md:w-fit p-3 bg-yellow-50 max-w-[90vw] md:max-w-120 border ml-2 md:ml-10 rounded-xl text-sm ${cn(className)}`}
                     initial={{ opacity: 0, y: 50, x: 730 }}
                     transition={{ duration: 0.5, delay: 10 }}
                     animate={{ opacity: 1, y: 20 }}

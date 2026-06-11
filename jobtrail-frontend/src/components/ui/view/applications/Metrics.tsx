@@ -15,14 +15,14 @@ export function Metrics(props: MetricsProps) {
 
 
     return (
-        <div className="flex justify-center flex-row gap-3">
+        <div className="flex justify-center flex-row flex-wrap gap-3 px-4">
             <motion.div
                 initial={{ opacity: 0, y: -25 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="border-2 p-8 w-fit rounded-xl shadow-md">
+                className="border-2 p-4 md:p-8 w-full md:w-fit rounded-xl shadow-md">
                 <div className="flex flex-row">
-                    <div className="flex justify-start w-40 font-bold text-sm">
+                    <div className="flex justify-start w-auto md:w-40 font-bold text-sm">
                         Pending
                     </div>
 
@@ -40,9 +40,9 @@ export function Metrics(props: MetricsProps) {
                 initial={{ opacity: 0, y: 25 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.5 }}
-                className="border-2 p-8 w-fit rounded-xl shadow-md">
+                className="border-2 p-4 md:p-8 w-full md:w-fit rounded-xl shadow-md">
                 <div className="flex flex-row">
-                    <div className="flex justify-start w-40 font-bold text-sm">
+                    <div className="flex justify-start w-auto md:w-40 font-bold text-sm">
                         Rejected
                     </div>
 
@@ -60,9 +60,9 @@ export function Metrics(props: MetricsProps) {
                 initial={{ opacity: 0, y: -25 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 1 }}
-                className="border-2 p-8 w-fit rounded-xl shadow-md">
+                className="border-2 p-4 md:p-8 w-full md:w-fit rounded-xl shadow-md">
                 <div className="flex flex-row">
-                    <div className="flex justify-start w-40 font-bold text-sm">
+                    <div className="flex justify-start w-auto md:w-40 font-bold text-sm">
                         Accepted
                     </div>
 

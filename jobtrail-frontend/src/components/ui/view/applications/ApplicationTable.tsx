@@ -24,7 +24,7 @@ export function ApplicationTable(props: ApplicationTableProps) {
 
     return (
 
-        <Table className="w-170 mr-auto ml-auto rounded-2xl" >
+        <Table className="w-full max-w-5xl px-4 mr-auto ml-auto rounded-2xl" >
             <TableCaption>{applications && applications.length != 0
                 ? `You have ${applications.length} applications`
                 : "You have no applications. Click the button to create one"

@@ -56,12 +56,12 @@ export function ExploreTab() {
                 </p>
             </div>
 
-            <div className="flex justify-center mb-10">
+            <div className="flex justify-center mb-10 px-4">
                 <Input
                     ref={inputRef}
                     placeholder="Enter position"
                     withDivider
-                    className="w-70 text-xs"
+                    className="w-full max-w-md text-xs"
                     variant="pill"
                     onChange={(e) => setSearchString(e.target.value)}
                     iconStart={<IconSearch className="mt-0.5" color="gray" size={20}/>}

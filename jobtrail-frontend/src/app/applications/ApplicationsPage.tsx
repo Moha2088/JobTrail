@@ -113,7 +113,7 @@ export default function ApplicationsPage() {
 
             {
                 tab == "applications" ?
-                    <div className="h-screen">
+                    <div className="min-h-screen">
                         <div className="p-5" />
                         <div className="flex flex-row">
 
@@ -121,8 +121,8 @@ export default function ApplicationsPage() {
                                 <ReactivateUserDialog open={true}/>
                             }
 
-                            <div className="flex justify-start items-center w-screen gap-25">
-                                <p className=" text-2xl text-blue-400 tracking-tighter font-bold ml-20">
+                            <div className="flex flex-col md:flex-row justify-start items-center w-full gap-5 md:gap-25">
+                                <p className=" text-2xl text-blue-400 tracking-tighter font-bold ml-0 md:ml-20 text-center md:text-left">
                                     Welcome back, {session?.name}!
                                 </p>
 

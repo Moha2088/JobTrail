@@ -18,7 +18,7 @@ export function SwitchComponent(props: SwitchProps) {
                     </p>
                 </div>
 
-                <div className="max-w-40">
+                <div className="max-w-40 md:max-w-60">
                     <p className="text-gray-400 text-xs">
                         {text}
                     </p>

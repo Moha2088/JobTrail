@@ -109,7 +109,7 @@ function Content(props: ContentProps) {
                             Name
                         </p>
                         <Input
-                            className="w-100 bg-gray-100 text-sm"
+                            className="w-full bg-gray-100 text-sm"
                             defaultValue=""
                             placeholder="Enter the name of the company"
                             {...register("companyName", {
@@ -124,7 +124,7 @@ function Content(props: ContentProps) {
                             Email
                         </p>
                         <Input
-                            className="w-100 bg-gray-100 text-sm"
+                            className="w-full bg-gray-100 text-sm"
                             placeholder="Enter the email of the company"
                             {...register("email", {
                                 required: "Company email is required"
@@ -170,7 +170,7 @@ function Content(props: ContentProps) {
                             Position
                         </p>
                         <Input
-                            className="w-100 bg-gray-100 text-sm"
+                            className="w-full bg-gray-100 text-sm"
                             defaultValue=""
                             placeholder="Enter the position you are applying for"
                             {...register("position", {
@@ -185,9 +185,9 @@ function Content(props: ContentProps) {
                             {ignoreContent ? <s className="text-gray-400">Content</s> : "Content"}
                         </p>
 
-                        <div className="flex gap-10">
-                            <div>
-                                <textarea placeholder={ignoreContent ? "TODO: Fill this out!" : ""} className="w-100 bg-gray-100 h-50 rounded-xl p-3 text-sm disabled:opacity-50"
+                        <div className="flex flex-col md:flex-row gap-5 md:gap-10">
+                            <div className="flex-1">
+                                <textarea placeholder={ignoreContent ? "TODO: Fill this out!" : ""} className="w-full bg-gray-100 h-50 rounded-xl p-3 text-sm disabled:opacity-50"
                                     {...register("content", {
                                         required: !ignoreContent ? "Content is required!" : false
                                     })}
@@ -237,7 +237,7 @@ function Content(props: ContentProps) {
 
                 <div className="p-3" />
 
-                <div className="flex justify-end gap-10" >
+                <div className="flex justify-end gap-5 md:gap-10" >
                     <Dialog.Close asChild>
                         <Button
                             type="button"

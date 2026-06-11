@@ -60,12 +60,12 @@ export function SignupForm() {
     return (
         <>
             <form
-                className="flex flex-col justify-center h-screen bg-blue-300" onSubmit={handleSubmit(onSubmit)}>
+                className="flex flex-col justify-center min-h-screen bg-blue-300" onSubmit={handleSubmit(onSubmit)}>
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{  duration : 0.5 }}
-                    className="flex flex-col justify-center items-center gap-6 px-20 py-10 bg-white ml-auto mr-auto rounded-xl">
+                    className="flex flex-col justify-center items-center gap-6 px-6 md:px-16 py-6 md:py-10 bg-white ml-auto mr-auto rounded-xl w-full md:w-auto max-w-lg mx-4">
                     <div className="flex flex-col gap-3">
                         <div className="mr-auto">
                             <h1 className="text-2xl font-bold mb-3">
@@ -75,7 +75,7 @@ export function SignupForm() {
 
                         <div >
                             <input
-                                className="w-70 text-xs border-3 p-2 rounded-lg"
+                                className="w-full text-xs border-3 p-2 rounded-lg"
                                 placeholder="Enter your name" 
                                 {...register("name", { 
                                     required: "Name is required!",
@@ -89,7 +89,7 @@ export function SignupForm() {
                         
                         <div>
                             <input
-                                className="w-70 text-xs border-3 p-2 rounded-lg"
+                                className="w-full text-xs border-3 p-2 rounded-lg"
                                 placeholder="Enter your email" 
                                 {...register("email", { 
                                     required: "Email is required!",
@@ -110,7 +110,7 @@ export function SignupForm() {
                             <div>
                                 <input
                                     type={passwordState}
-                                    className="w-70 text-xs border-3 p-2 rounded-lg"
+                                    className="w-full text-xs border-3 p-2 rounded-lg"
                                     placeholder="Enter your password"
                                     {...register("password", { 
                                         required: "Password is required!",
@@ -140,7 +140,7 @@ export function SignupForm() {
                         <div className="mb-5">
                             <input
                                 type={passwordState}
-                                className="w-70 text-xs border-3 p-2 rounded-lg"
+                                className="w-full text-xs border-3 p-2 rounded-lg"
                                 placeholder="Confirm password"
                                 {...register("confirmedPassword", { 
                                     required: "Password must be confirmed!",
@@ -166,7 +166,7 @@ export function SignupForm() {
                                 <Button
                                     size="small"
                                     type="submit"
-                                    className="w-25"
+                                    className="w-full md:w-25"
                                     isPending={createUser.isPending}
                                     disabled={!!errors.email || !!errors.password || !!errors.confirmedPassword || createUser.isPending}
                                 >

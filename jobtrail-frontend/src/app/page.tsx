@@ -19,7 +19,7 @@ export default function Home() {
 
     return (
         <>
-            <div className="bg-linear-to-b from-blue-300 via-blue-300 to-white h-300 mb-10">
+            <div className="bg-linear-to-b from-blue-300 via-blue-300 to-white min-h-screen md:h-300 md:min-h-0 pb-10 md:pb-0 mb-10">
 
                 <div className="p-3" />
 
@@ -75,7 +75,7 @@ export default function Home() {
                     <div className="p-5" />
 
                     <div className="flex justify-center items-center">
-                        <p className="text-4xl font-bold text-white max-w-300 ">
+                        <p className="text-4xl font-bold text-white max-w-full md:max-w-300 px-4 text-center">
                             AI assisted job tracking for everyone
                         </p>
                     </div>
@@ -92,43 +92,45 @@ export default function Home() {
                         width={500}
                         height={0}
                         alt=""
-                        className="w-200 rounded-xl"
+                        className="w-full max-w-xl md:w-200 px-4 rounded-xl"
                         src={"/landing/dashboard.png"} 
                     />
                 </motion.div>
             </div>
 
-            <div className="flex flex-row gap-100 mb-50">
+            <div className="flex flex-col items-center md:flex-row gap-10 md:gap-100 mb-50">
                 <div className="">
                     <Image
                         alt=""
                         src="/landing/landing-ai.png"
                         width="500"
                         height="100"
+                        className="w-full max-w-sm md:max-w-none"
                     />
                 </div>
 
-                <div className="pt-20">
+                <div className="pt-0 md:pt-20 px-4">
                     <p className="text-xl font-bold text-center" >
                         AI powered job tracking right at your fingertips.
                     </p>
                 </div>
             </div>
 
-            <div className="flex flex-row gap-80 mb-30">
+            <div className="flex flex-col-reverse items-center md:flex-row gap-10 md:gap-80 mb-30">
+                <div className="px-4">
+                    <p className="text-xl font-bold text-center pt-0 md:pt-60 max-w-full md:max-w-130">
+                        Leverage the power of AI to review and update your application in real time.
+                    </p>
+                </div>
+
                 <div>
                     <Image 
                         alt=""
                         src="/landing/landing-ai-text.png"
                         width="400"
                         height="100"
+                        className="w-full max-w-sm md:max-w-none"
                     />
-                </div>
-
-                <div>
-                    <p className="text-xl font-bold text-center pt-60 max-w-130">
-                        Leverage the power of AI to review and update your application in real time.
-                    </p>
                 </div>
             </div>
 
