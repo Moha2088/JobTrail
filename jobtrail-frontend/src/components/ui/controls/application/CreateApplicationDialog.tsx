@@ -129,7 +129,12 @@ function Content(props: ContentProps) {
                             className="w-full bg-gray-100 text-sm"
                             placeholder="Enter the email of the company"
                             {...register("email", {
-                                required: "Company email is required"
+                                required: "Company email is required",
+                                validate:(s) => {
+                                    if(!s.includes("@")) {
+                                        return "Email is not valid"
+                                    }
+                                }
                             })}
                         />
                         
