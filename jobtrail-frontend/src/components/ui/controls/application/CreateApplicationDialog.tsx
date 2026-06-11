@@ -54,7 +54,7 @@ function Content(props: ContentProps) {
     const [currentLength, setCurrentLength] = useState<number>(0)
     const [ignoreContent, setIgnoreContent] = useState<boolean>(false)
 
-    const contentTextRef = useRef<HTMLTextAreaElement>(null)
+    const contentTextAreaRef = useRef<HTMLTextAreaElement>(null)
 
     const minLimit: number = 500
     const maxLimit: number = 2500
@@ -197,7 +197,7 @@ function Content(props: ContentProps) {
                                     })}
                                     onChange={(e) => setCurrentLength(e.target.value.length)}
                                     disabled={ignoreContent}
-                                    ref={contentTextRef}
+                                    ref={contentTextAreaRef}
                                 />
                             </div>
 
@@ -206,7 +206,7 @@ function Content(props: ContentProps) {
                                     <SwitchComponent
                                         header="Skip content"
                                         text="Skip content for now, and come back to it later"
-                                        contentTextAreaRef={contentTextRef}
+                                        contentTextAreaRef={contentTextAreaRef}
                                         setIgnoreContent={setIgnoreContent}
                                     />
                                 </div>

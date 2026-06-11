@@ -7,9 +7,12 @@ import { Metrics } from "@/components/ui/view/applications/Metrics"
 import { useApplications } from "@/services/applications"
 import { useLogOut } from "@/services/auth/useLogOut"
 import {
+    IconArrowBigUp,
+    IconArrowBigUpFilled,
     IconFileDescription,
     IconPlus,
     IconSearch,
+    IconSlash,
 } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
@@ -136,11 +139,21 @@ export default function ApplicationsPage() {
                                             className="text-xs"
                                             iconStart={<IconSearch className=" ml-2" color="gray" size={20} />}
                                             iconEnd=
-                                                {
-                                                    <IconFileDescription 
-                                                        onClick={() => setIsFullTextSearchEnabled(!isFullTextSearchEnabled)} 
-                                                        className={`cursor-pointer ${isFullTextSearchEnabled ? "text-black hover:text-gray-400" : "text-gray-400 hover:text-black"}`} 
-                                                    />
+                                                {<div className="flex gap-3">
+                                                    <div className="flex rounded-sm gap bg-gray-200 p-1">
+                                                        <IconArrowBigUp color="gray" size={13}/>
+                                                        <IconPlus color="gray" size={13}/>
+                                                        <IconSlash color="gray" size={13}/>
+                                                    </div>
+
+                                                    <div>
+                                                        <IconFileDescription
+                                                            size={15} 
+                                                            onClick={() => setIsFullTextSearchEnabled(!isFullTextSearchEnabled)} 
+                                                            className={`cursor-pointer mt-1 ${isFullTextSearchEnabled ? "text-black hover:text-gray-400" : "text-gray-400 hover:text-black"}`} 
+                                                        />
+                                                    </div>
+                                                </div>
                                                 }
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
