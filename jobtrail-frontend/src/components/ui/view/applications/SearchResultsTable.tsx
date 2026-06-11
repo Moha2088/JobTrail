@@ -28,7 +28,7 @@ export function SearchResultsTable(props: SearchResultsTableProps) {
 
     return (
         
-        <Table className="w-170 mr-auto ml-auto rounded-2xl" >
+        <Table className="w-full max-w-5xl px-4 mr-auto ml-auto rounded-2xl" >
             <TableCaption>{applications && applications.length != 0
                 ? `${applications.length} search results`
                 : "Your query didn't match any applications."

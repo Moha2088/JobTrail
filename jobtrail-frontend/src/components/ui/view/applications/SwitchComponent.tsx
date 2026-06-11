@@ -1,13 +1,15 @@
+import { RefObject } from "react"
 import { Switch } from "../../switch"
 
 interface SwitchProps {
     header: string
     text: string
+    contentTextAreaRef: RefObject<HTMLTextAreaElement | null>
     setIgnoreContent: (val: boolean) => void
 }
 
 export function SwitchComponent(props: SwitchProps) {
-    const { header, text, setIgnoreContent } = props
+    const { header, text, setIgnoreContent, contentTextAreaRef } = props
 
     return (
         <div className="flex">
@@ -18,7 +20,7 @@ export function SwitchComponent(props: SwitchProps) {
                     </p>
                 </div>
 
-                <div className="max-w-40">
+                <div className="max-w-40 md:max-w-60">
                     <p className="text-gray-400 text-xs">
                         {text}
                     </p>
@@ -26,7 +28,12 @@ export function SwitchComponent(props: SwitchProps) {
             </div>
 
             <div className="ml-10">
-                <Switch className="cursor-pointer" onCheckedChange={(e) => setIgnoreContent(e)} />
+                <Switch className="cursor-pointer" onCheckedChange={(e) => {
+                    if(e && contentTextAreaRef.current) {
+                        contentTextAreaRef.current.value = ""
+                    }
+                    setIgnoreContent(e)
+                }} />
             </div>
         </div>
     )

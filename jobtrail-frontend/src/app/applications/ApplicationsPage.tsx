@@ -7,9 +7,12 @@ import { Metrics } from "@/components/ui/view/applications/Metrics"
 import { useApplications } from "@/services/applications"
 import { useLogOut } from "@/services/auth/useLogOut"
 import {
+    IconArrowBigUp,
+    IconArrowBigUpFilled,
     IconFileDescription,
     IconPlus,
     IconSearch,
+    IconSlash,
 } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
@@ -113,7 +116,7 @@ export default function ApplicationsPage() {
 
             {
                 tab == "applications" ?
-                    <div className="h-screen">
+                    <div className="min-h-screen">
                         <div className="p-5" />
                         <div className="flex flex-row">
 
@@ -121,8 +124,8 @@ export default function ApplicationsPage() {
                                 <ReactivateUserDialog open={true}/>
                             }
 
-                            <div className="flex justify-start items-center w-screen gap-25">
-                                <p className=" text-2xl text-blue-400 tracking-tighter font-bold ml-20">
+                            <div className="flex flex-col md:flex-row justify-start items-center w-full gap-5 md:gap-25">
+                                <p className=" text-2xl text-blue-400 tracking-tighter font-bold ml-0 md:ml-20 text-center md:text-left">
                                     Welcome back, {session?.name}!
                                 </p>
 
@@ -136,11 +139,21 @@ export default function ApplicationsPage() {
                                             className="text-xs"
                                             iconStart={<IconSearch className=" ml-2" color="gray" size={20} />}
                                             iconEnd=
-                                                {
-                                                    <IconFileDescription 
-                                                        onClick={() => setIsFullTextSearchEnabled(!isFullTextSearchEnabled)} 
-                                                        className={`cursor-pointer ${isFullTextSearchEnabled ? "text-black hover:text-gray-400" : "text-gray-400 hover:text-black"}`} 
-                                                    />
+                                                {<div className="flex gap-3">
+                                                    <div className="flex rounded-sm gap bg-gray-200 p-1">
+                                                        <IconArrowBigUp color="gray" size={13}/>
+                                                        <IconPlus color="gray" size={13}/>
+                                                        <IconSlash color="gray" size={13}/>
+                                                    </div>
+
+                                                    <div>
+                                                        <IconFileDescription
+                                                            size={15} 
+                                                            onClick={() => setIsFullTextSearchEnabled(!isFullTextSearchEnabled)} 
+                                                            className={`cursor-pointer mt-1 ${isFullTextSearchEnabled ? "text-black hover:text-gray-400" : "text-gray-400 hover:text-black"}`} 
+                                                        />
+                                                    </div>
+                                                </div>
                                                 }
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}

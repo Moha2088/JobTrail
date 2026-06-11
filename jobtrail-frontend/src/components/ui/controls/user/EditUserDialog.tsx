@@ -87,7 +87,7 @@ function Content(props: ContentProps) {
                             Name
                         </p>
                         <Input
-                            className="w-100 bg-gray-100"
+                            className="w-full bg-gray-100"
                             defaultValue=""
                             placeholder="Enter the name of the user"
                             {...register("name", {
@@ -102,7 +102,7 @@ function Content(props: ContentProps) {
                             Email
                         </p>
                         <Input
-                            className="w-100 bg-gray-100"
+                            className="w-full bg-gray-100"
                             placeholder="Enter the email of the user"
                             {...register("email", {
                                 required: "Email is required"
@@ -115,7 +115,7 @@ function Content(props: ContentProps) {
                             Password
                         </p>
                         <Input
-                            className="w-100 bg-gray-100"
+                            className="w-full bg-gray-100"
                             defaultValue=""
                             type="password"
                             placeholder="Enter the password for the user"
@@ -131,7 +131,7 @@ function Content(props: ContentProps) {
                             Confirm password
                         </p>
                         <Input
-                            className="w-100 bg-gray-100"
+                            className="w-full bg-gray-100"
                             defaultValue=""
                             type="password"
                             placeholder="Confirm the password for the user"
@@ -144,7 +144,7 @@ function Content(props: ContentProps) {
                     </label>
                 </div>
 
-                <div className="flex justify-end gap-10" >
+                <div className="flex justify-end gap-5 md:gap-10" >
                     <Dialog.Close asChild>
                         <Button
                             type="button"

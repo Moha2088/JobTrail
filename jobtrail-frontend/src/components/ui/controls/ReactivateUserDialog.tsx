@@ -40,7 +40,7 @@ function Content() {
                 Reactivate User?
             </Dialog.Title>
 
-            <div className="flex justify-center items-center mt-30 flex-col gap-10">
+            <div className="flex justify-center items-center mt-10 md:mt-30 flex-col gap-5 md:gap-10">
 
                 <div>
                     <Image

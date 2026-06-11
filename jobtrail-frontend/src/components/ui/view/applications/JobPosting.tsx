@@ -13,7 +13,7 @@ export function JobPosting(props: JobPostingProps) {
     const { position, jobPostingLink } = props
 
     return(
-        <div className="mr-auto ml-auto px-5 py-7 w-150 flex-col rounded-xl text-white bg-stone-800 text- mb-10">
+        <div className="mr-auto ml-auto px-5 py-7 w-full max-w-xl md:w-150 flex-col rounded-xl text-white bg-stone-800 text- mb-10 mx-4 md:mx-auto">
             <div className="flex justify-center mb-10">
                 <h1 className="text-xl font-bold">
                     {position}

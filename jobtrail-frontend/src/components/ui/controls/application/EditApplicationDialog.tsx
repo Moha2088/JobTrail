@@ -109,7 +109,7 @@ function Content(props: ContentProps) {
                             Name
                         </p>
                         <Input
-                            className="w-100 bg-gray-100"
+                            className="w-full bg-gray-100"
                             defaultValue=""
                             placeholder="Enter the name of the company"
                             {...register("companyName", {
@@ -124,7 +124,7 @@ function Content(props: ContentProps) {
                             Email
                         </p>
                         <Input
-                            className="w-100 bg-gray-100"
+                            className="w-full bg-gray-100"
                             placeholder="Enter the email of the company"
                             {...register("email", {
                                 required: "Company email is required"
@@ -163,7 +163,7 @@ function Content(props: ContentProps) {
                             Position
                         </p>
                         <Input
-                            className="w-100 bg-gray-100"
+                            className="w-full bg-gray-100"
                             defaultValue=""
                             placeholder="Enter the position you are applying for"
                             {...register("position", {
@@ -177,7 +177,7 @@ function Content(props: ContentProps) {
                         <p>
                             Content
                         </p>
-                        <textarea className="w-100 bg-gray-100 h-50 rounded-xl p-3"
+                        <textarea className="w-full bg-gray-100 h-50 rounded-xl p-3"
                             {...register("content", {
                                 required: "Content is required!"
                             })}
@@ -214,7 +214,7 @@ function Content(props: ContentProps) {
 
                 <div className="p-3" />
 
-                <div className="flex justify-end gap-10" >
+                <div className="flex justify-end gap-5 md:gap-10" >
                     <Dialog.Close asChild>
                         <Button
                             type="button"

@@ -57,7 +57,7 @@ function Content({ onOpenChange }: ContentProps) {
                     <Input
                         onChange={(e) => setConfirmationInput(e.target.value)}
                         value={confirmationInput}
-                        className="w-100"
+                        className="w-full"
                     />
                 </div>
             </div>

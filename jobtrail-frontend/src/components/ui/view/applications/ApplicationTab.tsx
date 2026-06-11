@@ -15,7 +15,7 @@ export function ApplicationTab(props: ApplicationTabProps) {
 
     
     return (
-        <Tabs className="absolute mt-10" defaultValue="applications">
+        <Tabs className="relative md:absolute mt-5 md:mt-10" defaultValue="applications">
             <TabsList variant="line">
                 <TabsTrigger className="hover:cursor-pointer" onClick={() => setActiveTab("applications")} value="applications">Applications <IconArticle /></TabsTrigger>
                 <TabsTrigger className="hover:cursor-pointer" onClick={() => setActiveTab("explore")} value="explore">Explore <IconFlameFilled color="red" /> </TabsTrigger>

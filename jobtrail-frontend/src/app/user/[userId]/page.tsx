@@ -83,11 +83,11 @@ export default function UserPage(){
             <div className="bg-black h-35" />
 
             <div className="flex flex-col gap-5 items-center">
-                <div className="bg-white border-3 p-7 rounded-full absolute top-15">
+                <div className="bg-white border-3 p-4 md:p-7 rounded-full absolute top-10 md:top-15">
                     <IconUser size={90} />
                 </div>
 
-                <div className="font-bold text-xl mt-25">
+                <div className="font-bold text-xl mt-15 md:mt-25">
                     {data?.name}
                 </div>
 
@@ -115,7 +115,7 @@ export default function UserPage(){
                     </Toggle>
                 </div>
 
-                <div className="flex flex-col max-w-200 gap-5 mb-5">
+                <div className="flex flex-col w-full max-w-xl md:max-w-200 gap-5 mb-5 px-4">
                     <div className="flex flex-row gap-2">
 
                         <div>

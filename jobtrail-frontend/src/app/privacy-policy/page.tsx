@@ -6,7 +6,7 @@ export default function Page() {
 
     return (
         <div
-            className="mt-10 flex flex-col gap-10 "
+            className="mt-10 flex flex-col gap-5 md:gap-10 px-4"
         >
             <motion.div
                 initial={{ opacity: 0, y: 15 }}
@@ -23,7 +23,7 @@ export default function Page() {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.5 }}
-                className="flex justify-center mr-93">
+                className="flex justify-center md:mr-93">
                 <p className="font-bold">
                     Last updated: March 12, 2026
                 </p>
@@ -35,7 +35,7 @@ export default function Page() {
                 transition={{ duration: 0.5, delay: 1.25 }}
                 className="flex flex-col gap-10 mb-20"
             >
-                <div className="mr-auto ml-auto max-w-150">
+                <div className="mr-auto ml-auto w-full max-w-xl md:max-w-150">
                     We respect your privacy and are committed to protecting your personal information.
                 </div>
 
@@ -43,7 +43,7 @@ export default function Page() {
                     Information We Collect
                 </div>
 
-                <div className="mr-auto ml-auto max-w-150">
+                <div className="mr-auto ml-auto w-full max-w-xl md:max-w-150">
                     When you use our job application tracking app, we may collect:
 
                     Account information (such as your name and email)
@@ -71,7 +71,7 @@ export default function Page() {
                     AI Processing
                 </div>
 
-                <div className="mr-auto ml-auto max-w-150">
+                <div className="mr-auto ml-auto w-full max-w-xl md:max-w-150">
                     Some features may send the information you provide (such as resume content or prompts) to third-party AI services to generate responses. This data is used only to provide the requested feature.
 
                 </div>
@@ -80,7 +80,7 @@ export default function Page() {
                     Data Sharing
                 </div>
 
-                <div className="mr-auto ml-auto max-w-150">
+                <div className="mr-auto ml-auto w-full max-w-xl md:max-w-150">
                     We do not sell your personal information. We may share data with trusted service providers that help operate the app (such as hosting, analytics, or AI providers).
                 </div>
 
@@ -88,7 +88,7 @@ export default function Page() {
                     Data Retention
                 </div>
 
-                <div className="mr-auto ml-auto max-w-150">
+                <div className="mr-auto ml-auto w-full max-w-xl md:max-w-150">
                     We keep your data only as long as necessary to provide the service. You may request deletion of your data at any time.
                 </div>
 
@@ -96,7 +96,7 @@ export default function Page() {
                     Contact
                 </div>
 
-                <div className="mr-auto ml-auto max-w-150">
+                <div className="mr-auto ml-auto w-full max-w-xl md:max-w-150">
                     If you have questions about this Privacy Policy, contact us at: <p className="font-bold inline-block underline">info@jobtrail.com</p>
                 </div>
             </motion.div>

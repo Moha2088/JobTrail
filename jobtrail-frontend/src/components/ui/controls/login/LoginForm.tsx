@@ -46,9 +46,9 @@ export function LoginForm(){
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{  duration : 0.5 }}
-                className="flex flex-col justify-center h-screen text-xs" onSubmit={handleSubmit(onSubmit)}
+                className="flex flex-col justify-center min-h-screen text-xs" onSubmit={handleSubmit(onSubmit)}
             >
-                <div className="flex flex-col justify-center items-center gap-5 border-stone-300  w-fit h-fit px-15 py-15 bg-white ml-auto mr-auto rounded-xl">
+                <div className="flex flex-col justify-center items-center gap-5 border-stone-300 w-full md:w-auto max-w-lg h-fit px-6 md:px-15 py-8 md:py-15 bg-white ml-auto mr-auto rounded-xl mx-4">
                     <div>
                         <div className="mb-5">
                             <h1 className="text-2xl font-bold">
@@ -56,26 +56,28 @@ export function LoginForm(){
                             </h1>
                         </div>
 
-                        <div className="mb-3">
-                            <Input
-                                className="w-70 text-xs border-3 p-2 mb-1 rounded-lg"
-                                placeholder="Enter your email" 
-                                {...register("email", { 
-                                    required: "Email is required!",
-                                    validate:(value) =>{
-                                        if(!value.includes("@")) {
-                                            return "Email is not valid!"
-                                        }
+                        <div className="flex gap-3">
+                            <div className="mb-3 flex-1">
+                                <Input
+                                    className="w-70 text-xs border-3 p-2 mb-1 rounded-lg"
+                                    placeholder="Enter your email" 
+                                    {...register("email", { 
+                                        required: "Email is required!",
+                                        validate:(value) =>{
+                                            if(!value.includes("@")) {
+                                                return "Email is not valid!"
+                                            }
 
-                                        return true
-                                    } })}
-                            />
+                                            return true
+                                        } })}
+                                />
 
-                            {errors.email && <p className="text-red-400">{errors.email.message}</p>}
+                                {errors.email && <p className="text-red-400">{errors.email.message}</p>}
+                            </div>
                         </div>
 
                         <div className="flex gap-3">
-                            <div className="mb-5">
+                            <div className="mb-5 flex-1">
                                 <Input
                                     type={passwordState}
                                     className="w-70 text-xs border-3 p-2 rounded-lg mb-1"
@@ -111,7 +113,7 @@ export function LoginForm(){
                                 <Button
                                     type="submit"
                                     size="small"
-                                    className="w-25"
+                                    className="w-full md:w-25"
                                     isPending={login.isPending}
                                     disabled={!!errors.email || !!errors.password || login.isPending}
                                 >

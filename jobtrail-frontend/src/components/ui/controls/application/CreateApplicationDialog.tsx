@@ -4,7 +4,7 @@ import { usePostApplication } from "@/services/applications"
 import { useForm } from "react-hook-form"
 import { ApplicationStatus, StatusDropdownMenu } from "@/components/ui/controls/application/StatusDropdownMenu"
 import { OverlayWrapper } from "../OverlayWrapper"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { Input } from "../Input"
 import { DialogProps } from "@radix-ui/react-dialog"
 import { CurrentTextLength } from "../../view/applications/CurrentTextLength"
@@ -53,7 +53,9 @@ function Content(props: ContentProps) {
     const [applicationStatus, setApplicationStatus] = useState<string>("Select status")
     const [currentLength, setCurrentLength] = useState<number>(0)
     const [ignoreContent, setIgnoreContent] = useState<boolean>(false)
-    
+
+    const contentTextAreaRef = useRef<HTMLTextAreaElement>(null)
+
     const minLimit: number = 500
     const maxLimit: number = 2500
 
@@ -109,7 +111,7 @@ function Content(props: ContentProps) {
                             Name
                         </p>
                         <Input
-                            className="w-100 bg-gray-100 text-sm"
+                            className="w-full bg-gray-100 text-sm"
                             defaultValue=""
                             placeholder="Enter the name of the company"
                             {...register("companyName", {
@@ -124,10 +126,15 @@ function Content(props: ContentProps) {
                             Email
                         </p>
                         <Input
-                            className="w-100 bg-gray-100 text-sm"
+                            className="w-full bg-gray-100 text-sm"
                             placeholder="Enter the email of the company"
                             {...register("email", {
-                                required: "Company email is required"
+                                required: "Company email is required",
+                                validate:(s) => {
+                                    if(!s.includes("@")) {
+                                        return "Email is not valid"
+                                    }
+                                }
                             })}
                         />
                         
@@ -170,7 +177,7 @@ function Content(props: ContentProps) {
                             Position
                         </p>
                         <Input
-                            className="w-100 bg-gray-100 text-sm"
+                            className="w-full bg-gray-100 text-sm"
                             defaultValue=""
                             placeholder="Enter the position you are applying for"
                             {...register("position", {
@@ -185,22 +192,26 @@ function Content(props: ContentProps) {
                             {ignoreContent ? <s className="text-gray-400">Content</s> : "Content"}
                         </p>
 
-                        <div className="flex gap-10">
-                            <div>
-                                <textarea placeholder={ignoreContent ? "TODO: Fill this out!" : ""} className="w-100 bg-gray-100 h-50 rounded-xl p-3 text-sm disabled:opacity-50"
+                        <div className="flex flex-col md:flex-row gap-5 md:gap-10">
+                            <div className="flex-1">
+                                <textarea
+                                    placeholder={ignoreContent ? "TODO: Fill this out!" : ""} 
+                                    className="w-full bg-gray-100 h-50 rounded-xl p-3 text-sm disabled:opacity-50"
                                     {...register("content", {
                                         required: !ignoreContent ? "Content is required!" : false
                                     })}
                                     onChange={(e) => setCurrentLength(e.target.value.length)}
                                     disabled={ignoreContent}
+                                    ref={contentTextAreaRef}
                                 />
                             </div>
 
-                            <div className="flex items-center ">
+                            <div className="flex items-center">
                                 <div>
-                                    <SwitchComponent 
+                                    <SwitchComponent
                                         header="Skip content"
                                         text="Skip content for now, and come back to it later"
+                                        contentTextAreaRef={contentTextAreaRef}
                                         setIgnoreContent={setIgnoreContent}
                                     />
                                 </div>
@@ -237,7 +248,7 @@ function Content(props: ContentProps) {
 
                 <div className="p-3" />
 
-                <div className="flex justify-end gap-10" >
+                <div className="flex justify-end gap-5 md:gap-10" >
                     <Dialog.Close asChild>
                         <Button
                             type="button"
