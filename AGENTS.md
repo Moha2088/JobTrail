@@ -57,9 +57,19 @@ bun run migrate   # apply Drizzle migration
 
 Separate microservice for scheduled user deletion. Shares the same Drizzle schema and DB. Runs BullMQ workers. Also Bun/Elysia, deployed on Railway.
 
+## CI pipelines (GitHub Actions)
+
+Four workflows in `.github/workflows/`:
+
+| workflow | file | triggers | what it does |
+|---|---|---|---|
+| **CI** | `ci.yml` | PR (opened/synchronize), manual | Backend: installs Bun, deps, runs migrations |
+| **Frontend test** | `frontend-test.yml` | PR (opened/synchronize), manual | Frontend: installs deps, builds, lints, runs Cypress component + E2E tests |
+| **opencode** | `opencode.yml` | issue/PR comment with `/oc` or `/opencode` | Runs opencode agent |
+| **labeler** | `labeler.yml` (at `.github/labeler.yml`) | PR events via GitHub's labeler action | Auto-labels PRs: `frontend`, `backend`, `ci`, `release` |
+
 ## Repository conventions
 
-- **No commit hooks or CI pipelines** — lint/typecheck are manual
 - **`.env` files are gitignored** — check `.env.local` in frontend and env vars for backend
 - **Image hostnames**: Cloudflare R2 — next.config allows `**.r2.cloudflarestorage.com`
 - **Prisma/Kysely/etc.** — not used. Only Drizzle ORM.
