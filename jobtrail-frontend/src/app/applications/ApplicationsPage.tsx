@@ -26,6 +26,7 @@ import { useUser } from "@/services/users/useUser"
 import { ReactivateUserDialog } from "@/components/ui/controls/ReactivateUserDialog"
 import { ApplicationTab, Tab } from "@/components/ui/view/applications/ApplicationTab"
 import { ExploreTab } from "@/components/ui/view/applications/ExploreTab"
+import { useIsMobile } from "@/hooks/useIsMobile"
 
 
 export default function ApplicationsPage() {
@@ -40,6 +41,7 @@ export default function ApplicationsPage() {
     const [tab, setTab] = useState<Tab>("applications")
 
     const debouncedSearchQuery = useDebounce(searchQuery)
+    const isMobile = useIsMobile()
 
     const { data, isLoading } = useApplications()
 
@@ -73,6 +75,10 @@ export default function ApplicationsPage() {
     }
 
     useEffect(() => {
+        if(isCreateApplicationDialogOpen) {
+            return
+        }
+
         document.addEventListener("keydown", handleKeyDown)
         document.addEventListener("keyup", handleKeyUp)
 
@@ -80,7 +86,7 @@ export default function ApplicationsPage() {
             document.removeEventListener("keydown", handleKeyDown)
             document.removeEventListener("keyup", handleKeyUp)
         }
-    }, [])
+    }, [isCreateApplicationDialogOpen])
 
     if(isLoading) {
         return (
@@ -140,11 +146,13 @@ export default function ApplicationsPage() {
                                             iconStart={<IconSearch className=" ml-2" color="gray" size={20} />}
                                             iconEnd=
                                                 {<div className="flex gap-3">
-                                                    <div className="flex rounded-sm gap bg-gray-200 p-1">
-                                                        <IconArrowBigUp color="gray" size={13}/>
-                                                        <IconPlus color="gray" size={13}/>
-                                                        <IconSlash color="gray" size={13}/>
-                                                    </div>
+                                                    {!isMobile &&
+                                                        <div className="flex rounded-sm gap bg-gray-200 p-1">
+                                                            <IconArrowBigUp color="gray" size={13}/>
+                                                            <IconPlus color="gray" size={13}/>
+                                                            <IconSlash color="gray" size={13}/>
+                                                        </div>
+                                                    }
 
                                                     <div>
                                                         <IconFileDescription

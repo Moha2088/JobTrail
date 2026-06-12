@@ -115,8 +115,8 @@ export default function UserPage(){
                     </Toggle>
                 </div>
 
-                <div className="flex flex-col w-full max-w-xl md:max-w-200 gap-5 mb-5 px-4">
-                    <div className="flex flex-row gap-2">
+                <div className="flex justify-center flex-col max-w-xl md:max-w-200 gap-5 mb-5 px-4">
+                    <div className="flex gap-2">
 
                         <div>
                             <IconMail size={30} />
