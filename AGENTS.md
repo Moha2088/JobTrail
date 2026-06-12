@@ -73,3 +73,7 @@ Four workflows in `.github/workflows/`:
 - **`.env` files are gitignored** — check `.env.local` in frontend and env vars for backend
 - **Image hostnames**: Cloudflare R2 — next.config allows `**.r2.cloudflarestorage.com`
 - **Prisma/Kysely/etc.** — not used. Only Drizzle ORM.
+
+## Pull requests
+
+When creating a PR, prefix the title with: `feat:` for new features, `fix:` for bugfixes, `refactor:` for code changes that don't change behaviour, `tests:` for adding/updating tests, `docs:` for documentation, `chore:` for maintenance/tooling/deps, `ci:` for CI/CD changes.
