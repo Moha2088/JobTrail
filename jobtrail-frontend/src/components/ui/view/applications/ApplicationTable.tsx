@@ -40,13 +40,13 @@ export function ApplicationTable(props: ApplicationTableProps) {
             </TableHeader>
             <TableBody>
                 {applications?.map(app => (
-                    <TableRow key={app?.id}>
+                    <TableRow className={`${app.content == "TODO: Fill this out!" ? "bg-red-200" : ""}`} key={app?.id}>
                         <TableCell className="cursor-pointer">{app.companyName}</TableCell>
                         <TableCell>{app.position}</TableCell>
                         <TableCell>{app.applicationStatus}</TableCell>
                         <TableCell>
                             <IconArrowNarrowRight
-                                className="cursor-pointer hover:text-gray-300" 
+                                className="cursor-pointer hover:text-gray-300"
                                 onClick={() => router.push(`/applications/${app.id}`)} 
                             />
                         </TableCell>

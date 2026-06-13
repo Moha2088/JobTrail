@@ -8,7 +8,6 @@ import { useApplications } from "@/services/applications"
 import { useLogOut } from "@/services/auth/useLogOut"
 import {
     IconArrowBigUp,
-    IconArrowBigUpFilled,
     IconFileDescription,
     IconPlus,
     IconSearch,
@@ -27,6 +26,7 @@ import { ReactivateUserDialog } from "@/components/ui/controls/ReactivateUserDia
 import { ApplicationTab, Tab } from "@/components/ui/view/applications/ApplicationTab"
 import { ExploreTab } from "@/components/ui/view/applications/ExploreTab"
 import { useIsMobile } from "@/hooks/useIsMobile"
+import { getKeyEvents } from "@/utils/getKeyEvents"
 
 
 export default function ApplicationsPage() {
@@ -45,39 +45,24 @@ export default function ApplicationsPage() {
 
     const { data, isLoading } = useApplications()
 
+    const skippedApplications = data?.applications.filter((app) => app.content == "TODO: Fill this out!")
+
     const session = useSessionContext()
     const { data: userData } = useUser(session?.userId)
 
     const { data: searchData, isLoading: isSearchLoading } = useSearchContent(debouncedSearchQuery)
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-        if(event.key === "Shift") {
-            isShiftPressed.current = true
-        }
-        
-        if(event.key === "/") {
-            isSlashPressed.current = true
-        }
-
-        if(isShiftPressed.current && isSlashPressed.current) {
-            searchInputRef.current?.focus()
-        }
-    }
-
-    const handleKeyUp = (event: KeyboardEvent) => {
-        if(event.key === "Shift") {
-            isShiftPressed.current = false
-        }
-
-        if(event.key === "/") {
-            isSlashPressed.current = false
-        }
-    }
 
     useEffect(() => {
         if(isCreateApplicationDialogOpen) {
             return
         }
+        
+        const { handleKeyDown, handleKeyUp } = getKeyEvents({
+            isShiftPressed,
+            isSlashPressed,
+            searchInputRef
+        })
 
         document.addEventListener("keydown", handleKeyDown)
         document.addEventListener("keyup", handleKeyUp)
@@ -168,7 +153,6 @@ export default function ApplicationsPage() {
                                         />
                                     </div>
                                 </div>
-
                             </div>
                         </div>
 
@@ -186,16 +170,32 @@ export default function ApplicationsPage() {
                         />
 
                         <div className="flex justify-center mt-10 mb-10">
-                            <Button
-                                className="w-fit text-blue-400 hover:bg-blue-50"
-                                variant="ghost"
-                                size="small"
-                                onClick={() => setIsCreateApplicationDialogOpen(true)}
-                                iconEnd={<IconPlus className="text-blue-400" />}
-                            >
-                                <p className="pt-0.5">Create</p>
-                            </Button>
+                            <div>
+                                <Button
+                                    className="w-fit text-blue-400 hover:bg-blue-50"
+                                    variant="ghost"
+                                    size="small"
+                                    onClick={() => setIsCreateApplicationDialogOpen(true)}
+                                    iconEnd={<IconPlus className="text-blue-400" />}
+                                >
+                                    <p className="pt-0.5">Create</p>
+                                </Button>
+                            </div>
                         </div>
+
+                        {skippedApplications && skippedApplications.length > 0 &&
+                            <div className="flex mr-auto ml-auto w-fit rounded-full px-5 py-1 gap-2 border">
+                                <div className="flex w-2 h-2 bg-red-500 rounded-full mt-1" />
+                                
+                                <div>
+                                    <p className="text-xs">
+                                        <p className="font-bold">
+                                            {skippedApplications?.length} <p className="font-normal inline-block"> {skippedApplications?.length == 1 ? "application": "applications"} with unfinished content</p>
+                                        </p>
+                                    </p>
+                                </div>
+                            </div>
+                        }
 
                         {!isFullTextSearchEnabled &&
                             <ApplicationTable
