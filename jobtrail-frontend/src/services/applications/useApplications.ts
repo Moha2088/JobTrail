@@ -22,7 +22,7 @@ export function useApplications(params: UseApplicationParams): UseQueryResult<Ap
                 },
                 query: {
                     page,
-                    limit: 5
+                    limit: 10
                 }
             })
 
