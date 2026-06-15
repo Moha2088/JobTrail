@@ -19,7 +19,7 @@ export const getApplicationSchema = {
 export const getApplicationsSchema = {
     query: t.Object({
         page: t.Number(),
-        limit: t.Optional(t.Number())
+        limit: t.Number()
     })
 }
 

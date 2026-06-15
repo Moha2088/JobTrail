@@ -25,10 +25,7 @@ export function useApplications(params: UseApplicationParams): UseQueryResult<Ap
                     limit: 5
                 }
             })
-            
-            // if (data != null) {
-            //     return data as ApplicationData
-            // }
+
             return data as ApplicationData
         }
     })

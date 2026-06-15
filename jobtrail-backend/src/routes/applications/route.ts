@@ -64,44 +64,48 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     }, postApplicationSchema)
     // @ts-ignore
     .get("/",async({jwt, query, headers: { authorization }}) => {
-        const { page, limit } = query
-
         const claims = await getClaims(authorization!)
 
-            const results = await db.select()
-            .from(applicationsTable)
-            .where(eq(applicationsTable.userId, claims.sub))
-            .limit(query.limit ?? 10)
-            .offset((query.page - 1) * (query.limit ?? 10))
+        const { limit } = query
 
-            const applications: Application[] = results.map(app => {
-                return {
-                    id: app.id,
-                    companyName: app.companyName,
-                    email: app.email,
-                    applicationStatus: app.applicationStatus,
-                    position: app.position,
-                    content: app.content,
-                }
-            })
+        const results = await db.select()
+        .from(applicationsTable)
+        .where(eq(applicationsTable.userId, claims.sub))
+        .limit(limit + 1)
+        .offset((query.page - 1) * (limit))
 
-            const nextResult = await db.select()
-            .from(applicationsTable)
-            .where(eq(applicationsTable.userId, claims.sub))
-            .limit(query.limit ?? 10)
-            .offset(((query.page + 1) - 1) * (query.limit ?? 10))
-    
-            const hasNext = nextResult.length > 0
+        const hasMore = results.length > limit
 
+        const applications: Application[] = hasMore ? results.slice(0, -1).map(app => {
             return {
-                applications,
-                hasNext,
-                metrics: {
-                    pendingCount: applications.filter(app => app.applicationStatus == "PENDING").length,
-                    rejectedCount: applications.filter(app => app.applicationStatus == "REJECTED").length,
-                    acceptedCount: applications.filter(app => app.applicationStatus == "ACCEPTED").length,
-                }
+                id: app.id,
+                companyName: app.companyName,
+                email: app.email,
+                applicationStatus: app.applicationStatus,
+                position: app.position,
+                content: app.content
             }
+        }) :
+        results.map(app => {
+            return {
+                id: app.id,
+                companyName: app.companyName,
+                email: app.email,
+                applicationStatus: app.applicationStatus,
+                position: app.position,
+                content: app.content
+            }
+        })
+
+        return {
+            hasMore,
+            applications,
+            metrics: {
+                pendingCount: applications.filter(app => app.applicationStatus == "PENDING").length,
+                rejectedCount: applications.filter(app => app.applicationStatus == "REJECTED").length,
+                acceptedCount: applications.filter(app => app.applicationStatus == "ACCEPTED").length,
+            }
+        }
     }, getApplicationsSchema)
 
 

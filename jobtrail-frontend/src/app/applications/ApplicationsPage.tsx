@@ -47,7 +47,7 @@ export default function ApplicationsPage() {
 
     const [page, setPage] = useState<number>(1)
 
-    const { data, isLoading } = useApplications({ page })
+    const { data, isPlaceholderData, isLoading } = useApplications({ page })
 
     const session = useSessionContext()
     const { data: userData } = useUser(session?.userId)
@@ -58,7 +58,7 @@ export default function ApplicationsPage() {
         if(event.key === "Shift") {
             isShiftPressed.current = true
         }
-        
+
         if(event.key === "/") {
             isSlashPressed.current = true
         }
@@ -236,7 +236,7 @@ export default function ApplicationsPage() {
                                         variant="light"
                                         size="small"
                                         className="w-fit"
-                                        disabled={!data.hasNext}
+                                        disabled={!data.hasMore || isPlaceholderData}
                                         onClick={() => setPage(prevPage => prevPage + 1)}
                                     >
                                         <IconArrowRight size={20}/>

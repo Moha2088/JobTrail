@@ -12,7 +12,7 @@ export interface Application {
 
 export interface ApplicationData {
     applications: Application[],
-    hasNext: boolean
+    hasMore: boolean
     metrics: {
         rejectedCount: number
         pendingCount: number
