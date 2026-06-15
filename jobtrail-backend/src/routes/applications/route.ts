@@ -74,6 +74,10 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         .limit(limit + 1)
         .offset((query.page - 1) * (limit))
 
+        const statusResults = await db.select({ applicationStatus: applicationsTable.applicationStatus })
+        .from(applicationsTable)
+        .where(eq(applicationsTable.userId, claims.sub))
+
         const hasMore = results.length > limit
 
         const applications: Application[] = hasMore ? results.slice(0, -1).map(app => {
@@ -101,9 +105,9 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
             hasMore,
             applications,
             metrics: {
-                pendingCount: applications.filter(app => app.applicationStatus == "PENDING").length,
-                rejectedCount: applications.filter(app => app.applicationStatus == "REJECTED").length,
-                acceptedCount: applications.filter(app => app.applicationStatus == "ACCEPTED").length,
+                pendingCount: statusResults.filter(app => app.applicationStatus == "PENDING").length,
+                rejectedCount: statusResults.filter(app => app.applicationStatus == "REJECTED").length,
+                acceptedCount: statusResults.filter(app => app.applicationStatus == "ACCEPTED").length,
             }
         }
     }, getApplicationsSchema)
