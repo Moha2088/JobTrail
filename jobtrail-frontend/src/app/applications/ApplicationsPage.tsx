@@ -5,15 +5,15 @@ import { Button } from "@/components/ui/controls/Button"
 import { ApplicationTable } from "@/components/ui/view/applications/ApplicationTable"
 import { Metrics } from "@/components/ui/view/applications/Metrics"
 import { useApplications } from "@/services/applications"
-import { useLogOut } from "@/services/auth/useLogOut"
 import {
     IconArrowBigUp,
+    IconArrowLeft,
+    IconArrowRight,
     IconFileDescription,
     IconPlus,
     IconSearch,
     IconSlash,
 } from "@tabler/icons-react"
-import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { useSessionContext } from "@/contexts/session/SessionContext"
 import { useDebounce } from "@/hooks/useDebounce"
@@ -43,7 +43,9 @@ export default function ApplicationsPage() {
     const debouncedSearchQuery = useDebounce(searchQuery)
     const isMobile = useIsMobile()
 
-    const { data, isLoading } = useApplications()
+    const [page, setPage] = useState<number>(1)
+
+    const { data, isPlaceholderData, isLoading } = useApplications({ page })
 
     const skippedApplications = data?.applications.filter((app) => app.content == "TODO: Fill this out!")
 
@@ -107,7 +109,7 @@ export default function ApplicationsPage() {
 
             {
                 tab == "applications" ?
-                    <div className="min-h-screen">
+                    <div className="min-h-screen mb-10">
                         <div className="p-5" />
                         <div className="flex flex-row">
 
@@ -213,6 +215,33 @@ export default function ApplicationsPage() {
                             <SearchResultsTable applications={searchData} query={debouncedSearchQuery} />
                         }
 
+                        <div className="flex justify-center gap-3 mt-5">
+                            <div>
+                                <Button
+                                    variant="light"
+                                    size="small"
+                                    className="w-fit"
+                                    disabled={page == 1 || isPlaceholderData}
+                                    onClick={() =>  setPage(prevPage => prevPage - 1)}
+                                >
+                                    <IconArrowLeft size={20} />
+                                </Button>
+                            </div>
+
+                            <div>
+                                <div>
+                                    <Button
+                                        variant="light"
+                                        size="small"
+                                        className="w-fit"
+                                        disabled={!data.hasMore || isPlaceholderData}
+                                        onClick={() => setPage(prevPage => prevPage + 1)}
+                                    >
+                                        <IconArrowRight size={20}/>
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     : <ExploreTab />

@@ -3,11 +3,12 @@ import {
     postApplicationSchema, getApplicationSchema, putApplicationSchema, deleteApplicationsSchema,
     getFileSchema, patchApplicationContentSchema,
     searchContentSchema,
-    cancelDeletionSchema
+    cancelDeletionSchema,
+    getApplicationsSchema
 } from "./schema";
 import { db } from "../../db/db";
 import { applicationsTable } from "../../db/schema";
-import { eq, sql } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { getClaims } from "../../utils/auth/getClaims"
 import { getApplication } from "../../utils/applications"
 import { Application } from "./types"
@@ -62,36 +63,55 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
 
     }, postApplicationSchema)
     // @ts-ignore
-    .get("/",async({jwt, headers: { authorization }}) => {
-        // const claims: ClaimTypes = await jwt.verify(auth.value)
-
+    .get("/",async({jwt, query, headers: { authorization }}) => {
         const claims = await getClaims(authorization!)
 
-        const results = await db.select()
-            .from(applicationsTable)
-            .where(eq(applicationsTable.userId, claims.sub))
+        const { limit } = query
 
-        const applications: Application[] = results.map(app => {
+        const results = await db.select()
+        .from(applicationsTable)
+        .where(eq(applicationsTable.userId, claims.sub))
+        .limit(limit + 1)
+        .offset((query.page - 1) * (limit))
+        .orderBy(desc(applicationsTable.createdAt))
+
+        const statusResults = await db.select({ applicationStatus: applicationsTable.applicationStatus })
+        .from(applicationsTable)
+        .where(eq(applicationsTable.userId, claims.sub))
+
+        const hasMore = results.length > limit
+
+        const applications: Application[] = hasMore ? results.slice(0, -1).map(app => {
             return {
                 id: app.id,
                 companyName: app.companyName,
                 email: app.email,
                 applicationStatus: app.applicationStatus,
                 position: app.position,
-                content: app.content,
+                content: app.content
+            }
+        }) :
+        results.map(app => {
+            return {
+                id: app.id,
+                companyName: app.companyName,
+                email: app.email,
+                applicationStatus: app.applicationStatus,
+                position: app.position,
+                content: app.content
             }
         })
 
-
         return {
-            applications: applications,
+            hasMore,
+            applications,
             metrics: {
-                pendingCount: applications.filter(app => app.applicationStatus == "PENDING").length,
-                rejectedCount: applications.filter(app => app.applicationStatus == "REJECTED").length,
-                acceptedCount: applications.filter(app => app.applicationStatus == "ACCEPTED").length,
+                pendingCount: statusResults.filter(app => app.applicationStatus == "PENDING").length,
+                rejectedCount: statusResults.filter(app => app.applicationStatus == "REJECTED").length,
+                acceptedCount: statusResults.filter(app => app.applicationStatus == "ACCEPTED").length,
             }
         }
-    })
+    }, getApplicationsSchema)
 
 
     .get("/:id", async({ params, set, headers: { authorization } }) => {
