@@ -3,7 +3,8 @@ import {
     postApplicationSchema, getApplicationSchema, putApplicationSchema, deleteApplicationsSchema,
     getFileSchema, patchApplicationContentSchema,
     searchContentSchema,
-    cancelDeletionSchema
+    cancelDeletionSchema,
+    getApplicationsSchema
 } from "./schema";
 import { db } from "../../db/db";
 import { applicationsTable } from "../../db/schema";
@@ -62,36 +63,46 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
 
     }, postApplicationSchema)
     // @ts-ignore
-    .get("/",async({jwt, headers: { authorization }}) => {
-        // const claims: ClaimTypes = await jwt.verify(auth.value)
+    .get("/",async({jwt, query, headers: { authorization }}) => {
+        const { page, limit } = query
 
         const claims = await getClaims(authorization!)
 
-        const results = await db.select()
+            const results = await db.select()
             .from(applicationsTable)
             .where(eq(applicationsTable.userId, claims.sub))
+            .limit(query.limit ?? 10)
+            .offset((query.page - 1) * (query.limit ?? 10))
 
-        const applications: Application[] = results.map(app => {
+            const applications: Application[] = results.map(app => {
+                return {
+                    id: app.id,
+                    companyName: app.companyName,
+                    email: app.email,
+                    applicationStatus: app.applicationStatus,
+                    position: app.position,
+                    content: app.content,
+                }
+            })
+
+            const nextResult = await db.select()
+            .from(applicationsTable)
+            .where(eq(applicationsTable.userId, claims.sub))
+            .limit(query.limit ?? 10)
+            .offset(((query.page + 1) - 1) * (query.limit ?? 10))
+    
+            const hasNext = nextResult.length > 0
+
             return {
-                id: app.id,
-                companyName: app.companyName,
-                email: app.email,
-                applicationStatus: app.applicationStatus,
-                position: app.position,
-                content: app.content,
+                applications,
+                hasNext,
+                metrics: {
+                    pendingCount: applications.filter(app => app.applicationStatus == "PENDING").length,
+                    rejectedCount: applications.filter(app => app.applicationStatus == "REJECTED").length,
+                    acceptedCount: applications.filter(app => app.applicationStatus == "ACCEPTED").length,
+                }
             }
-        })
-
-
-        return {
-            applications: applications,
-            metrics: {
-                pendingCount: applications.filter(app => app.applicationStatus == "PENDING").length,
-                rejectedCount: applications.filter(app => app.applicationStatus == "REJECTED").length,
-                acceptedCount: applications.filter(app => app.applicationStatus == "ACCEPTED").length,
-            }
-        }
-    })
+    }, getApplicationsSchema)
 
 
     .get("/:id", async({ params, set, headers: { authorization } }) => {

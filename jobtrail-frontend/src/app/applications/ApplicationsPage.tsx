@@ -9,6 +9,8 @@ import { useLogOut } from "@/services/auth/useLogOut"
 import {
     IconArrowBigUp,
     IconArrowBigUpFilled,
+    IconArrowLeft,
+    IconArrowRight,
     IconFileDescription,
     IconPlus,
     IconSearch,
@@ -43,7 +45,9 @@ export default function ApplicationsPage() {
     const debouncedSearchQuery = useDebounce(searchQuery)
     const isMobile = useIsMobile()
 
-    const { data, isLoading } = useApplications()
+    const [page, setPage] = useState<number>(1)
+
+    const { data, isLoading } = useApplications({ page })
 
     const session = useSessionContext()
     const { data: userData } = useUser(session?.userId)
@@ -122,7 +126,7 @@ export default function ApplicationsPage() {
 
             {
                 tab == "applications" ?
-                    <div className="min-h-screen">
+                    <div className="min-h-screen mb-10">
                         <div className="p-5" />
                         <div className="flex flex-row">
 
@@ -212,6 +216,34 @@ export default function ApplicationsPage() {
                         {isFullTextSearchEnabled && searchData &&
                             <SearchResultsTable applications={searchData} query={debouncedSearchQuery} />
                         }
+
+                        <div className="flex justify-center gap-3 mt-5">
+                            <div>
+                                <Button
+                                    variant="light"
+                                    size="small"
+                                    className="w-fit"
+                                    disabled={page == 1}
+                                    onClick={() =>  setPage(prevPage => prevPage - 1)}
+                                >
+                                    <IconArrowLeft size={20} />
+                                </Button>
+                            </div>
+
+                            <div>
+                                <div>
+                                    <Button
+                                        variant="light"
+                                        size="small"
+                                        className="w-fit"
+                                        disabled={!data.hasNext}
+                                        onClick={() => setPage(prevPage => prevPage + 1)}
+                                    >
+                                        <IconArrowRight size={20}/>
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
 

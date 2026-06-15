@@ -16,6 +16,13 @@ export const getApplicationSchema = {
     })
 }
 
+export const getApplicationsSchema = {
+    query: t.Object({
+        page: t.Number(),
+        limit: t.Optional(t.Number())
+    })
+}
+
 export const searchContentSchema = {
     query: t.Object({
         q: t.String()

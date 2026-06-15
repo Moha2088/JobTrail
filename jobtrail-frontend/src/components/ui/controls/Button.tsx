@@ -12,7 +12,7 @@ const buttonStyles = cva(
         variants: {
             variant:{
                 dark: "bg-stone-800 text-white font-bold hover:bg-stone-500",
-                light: "bg-white border-2 font-bold border-transparent shadow-md hover:bg-zinc-200",
+                light: "bg-white border-2 font-bold border-transparent border-gray-100 border-2 hover:bg-zinc-200",
                 destructive: "bg-red-400 text-white hover:bg-red-500",
                 ghost: "font-bold hover:bg-gray-100",
             },
