@@ -223,7 +223,7 @@ export default function ApplicationsPage() {
                                     variant="light"
                                     size="small"
                                     className="w-fit"
-                                    disabled={page == 1}
+                                    disabled={page == 1 || isPlaceholderData}
                                     onClick={() =>  setPage(prevPage => prevPage - 1)}
                                 >
                                     <IconArrowLeft size={20} />
@@ -244,7 +244,6 @@ export default function ApplicationsPage() {
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
                     : <ExploreTab />

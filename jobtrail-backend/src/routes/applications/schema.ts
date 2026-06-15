@@ -18,8 +18,8 @@ export const getApplicationSchema = {
 
 export const getApplicationsSchema = {
     query: t.Object({
-        page: t.Number(),
-        limit: t.Number()
+        page: t.Number({ minimum: 1 }),
+        limit: t.Number({ minimum: 5 })
     })
 }
 

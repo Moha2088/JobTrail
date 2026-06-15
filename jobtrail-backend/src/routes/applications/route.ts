@@ -8,7 +8,7 @@ import {
 } from "./schema";
 import { db } from "../../db/db";
 import { applicationsTable } from "../../db/schema";
-import { eq, sql } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { getClaims } from "../../utils/auth/getClaims"
 import { getApplication } from "../../utils/applications"
 import { Application } from "./types"
@@ -73,6 +73,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         .where(eq(applicationsTable.userId, claims.sub))
         .limit(limit + 1)
         .offset((query.page - 1) * (limit))
+        .orderBy(desc(applicationsTable.createdAt))
 
         const statusResults = await db.select({ applicationStatus: applicationsTable.applicationStatus })
         .from(applicationsTable)
