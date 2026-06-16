@@ -74,6 +74,8 @@ function Content(props: ContentProps) {
             applicationStatus: applicationStatus,
             position: data.position,
             content: data.content,
+        }, {
+            onSuccess:() => onOpenChange?.(false)
         })
     }
 
