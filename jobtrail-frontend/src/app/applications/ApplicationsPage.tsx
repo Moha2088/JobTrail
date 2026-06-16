@@ -140,7 +140,7 @@ export default function ApplicationsPage() {
                                                             <IconSlash color="gray" size={13}/>
                                                         </div>
                                                     }
-
+                                                    
                                                     <div>
                                                         <IconFileDescription
                                                             size={15} 

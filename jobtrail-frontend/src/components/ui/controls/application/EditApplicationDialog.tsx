@@ -4,14 +4,13 @@ import { usePutApplication } from "@/services/applications"
 import { useForm } from "react-hook-form"
 import { ApplicationStatus, StatusDropdownMenu } from "@/components/ui/controls/application/StatusDropdownMenu"
 import { OverlayWrapper } from "../OverlayWrapper"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useApplicationContext } from "@/contexts/application/ApplicationContext"
 import { Input } from "@/components/ui/controls/Input"
 import { DialogProps } from "@radix-ui/react-dialog"
 import { statusColorMap } from "./CreateApplicationDialog"
-import { TextField } from "@radix-ui/themes"
 import { CurrentTextLength } from "../../view/applications/CurrentTextLength"
-import { ProgressCircle } from "../../progress-circle"
+import { ProgressCircle } from "../../progress-circle"  
 
 interface EditApplicationDialogProps extends DialogProps{
 
@@ -69,23 +68,12 @@ function Content(props: ContentProps) {
     const contentInputValue = watch("content")
 
     const onSubmit = (data: EditApplicationInput) => {
-        console.log("Entered edit function")
-
         editApplication.mutate({
             companyName: data.companyName,
             email: data.email,
             applicationStatus: applicationStatus,
             position: data.position,
             content: data.content,
-        }, {
-            onSuccess: () => {
-                console.log("Application updated successfully")
-                onOpenChange?.(false)
-            },
-
-            onError: () => {
-                alert("Failed to update application")
-            }
         })
     }
 
@@ -211,37 +199,38 @@ function Content(props: ContentProps) {
                     </label>
                 </div>
 
-
                 <div className="p-3" />
 
                 <div className="flex justify-end gap-5 md:gap-10" >
                     <Dialog.Close asChild>
                         <Button
-                            type="button"
                             variant="light"
                             size="small">
                             Cancel
                         </Button>
                     </Dialog.Close>
-                    <Dialog.Close asChild>
-                        <Button
-                            isPending={editApplication.isPending}
-                            disabled={!applicationStatus || !companyNameInputValue || !emailInputValue || !contentInputValue ||
-                                currentLength < minLimit || currentLength > maxLimit}
-                            onClick={() => {
-                                editApplication.mutate({
-                                    companyName: companyNameInputValue,
-                                    email: emailInputValue,
-                                    applicationStatus: applicationStatus,
-                                    position: positionInputValue,
-                                    content: contentInputValue
-                                })
-                            }}
-                            size="small"
-                        >
-                            Save
-                        </Button>
-                    </Dialog.Close>
+
+                    <Button
+                        type="submit"
+                        isPending={editApplication.isPending}
+                        disabled={!applicationStatus || !companyNameInputValue || !emailInputValue || !contentInputValue ||
+                            currentLength < minLimit || currentLength > maxLimit}
+                        onClick={() => {
+                            console.log("New content:")
+                            console.log(contentInputValue)
+
+                            editApplication.mutate({
+                                companyName: companyNameInputValue,
+                                email: emailInputValue,
+                                applicationStatus: applicationStatus,
+                                position: positionInputValue,
+                                content: contentInputValue
+                            })
+                        }}
+                        size="small"
+                    >
+                        Save
+                    </Button>
                 </div>
             </form>
         </OverlayWrapper>

@@ -276,7 +276,7 @@ export default function Page() {
                             }
 
                             {!completion &&
-                                <div className="mr-auto ml-auto">
+                                <div className="mr-auto ml-auto max-w-130">
                                     <p>{data.content}</p>
                                 </div>
                             }
