@@ -1,5 +1,5 @@
-import { sql } from "drizzle-orm";
-import { db } from "../../db/db";
+import { sql } from "drizzle-orm"
+import { db } from "../../db/db"
 
 
 export async function searchContent(query: string, userId: number) {

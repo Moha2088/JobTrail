@@ -1,5 +1,5 @@
-import jwt from "@elysiajs/jwt";
-import Elysia from "elysia";
+import jwt from "@elysiajs/jwt"
+import Elysia from "elysia"
 
 export const jwtConfig = new Elysia()
     .use(

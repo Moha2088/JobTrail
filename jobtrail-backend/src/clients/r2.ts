@@ -1,4 +1,4 @@
-import { S3Client } from "@aws-sdk/client-s3";
+import { S3Client } from "@aws-sdk/client-s3"
 import { S3Client as BunS3Client } from "bun"
 
 export const r2 = new S3Client({

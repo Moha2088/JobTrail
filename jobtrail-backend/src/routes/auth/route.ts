@@ -1,16 +1,14 @@
-import Elysia from "elysia";
-import { loginSchema } from "./schema";
-import { db } from "../../db/db";
-import { usersTable } from "../../db/schema";
-import { eq } from "drizzle-orm";
-import { jwt } from "@elysiajs/jwt"
+import Elysia from "elysia"
+import { loginSchema } from "./schema"
+import { db } from "../../db/db"
+import { usersTable } from "../../db/schema"
+import { eq } from "drizzle-orm"
 import { getUser } from "../../utils/users/getUser"
 import { StatusCodes } from "http-status-codes"
 
 
 export const authRouter = new Elysia({ prefix :"/auth" })
-    // @ts-ignore
-    .post("/login", async({ jwt, body, set}) => {
+    .post("/login", async({ jwt, body, set }) => {
         const { email, password } = body
 
         const result = await db.select()
@@ -43,23 +41,8 @@ export const authRouter = new Elysia({ prefix :"/auth" })
 
     }, loginSchema)
 
-    // @ts-ignore
-    .post("/logout", async({jwt, set, cookie: { auth }}) => {
+    .post("/logout", async({ set, cookie: { auth } }) => {
         auth.remove()
         set.status = 204
         return
-    })
-
-    // @ts-ignore
-    .get("/me", async({jwt, cookie: { auth }}) => {
-        const claims: ClaimTypes = await jwt.verify(auth.value)
-        const user = await db.select()
-            .from(usersTable)
-            .where(eq(usersTable.id, claims.sub))
-
-        return {
-            id: user[0].id,
-            name: user[0].name,
-            email: user[0].email,
-        }
     })

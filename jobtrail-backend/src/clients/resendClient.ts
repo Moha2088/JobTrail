@@ -1,7 +1,7 @@
-import { Resend } from "resend";
+import { Resend } from "resend"
 
 if (!Bun.env.RESEND_API_KEY) {
-    throw new Error("RESEND_API_KEY not found!");
+    throw new Error("RESEND_API_KEY not found!")
 }
 
 if(!Bun.env.RESEND_FROM) {

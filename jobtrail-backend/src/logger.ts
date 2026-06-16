@@ -16,7 +16,7 @@ export const logger: winston.Logger = winston.createLogger({
         winston.format.json(),
         winston.format.prettyPrint(),
         winston.format.colorize({ all: true, colors: colorOptions }),
-        ),
+    ),
 
     transports: [
         new winston.transports.Console()
