@@ -81,15 +81,6 @@ function Content(props: ContentProps) {
             applicationStatus: applicationStatus,
             position: data.position,
             content: !ignoreContent ? data.content : "TODO: Fill this out!"
-        }, {
-            onSuccess: () => {
-                console.log("Application created successfully")
-                onOpenChange?.(false)
-            },
-            
-            onError: () => {
-                alert("Failed to create application")
-            }
         })
     }
 
