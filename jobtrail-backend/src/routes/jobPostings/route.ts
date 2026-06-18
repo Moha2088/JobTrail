@@ -1,23 +1,23 @@
-import Elysia from "elysia";
-import { getClaims } from "../../utils/auth/getClaims";
-import { getJobPostings } from "../../utils/jobPostings/getJobPostings";
+import Elysia from "elysia"
+import { getClaims } from "../../utils/auth/getClaims"
+import { getJobPostings } from "../../utils/jobPostings/getJobPostings"
 
 
 export const jobPostingRouter = new Elysia({ prefix: "/jobPostings" })
-.get("/", async({set, headers: { authorization }}) => {
-    if(!authorization) {
-        set.status = 401
-        return
-    }
+    .get("/", async({ set, headers: { authorization } }) => {
+        if(!authorization) {
+            set.status = 401
+            return
+        }
 
-    const claims = await getClaims(authorization)
+        const claims = await getClaims(authorization)
 
-    if(!claims) {
-        set.status = 401
-        return
-    }
+        if(!claims) {
+            set.status = 401
+            return
+        }
 
-    const jobPostings = await getJobPostings()
+        const jobPostings = await getJobPostings()
 
-    return [...new Set(jobPostings)]
-})
+        return [...new Set(jobPostings)]
+    })

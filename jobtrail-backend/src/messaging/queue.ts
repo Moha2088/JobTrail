@@ -1,4 +1,4 @@
-import { ConnectionOptions, DefaultJobOptions, Queue, QueueOptions } from "bullmq"
+import { ConnectionOptions, DefaultJobOptions, Queue } from "bullmq"
 import { UserQueueJobs } from "./events/users/jobTypes"
 
 export const usersQueueName = "users"
@@ -15,7 +15,7 @@ export const connection: ConnectionOptions = {
     ...(isProduction ? {
         password: process.env.RAILWAY_REDIS_PASSWORD
     }
-    : {})
+        : {})
 }
 
 const defaultJobOptions: DefaultJobOptions = {

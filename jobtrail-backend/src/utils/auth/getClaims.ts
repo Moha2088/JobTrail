@@ -1,4 +1,3 @@
-import { jwt } from "@elysiajs/jwt"
 import { decodeJwt } from "jose"
 
 

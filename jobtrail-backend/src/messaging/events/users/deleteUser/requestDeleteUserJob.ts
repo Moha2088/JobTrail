@@ -1,5 +1,5 @@
-import { JobsOptions } from "bullmq";
-import { usersQueue } from "../../../queue";
+import { JobsOptions } from "bullmq"
+import { usersQueue } from "../../../queue"
 
 export async function requestDeleteUserJob(userId: number, jobOptions: Partial<JobsOptions> = { }) {
     const jobId = "delete_user_" + userId

@@ -19,12 +19,12 @@ export const applicationsTable = pgTable("applications", {
     key: varchar("Key", { length: 100 }),
     userId: integer("UserId").references(() => usersTable.id, { onDelete: "cascade" })
 }, (table => [
-        index("CompanyName_idx").on(table.companyName),
-        index("Email_idx").on(table.email),
-        index("Status_idx").on(table.applicationStatus),
-        index("Position_idx").on(table.position),
-        index("CreatedAt_idx").on(table.createdAt),
-        index("Content_idx").on(table.content)
+    index("CompanyName_idx").on(table.companyName),
+    index("Email_idx").on(table.email),
+    index("Status_idx").on(table.applicationStatus),
+    index("Position_idx").on(table.position),
+    index("CreatedAt_idx").on(table.createdAt),
+    index("Content_idx").on(table.content)
 ]))
 
 export const usersTable = pgTable("users", {

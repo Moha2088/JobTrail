@@ -1,20 +1,19 @@
-import Elysia from "elysia";
+import Elysia from "elysia"
 import {
     postApplicationSchema, getApplicationSchema, putApplicationSchema, deleteApplicationsSchema,
     getFileSchema, patchApplicationContentSchema,
     searchContentSchema,
-    cancelDeletionSchema,
     getApplicationsSchema
-} from "./schema";
-import { db } from "../../db/db";
-import { applicationsTable } from "../../db/schema";
-import { desc, eq, sql } from "drizzle-orm";
+} from "./schema"
+import { db } from "../../db/db"
+import { applicationsTable } from "../../db/schema"
+import { desc, eq } from "drizzle-orm"
 import { getClaims } from "../../utils/auth/getClaims"
 import { getApplication } from "../../utils/applications"
 import { Application } from "./types"
-import { StatusCodes } from "http-status-codes";
-import { uploadToR2, getFile, deleteFile, fileExists } from "../../utils/r2";
-import { searchContent } from "../../utils/search-engine/searchContent";
+import { StatusCodes } from "http-status-codes"
+import { uploadToR2, getFile, deleteFile, fileExists } from "../../utils/r2"
+import { searchContent } from "../../utils/search-engine/searchContent"
 
 
 const validate = async (
@@ -32,16 +31,14 @@ const validate = async (
 }
 
 export const applicationRouter = new Elysia({ prefix: "/applications" })
-    // @ts-ignore
-    .onBeforeHandle(async({ set, headers: { authorization }, route}) => {
+    .onBeforeHandle(async({ set, headers: { authorization } }) => {
         if(!authorization) {
             set.status = StatusCodes.UNAUTHORIZED
             return
         }
     })
 
-    // @ts-ignore
-    .post("/", async({ body, set, jwt, headers: { authorization } }) => {
+    .post("/", async({ body, set, headers: { authorization } }) => {
         const { companyName, email, applicationStatus, position, content } = body
 
         console.log("Body: ")
@@ -49,7 +46,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
 
         const claims = await getClaims(authorization!)
 
-        const result = await db.insert(applicationsTable)
+        await db.insert(applicationsTable)
             .values({
                 companyName: companyName,
                 email: email,
@@ -59,25 +56,25 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
                 content: content
             })
 
-            set.status = StatusCodes.CREATED
+        set.status = StatusCodes.CREATED
 
     }, postApplicationSchema)
-    // @ts-ignore
-    .get("/",async({jwt, query, headers: { authorization }}) => {
+
+    .get("/",async({ query, headers: { authorization } }) => {
         const claims = await getClaims(authorization!)
 
         const { limit } = query
 
         const results = await db.select()
-        .from(applicationsTable)
-        .where(eq(applicationsTable.userId, claims.sub))
-        .limit(limit + 1)
-        .offset((query.page - 1) * (limit))
-        .orderBy(desc(applicationsTable.createdAt))
+            .from(applicationsTable)
+            .where(eq(applicationsTable.userId, claims.sub))
+            .limit(limit + 1)
+            .offset((query.page - 1) * (limit))
+            .orderBy(desc(applicationsTable.createdAt))
 
         const statusResults = await db.select({ applicationStatus: applicationsTable.applicationStatus })
-        .from(applicationsTable)
-        .where(eq(applicationsTable.userId, claims.sub))
+            .from(applicationsTable)
+            .where(eq(applicationsTable.userId, claims.sub))
 
         const hasMore = results.length > limit
 
@@ -91,16 +88,16 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
                 content: app.content
             }
         }) :
-        results.map(app => {
-            return {
-                id: app.id,
-                companyName: app.companyName,
-                email: app.email,
-                applicationStatus: app.applicationStatus,
-                position: app.position,
-                content: app.content
-            }
-        })
+            results.map(app => {
+                return {
+                    id: app.id,
+                    companyName: app.companyName,
+                    email: app.email,
+                    applicationStatus: app.applicationStatus,
+                    position: app.position,
+                    content: app.content
+                }
+            })
 
         return {
             hasMore,
@@ -142,7 +139,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     }, getApplicationSchema)
 
 
-    .get("/search", async({ query, set, headers: { authorization } }) => {
+    .get("/search", async({ query, headers: { authorization } }) => {
         const { q } = query
 
         const claims = await getClaims(authorization!)
@@ -167,15 +164,15 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     }, putApplicationSchema)
 
 
-    .delete("/:id", async({params, set, headers: { authorization }}) => {
+    .delete("/:id", async({ params, set, headers: { authorization } }) => {
         const { id } = params
 
         const { sub } = await getClaims(authorization!)
 
-        await validate(id, authorization!, set)
+        await validate(sub, authorization!, set)
 
         await db.delete(applicationsTable)
-        .where(eq(applicationsTable.id, id))
+            .where(eq(applicationsTable.id, id))
 
         set.status = StatusCodes.NO_CONTENT
     }, deleteApplicationsSchema)
@@ -184,17 +181,18 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     .patch("/:id/content", async({ params, body, set, headers: { authorization } }) => {
         const { id } = params
         const { content } = body
-        await validate(Number(params.id), authorization!, set)
+        
+        await validate(Number(id), authorization!, set)
 
-        const result = await db.update(applicationsTable)
-            .set({ content: body.content})
+        await db.update(applicationsTable)
+            .set({ content: content })
             .where(eq(applicationsTable.id, Number(params.id)))
 
     }, patchApplicationContentSchema)
+    
+// Files
 
-    // Files
-
-    .post("/resume", async({ body, set, headers: { authorization }}) => {
+    .post("/resume", async({ body, set, headers: { authorization } }) => {
         const claims = await getClaims(authorization!)
 
         console.log("Received file upload request")
@@ -217,14 +215,14 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         }
         
         await db.update(applicationsTable)
-        .set({ key: key })
-        .where(eq(applicationsTable.id, body.applicationId))
+            .set({ key: key })
+            .where(eq(applicationsTable.id, body.applicationId))
 
         set.status = StatusCodes.NO_CONTENT
     })
 
 
-    .get("/resume/:key", async({ params, set, headers: { authorization }}) => {
+    .get("/resume/:key", async({ params, set, headers: { authorization } }) => {
         const { sub } = await getClaims(authorization!)
 
         const { key }  = params
@@ -235,8 +233,8 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         }
 
         const result = await db.select()
-        .from(applicationsTable)
-        .where(eq(applicationsTable.key, key) && eq(applicationsTable.userId, sub))
+            .from(applicationsTable)
+            .where(eq(applicationsTable.key, key) && eq(applicationsTable.userId, sub))
 
         if(result.length == 0) {
             set.status = StatusCodes.NOT_FOUND
@@ -262,7 +260,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     }, getFileSchema)
 
 
-    .delete("/:id/resume/:key", async({ params, set, headers: { authorization }}) => {
+    .delete("/:id/resume/:key", async({ params, set, headers: { authorization } }) => {
         const { key, id }  = params
         const { sub } = await getClaims(authorization!)
 

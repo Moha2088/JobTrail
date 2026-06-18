@@ -1,6 +1,6 @@
-import Elysia from "elysia";
-import { db } from "../../db/db";
-import { sql } from "drizzle-orm";
+import Elysia from "elysia"
+import { db } from "../../db/db"
+import { sql } from "drizzle-orm"
 
 
 type Status = "UP" | "DOWN"
@@ -19,14 +19,14 @@ const withTimeout = <T>(promise: Promise<T>, ms: number): Promise<T> => {
         const timer = setTimeout(() => reject(new Error("Healthcheck timeout")), ms)
 
         promise
-        .then((value) => {
-            clearTimeout(timer)
-            resolve(value)
-        })
-        .catch((err) => {
-            clearTimeout(timer)
-            reject(err)
-        })
+            .then((value) => {
+                clearTimeout(timer)
+                resolve(value)
+            })
+            .catch((err) => {
+                clearTimeout(timer)
+                reject(err)
+            })
     })
 }
 

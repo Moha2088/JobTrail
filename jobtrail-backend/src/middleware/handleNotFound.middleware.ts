@@ -3,7 +3,7 @@ import { StatusCodes } from "http-status-codes"
 
 
 export const handleNotFoundMiddleware = new Elysia()
-    .onError({ as: "global" }, ({ code, status, set, path }) => {
+    .onError({ as: "global" }, ({ code, set, path }) => {
         if(code === "NOT_FOUND") {
             set.status = StatusCodes.NOT_FOUND
 

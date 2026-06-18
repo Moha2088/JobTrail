@@ -1,7 +1,7 @@
-import { resendClient } from "../../clients/resendClient";
-import { getUser } from "../users/getUser";
-import { MailOptions } from "./types";
-import { validateEmail } from "./validateEmail";
+import { resendClient } from "../../clients/resendClient"
+import { getUser } from "../users/getUser"
+import { MailOptions } from "./types"
+import { validateEmail } from "./validateEmail"
 
 
 export async function sendDeleteRequestMail(options: MailOptions) {

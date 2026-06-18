@@ -1,10 +1,10 @@
-import Elysia from "elysia";
-import { getApplication } from "../utils/applications";
-import { getClaims } from "../utils/auth/getClaims";
+import Elysia from "elysia"
+import { getApplication } from "../utils/applications"
+import { getClaims } from "../utils/auth/getClaims"
 
 
 export const authMiddleware = new Elysia({ name: "auth-middleware" })
-    .onBeforeHandle(async({set, params, headers: { authorization }}) => {
+    .onBeforeHandle(async({ set, params, headers: { authorization } }) => {
         console.log("After get applications")
     
         const applicationId = Number(params.id)

@@ -1,17 +1,17 @@
-import Elysia from "elysia";
-import { cancelUserDeletionSchema, createUserSchema, deleteUserSchema, getUserSchema, putUserSchema } from "./schema";
-import { db } from "../../db/db";
-import { applicationsTable, usersTable } from "../../db/schema";
+import Elysia from "elysia"
+import { cancelUserDeletionSchema, createUserSchema, deleteUserSchema, getUserSchema, putUserSchema } from "./schema"
+import { db } from "../../db/db"
+import { applicationsTable, usersTable } from "../../db/schema"
 import { eq } from "drizzle-orm"
 import { getClaims } from "../../utils/auth/getClaims"
 import { StatusCodes } from "http-status-codes"
-import { requestDeleteUserJob } from "../../messaging/events/users/deleteUser/requestDeleteUserJob";
-import { cancelUserDeletion } from "../../messaging/events/users/cancelUserDeletion/cancelUserDeletion";
-import { emailExists } from "../../utils/users/emailExists";
-import { DatabaseError } from "pg";
-import { sendDeleteRequestMail } from "../../utils/mail/sendDeleteRequestMail";
-import { sendDeletionCancelledMail } from "../../utils/mail/sendDeletionCancelledMail";
-import { getUser } from "../../utils/users/getUser";
+import { requestDeleteUserJob } from "../../messaging/events/users/deleteUser/requestDeleteUserJob"
+import { cancelUserDeletion } from "../../messaging/events/users/cancelUserDeletion/cancelUserDeletion"
+import { emailExists } from "../../utils/users/emailExists"
+import { DatabaseError } from "pg"
+import { sendDeleteRequestMail } from "../../utils/mail/sendDeleteRequestMail"
+import { sendDeletionCancelledMail } from "../../utils/mail/sendDeletionCancelledMail"
+import { getUser } from "../../utils/users/getUser"
 
 
 export const userRouter = new Elysia({ prefix: "/users" })
@@ -31,7 +31,7 @@ export const userRouter = new Elysia({ prefix: "/users" })
 
         try {
             await db.insert(usersTable)
-            .values(body)
+                .values(body)
         }
 
         catch(error) {
@@ -48,8 +48,7 @@ export const userRouter = new Elysia({ prefix: "/users" })
         set.status = StatusCodes.CREATED
     }, createUserSchema)
 
-    // @ts-ignore
-    .onBeforeHandle(async({jwt, set, headers: { authorization } }) =>{
+    .onBeforeHandle(async({ set, headers: { authorization } }) =>{
         const claims = await getClaims(authorization!)
         const { sub } = claims
         if(!sub) {
@@ -58,8 +57,7 @@ export const userRouter = new Elysia({ prefix: "/users" })
         }
     })
     
-    // @ts-ignore
-    .get("/:id", async({ params, set, jwt, headers: { authorization } }) => {
+    .get("/:id", async({ params, set, headers: { authorization } }) => {
         if(!authorization) {
             set.status = StatusCodes.UNAUTHORIZED
             return
@@ -95,7 +93,7 @@ export const userRouter = new Elysia({ prefix: "/users" })
         }
     }, getUserSchema)
 
-    .put("/:id", async({params, body, set}) => {
+    .put("/:id", async({ params, body, set }) => {
         const id = Number(params.id)
 
         const result = await db.select()
@@ -123,7 +121,7 @@ export const userRouter = new Elysia({ prefix: "/users" })
 
     }, putUserSchema)
 
-    .post("/cancel-deletion/:id", async({set, params, headers: { authorization }}) => {
+    .post("/cancel-deletion/:id", async({ set, params, headers: { authorization } }) => {
         
         const claims = await getClaims(authorization!)
 
@@ -154,7 +152,7 @@ export const userRouter = new Elysia({ prefix: "/users" })
 
     }, cancelUserDeletionSchema)
 
-    .delete("/:id", async({params, set, headers: { authorization }}) => {
+    .delete("/:id", async({ params, set, headers: { authorization } }) => {
         const claims = await getClaims(authorization!)
 
         if(!claims) {
@@ -179,8 +177,8 @@ export const userRouter = new Elysia({ prefix: "/users" })
         })
 
         await db.update(usersTable)
-        .set({ pendingDeletion: true })
-        .where(eq(usersTable.id, id))
+            .set({ pendingDeletion: true })
+            .where(eq(usersTable.id, id))
 
         console.log(`User with id: ${id} is scheduled for deletion`)
 
