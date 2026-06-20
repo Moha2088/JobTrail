@@ -1,10 +1,10 @@
 import { Dialog } from "radix-ui"
 import { Button } from "../Button"
 import { usePostApplication } from "@/services/applications"
-import { useForm } from "react-hook-form"
+import { useController, useForm } from "react-hook-form"
 import { ApplicationStatus, StatusDropdownMenu } from "@/components/ui/controls/application/StatusDropdownMenu"
 import { OverlayWrapper } from "../OverlayWrapper"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Input } from "../Input"
 import { DialogProps } from "@radix-ui/react-dialog"
 import { CurrentTextLength } from "../../view/applications/CurrentTextLength"
@@ -59,7 +59,7 @@ function Content(props: ContentProps) {
     const minLimit: number = 500
     const maxLimit: number = 2500
 
-    const { handleSubmit, register, watch, formState: { errors } } = useForm<CreateApplicationInput>({
+    const { handleSubmit, register, watch, control, formState: { errors } } = useForm<CreateApplicationInput>({
         defaultValues: {
             companyName: "",
             email: "",
@@ -69,10 +69,17 @@ function Content(props: ContentProps) {
         }
     })
 
+    const { field: contentField } = useController({
+        name: "content",
+        control,
+        rules: {
+            required: !ignoreContent ? "Content is required!" : false,
+        },
+    })
+
     const companyNameInputValue = watch("companyName")
     const emailInputValue = watch("email")
     const positionInputValue = watch("position")
-    const contentInputValue = watch("content")
 
     const onSubmit = (data: CreateApplicationInput) => {
         createApplication.mutate({
@@ -81,6 +88,8 @@ function Content(props: ContentProps) {
             applicationStatus: applicationStatus,
             position: data.position,
             content: !ignoreContent ? data.content : "TODO: Fill this out!"
+        }, {
+            onSuccess: () => onOpenChange?.(false)
         })
     }
 
@@ -188,12 +197,18 @@ function Content(props: ContentProps) {
                                 <textarea
                                     placeholder={ignoreContent ? "TODO: Fill this out!" : ""} 
                                     className="w-full bg-gray-100 h-50 rounded-xl p-3 text-sm disabled:opacity-50"
-                                    {...register("content", {
-                                        required: !ignoreContent ? "Content is required!" : false
-                                    })}
-                                    onChange={(e) => setCurrentLength(e.target.value.length)}
+                                    name={contentField.name}
+                                    value={contentField.value}
+                                    onBlur={contentField.onBlur}
                                     disabled={ignoreContent}
-                                    ref={contentTextAreaRef}
+                                    onChange={(e) => {
+                                        contentField.onChange(e)
+                                        setCurrentLength(e.target.value.length)
+                                    }}
+                                    ref={(e) => {
+                                        contentField.ref(e)
+                                        contentTextAreaRef.current = e
+                                    }}
                                 />
                             </div>
 
@@ -250,8 +265,8 @@ function Content(props: ContentProps) {
                     </Dialog.Close>
 
                     <Button
-                        disabled={applicationStatus == "Select status" || !companyNameInputValue || !emailInputValue ||
-                            !positionInputValue || !contentInputValue && !ignoreContent || currentLength < minLimit && !ignoreContent || 
+                        disabled={applicationStatus == "Select status" || (!companyNameInputValue || !emailInputValue ||
+                            !positionInputValue)  && !ignoreContent || currentLength < minLimit && !ignoreContent || 
                             currentLength > maxLimit && !ignoreContent}
                         type="submit"
                         isPending={createApplication.isPending}
