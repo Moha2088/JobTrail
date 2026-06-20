@@ -169,7 +169,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
 
         const { sub } = await getClaims(authorization!)
 
-        await validate(sub, authorization!, set)
+        await validate(id, authorization!, set)
 
         await db.delete(applicationsTable)
             .where(eq(applicationsTable.id, id))
