@@ -12,10 +12,20 @@ import Link from "next/link"
 import { motion } from "motion/react"
 import { MotionButton } from "@/components/ui/controls/motion/MotionButton"
 import Image from "next/image"
+import { useState } from "react"
+import { PreviewTab } from "@/components/ui/controls/landing/PreviewTab"
+
+
+export type PreviewTabType = "Application Management" | "AI"
 
 export default function Home() {
-
     const router = useRouter()
+
+    const [previewTab, setPreviewTab] = useState<PreviewTabType>("Application Management")
+
+    const handleTab = (tab: PreviewTabType) => {
+        setPreviewTab(tab)
+    }
 
     return (
         <>
@@ -48,7 +58,6 @@ export default function Home() {
                             Sign Up
                         </MotionButton>
                     </div>
-
                 </div>
 
                 <div className="p-10" />
@@ -92,48 +101,31 @@ export default function Home() {
                         width={500}
                         height={0}
                         alt=""
-                        className="w-full max-w-xl md:w-200 px-4 rounded-xl"
+                        className="w-full max-w-xl md:w-200 "
                         src={"/landing/dashboard.png"} 
                     />
                 </motion.div>
             </div>
 
-            <div className="flex flex-col items-center md:flex-row gap-10 md:gap-100 mb-50">
-                <div className="">
-                    <Image
-                        alt=""
-                        src="/landing/landing-ai.png"
-                        width="500"
-                        height="100"
-                        className="w-full max-w-sm md:max-w-none"
-                    />
-                </div>
-
-                <div className="pt-0 md:pt-20 px-4">
-                    <p className="text-xl font-bold text-center" >
-                        AI powered job tracking right at your fingertips.
-                    </p>
-                </div>
+            <div className="flex justify-center mb-20">
+                <PreviewTab
+                    setPreviewTab={handleTab}
+                />
             </div>
 
-            <div className="flex flex-col-reverse items-center md:flex-row gap-10 md:gap-80 mb-30">
-                <div className="px-4">
-                    <p className="text-xl font-bold text-center pt-0 md:pt-60 max-w-full md:max-w-130">
-                        Leverage the power of AI to review and update your application in real time.
-                    </p>
-                </div>
-
-                <div>
-                    <Image 
-                        alt=""
-                        src="/landing/landing-ai-text.png"
-                        width="400"
-                        height="100"
-                        className="w-full max-w-sm md:max-w-none"
-                    />
-                </div>
+            <div className="flex justify-center mb-5">
+                <p className="text-gray-500 text-sm">
+                    {previewTab == "Application Management" ? "Create and track applications with ease" : "AI enhancement feature ensures each application is better than the last"}
+                </p>
             </div>
 
+            <div className="flex justify-center items-center mb-20">
+                <Image
+                    alt="" src={previewTab == "Application Management" ? "/landing/create-application-demo.gif" : "/landing/enhance-ai-demo.gif"}
+                    width={1}
+                    height={1}
+                    className="w-200 h-100 rounded-xl"/>
+            </div>
 
             <div className="flex flex-col justify-center items-center gap-3 mb-20">
                 <div className="flex flex-row gap-2">
