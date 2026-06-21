@@ -20,7 +20,7 @@ export function Metrics(props: MetricsProps) {
                 initial={{ opacity: 0, y: -25 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="border-2 p-4 md:p-8 w-full md:w-fit rounded-xl shadow-md">
+                className="border-2 p-4 md:p-8 w-60 md:w-fit rounded-xl shadow-md">
                 <div className="flex flex-row">
                     <div className="flex justify-start w-auto md:w-40 font-bold text-sm">
                         Pending
@@ -40,7 +40,7 @@ export function Metrics(props: MetricsProps) {
                 initial={{ opacity: 0, y: 25 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.5 }}
-                className="border-2 p-4 md:p-8 w-full md:w-fit rounded-xl shadow-md">
+                className="border-2 p-4 md:p-8 w-60 md:w-fit rounded-xl shadow-md">
                 <div className="flex flex-row">
                     <div className="flex justify-start w-auto md:w-40 font-bold text-sm">
                         Rejected
@@ -60,7 +60,7 @@ export function Metrics(props: MetricsProps) {
                 initial={{ opacity: 0, y: -25 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 1 }}
-                className="border-2 p-4 md:p-8 w-full md:w-fit rounded-xl shadow-md">
+                className="border-2 p-4 md:p-8 w-60 md:w-fit rounded-xl shadow-md">
                 <div className="flex flex-row">
                     <div className="flex justify-start w-auto md:w-40 font-bold text-sm">
                         Accepted
