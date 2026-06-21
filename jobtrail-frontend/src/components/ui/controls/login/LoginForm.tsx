@@ -48,7 +48,7 @@ export function LoginForm(){
                 transition={{  duration : 0.5 }}
                 className="flex flex-col justify-center min-h-screen text-xs" onSubmit={handleSubmit(onSubmit)}
             >
-                <div className="flex flex-col justify-center items-center gap-5 border-stone-300 w-full md:w-auto max-w-lg h-fit px-6 md:px-15 py-8 md:py-15 bg-white ml-auto mr-auto rounded-xl mx-4">
+                <div className="flex flex-col justify-center items-center gap-5 border-2 border-stone-200 w-full md:w-auto max-w-lg h-fit px-6 md:px-15 py-8 md:py-15 bg-white ml-auto mr-auto rounded-xl mx-4">
                     <div>
                         <div className="mb-5">
                             <h1 className="text-2xl font-bold">
