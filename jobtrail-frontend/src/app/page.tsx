@@ -14,6 +14,7 @@ import { MotionButton } from "@/components/ui/controls/motion/MotionButton"
 import Image from "next/image"
 import { useState } from "react"
 import { PreviewTab } from "@/components/ui/controls/landing/PreviewTab"
+import { useScramble } from "use-scramble"
 
 
 export type PreviewTabType = "Application Management" | "AI"
@@ -27,6 +28,12 @@ export default function Home() {
         setPreviewTab(tab)
     }
 
+    const { ref, replay } = useScramble({
+        text: "AI assisted job tracking for everyone",
+        scramble: 30,
+        seed: 0,
+        overflow: false
+    })
 
     return (
         <>
@@ -83,9 +90,9 @@ export default function Home() {
                     </motion.div>
 
                     <div className="flex justify-center items-center">
-                        <p className={"text-4xl font-bold bg-linear-to-r bg-clip-text text-transparent from-black to-purple-600 max-w-full md:max-w-300 px-4 text-center"}>
-                            AI assisted job tracking for everyone
-                        </p>
+                        <p
+                            onMouseEnter={replay}
+                            ref={ref} className={"text-4xl font-bold bg-linear-to-r bg-clip-text text-transparent from-black to-purple-600 max-w-full md:max-w-300 px-4 text-center"} />
                     </div>
                 </motion.div>
 
