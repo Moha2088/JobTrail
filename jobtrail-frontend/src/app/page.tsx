@@ -108,18 +108,18 @@ export default function Home() {
 
             <div className=" mb-20">
                 <div className="flex justify-center">
-                    <p className="text-4xl font-bold">
+                    <p className="text-2xl md:text-4xl font-bold">
                         Submit an application
                     </p>
                 </div>
 
                 <div className="flex justify-center mb-10">
-                    <p className="text-4xl font-bold text-gray-400">
+                    <p className="text-2xl md:text-4xl font-bold text-gray-400">
                         Optimize it instantly
                     </p>
                 </div>
 
-                <div className="ml-auto mr-auto max-w-170">
+                <div className="ml-auto mr-auto max-w-60 md:max-w-170">
                     <p className="text-gray-500">
                         Why wait until after your applications has been rejected multiple times before optimizing it? 
                         With Jobtrail, you can create an application and immediately improve it
@@ -134,7 +134,7 @@ export default function Home() {
             </div>
 
             <div className="flex justify-center mb-5">
-                <p className="text-gray-500 text-sm">
+                <p className="text-gray-500 text-sm max-w-70">
                     {previewTab == "Application Management" ? "Create and track applications with ease" : "AI enhancement feature ensures each application is better than the last"}
                 </p>
             </div>
@@ -163,9 +163,9 @@ export default function Home() {
                 </div>
             </div>
 
-            <div className="mr-auto ml-auto bg-black rounded-xl w-250 h-100">
+            <div className="mr-auto ml-auto bg-black rounded-xl h-80 w-80 md:w-250 md:h-100">
                 <div className="flex justify-center p-10 mb-10">
-                    <p className="text-3xl text-white font-bold mt-20">
+                    <p className="text-xl md:text-3xl text-white font-bold mt-20">
                         Start your journey now!
                     </p>
                 </div>
