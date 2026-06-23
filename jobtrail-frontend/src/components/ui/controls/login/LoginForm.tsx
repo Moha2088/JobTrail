@@ -48,9 +48,9 @@ export function LoginForm(){
                 transition={{  duration : 0.5 }}
                 className="flex flex-col justify-center min-h-screen text-xs" onSubmit={handleSubmit(onSubmit)}
             >
-                <div className="flex flex-col justify-center items-center gap-5 border-2 border-stone-200 w-full md:w-auto max-w-lg h-fit px-6 md:px-15 py-8 md:py-15 bg-white ml-auto mr-auto rounded-xl mx-4">
+                <div className="flex flex-col justify-center items-center gap-5 border-2 border-stone-200 w-full md:w-auto max-w-xs md:max-w-lg h-fit px-6 md:px-15 py-8 md:py-15 bg-white ml-auto mr-auto rounded-xl mx-4">
                     <div>
-                        <div className="mb-5">
+                        <div className="mb-5 ml-5 md:ml-0">
                             <h1 className="text-2xl font-bold">
                                 Login
                             </h1>
@@ -59,7 +59,7 @@ export function LoginForm(){
                         <div className="flex gap-3">
                             <div className="mb-3 flex-1">
                                 <Input
-                                    className="w-70 text-xs border-3 p-2 mb-1 rounded-lg"
+                                    className="w-60 md:w-70 ml-5 md:ml-0 text-xs border-3 p-2 mb-1 rounded-lg"
                                     placeholder="Enter your email" 
                                     {...register("email", { 
                                         required: "Email is required!",
@@ -80,7 +80,7 @@ export function LoginForm(){
                             <div className="mb-5 flex-1">
                                 <Input
                                     type={passwordState}
-                                    className="w-70 text-xs border-3 p-2 rounded-lg mb-1"
+                                    className="w-60 ml-5 md:ml-0 md:w-70 text-xs border-3 p-2 rounded-lg mb-1"
                                     
                                     placeholder="Enter your password"
                                     {...register("password", { 
@@ -108,12 +108,12 @@ export function LoginForm(){
                             </div>
                         </div>
 
-                        <div className="flex gap-3">
+                        <div className="flex flex-col md:flex-row gap-3">
                             <div className="">
                                 <Button
                                     type="submit"
                                     size="small"
-                                    className="w-full md:w-25"
+                                    className="w-25 ml-5 md:ml-0"
                                     isPending={login.isPending}
                                     disabled={!!errors.email || !!errors.password || login.isPending}
                                 >
@@ -122,7 +122,7 @@ export function LoginForm(){
                             </div>
 
                             <div>
-                                <div className="flex pt-3 gap-1">
+                                <div className="flex flex-col md:flex-row pt-3 ml-5 md:ml-0 gap-1">
                                     <div>
                                         <p className="text-xs">
                                             Don&apos;t have an account?

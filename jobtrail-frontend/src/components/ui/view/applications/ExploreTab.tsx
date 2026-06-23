@@ -50,7 +50,7 @@ export function ExploreTab() {
                 </p>
             </div>
 
-            <div className="flex justify-center mb-10">
+            <div className="mx-auto w-70 md:w-fit mb-10">
                 <p className="font-bold">
                     The job postings are targeted towards developers!
                 </p>
@@ -61,7 +61,7 @@ export function ExploreTab() {
                     ref={inputRef}
                     placeholder="Enter position"
                     withDivider
-                    className="w-full max-w-md text-xs"
+                    className="w-70 md:w-full md:max-w-md text-xs"
                     variant="pill"
                     onChange={(e) => setSearchString(e.target.value)}
                     iconStart={<IconSearch className="mt-0.5" color="gray" size={20}/>}

@@ -65,7 +65,7 @@ export function SignupForm() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{  duration : 0.5 }}
-                    className="flex flex-col justify-center items-center gap-6 px-6 md:px-16 py-6 md:py-10 bg-white border-2 border-stone-200 ml-auto mr-auto rounded-xl w-full md:w-auto max-w-lg mx-4">
+                    className="flex flex-col justify-center items-center gap-6 px-6 md:px-16 py-6 md:py-10 bg-white border-2 border-stone-200 ml-auto mr-auto rounded-xl md:w-auto mx-4">
                     <div className="flex flex-col gap-3">
                         <div className="mr-auto">
                             <h1 className="text-2xl font-bold mb-3">
@@ -161,12 +161,12 @@ export function SignupForm() {
                             {errors.confirmedPassword && <p className="text-red-400 text-sm">{errors.confirmedPassword.message}</p>}
                         </div>
 
-                        <div className="flex gap-3 ">
+                        <div className="flex flex-col md:flex-row gap-3 ">
                             <div>
                                 <Button
                                     size="small"
                                     type="submit"
-                                    className="w-full md:w-25"
+                                    className="w-25"
                                     isPending={createUser.isPending}
                                     disabled={!!errors.email || !!errors.password || !!errors.confirmedPassword || createUser.isPending}
                                 >
