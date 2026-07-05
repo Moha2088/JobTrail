@@ -13,6 +13,26 @@ import { sendDeleteRequestMail } from "../../utils/mail/sendDeleteRequestMail"
 import { sendDeletionCancelledMail } from "../../utils/mail/sendDeletionCancelledMail"
 import { getUser } from "../../utils/users/getUser"
 
+const validate = async (
+    id: number,
+    authorization: string,
+    set: { status?: number | string }
+) => {    
+
+    const user = await getUser(id)
+
+    if(!user) {
+        set.status = StatusCodes.NOT_FOUND
+        return
+    }
+
+    const claims = await getClaims(authorization)
+
+    if(claims.sub != user?.sub) {
+        set.status = StatusCodes.FORBIDDEN
+        throw "Unauthorized"
+    }
+}
 
 export const userRouter = new Elysia({ prefix: "/users" })
     .post("/", async({ body, set }) => {
@@ -49,6 +69,10 @@ export const userRouter = new Elysia({ prefix: "/users" })
     }, createUserSchema)
 
     .onBeforeHandle(async({ set, headers: { authorization } }) =>{
+        if(!authorization) {
+            set.status = StatusCodes.UNAUTHORIZED
+        }
+
         const claims = await getClaims(authorization!)
         const { sub } = claims
         if(!sub) {
@@ -63,13 +87,15 @@ export const userRouter = new Elysia({ prefix: "/users" })
             return
         }
 
-        const claims: ClaimTypes = await getClaims(authorization!)
+        const claims = await getClaims(authorization!)
 
         if(!claims) {
             set.status = StatusCodes.UNAUTHORIZED
         }
 
         const id = Number(params.id)
+
+        await validate(id, authorization, set)
 
         const result = await db.select()
             .from(usersTable)

@@ -4,14 +4,21 @@ import { eq } from "drizzle-orm"
 
 
 export async function getUser(userId: number) {
-    const result = await db.select()
-        .from(usersTable)
-        .where(eq(usersTable.id, userId))
+    try {
+        const result = await db.select()
+            .from(usersTable)
+            .where(eq(usersTable.id, userId))
 
-    return {
-        sub: result[0].id,
-        name: result[0].name,
-        email: result[0].email,
-        pendingDeletion: result[0].pendingDeletion
+        return {
+            sub: result[0].id,
+            name: result[0].name,
+            email: result[0].email,
+            pendingDeletion: result[0].pendingDeletion
+        }
     }
+
+    catch {
+        return null
+    }
+    
 }

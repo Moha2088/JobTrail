@@ -22,10 +22,16 @@ const validate = async (
     set: { status?: number | string }
 ) => {
     const application = await getApplication(id)
+
+    if(!application) {
+        set.status = StatusCodes.NOT_FOUND
+        return
+    }
+
     const claims = await getClaims(authorization)
 
     if(claims.sub != application.userId) {
-        set.status = StatusCodes.UNAUTHORIZED
+        set.status = StatusCodes.FORBIDDEN
         throw "Unauthorized"
     }
 }
@@ -115,15 +121,10 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         const id = Number(params.id)
 
         await validate(id, authorization!, set)
-        
+
         const result = await db.select()
             .from(applicationsTable)
             .where(eq(applicationsTable.id, id))
-       
-        if(result.length == 0) {
-            set.status = StatusCodes.NOT_FOUND
-            throw `Application with id: ${id} not found`
-        }
 
         return {
             id: result[0].id,
@@ -168,6 +169,13 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         const { id } = params
 
         const { sub } = await getClaims(authorization!)
+
+        const applicationToDelete =  await getApplication(id)
+
+        if(!applicationToDelete) {
+            set.status = StatusCodes.NOT_FOUND
+            return
+        }
 
         await validate(id, authorization!, set)
 

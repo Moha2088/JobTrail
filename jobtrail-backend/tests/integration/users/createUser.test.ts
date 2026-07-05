@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from "bun:test"
 import { createTestApp } from "../../helpers/app"
-import { removeAll } from "../../helpers/db"
+import { getTestUser, removeAll } from "../../helpers/db"
 import { StatusCodes } from "http-status-codes"
 
 
@@ -26,7 +26,7 @@ afterAll(async() => {
 describe("POST /api/users", () => {
     it("should create user when input is valid", async() => {
         const response = await app.handle(
-            new Request("http://localhost/api/users/", {
+            new Request("http://localhost/api/users", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -37,9 +37,16 @@ describe("POST /api/users", () => {
             })
         )
 
-        console.log(response)
-
         expect(response.status).toBe(StatusCodes.CREATED)
+
+        const createdUser = await getTestUser({ email })
+        
+        expect(createdUser).toBeDefined()
+        expect(createdUser.id).toBeDefined()
+        expect(createdUser.id).toBeTypeOf("number")
+        expect(createdUser.email).toBe(email)
+        expect(createdUser.name).toBe(name)
+
     })
 
     it("should throw 409 CONFLICT when a user already exists with the given email", async() => {
