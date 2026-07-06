@@ -1,6 +1,6 @@
 import Elysia from "elysia"
 import {
-    postApplicationSchema, getApplicationSchema, putApplicationSchema, deleteApplicationsSchema,
+    postApplicationSchema, getApplicationSchema, patchApplicationSchema, deleteApplicationsSchema,
     getFileSchema, patchApplicationContentSchema,
     searchContentSchema,
     getApplicationsSchema
@@ -140,12 +140,17 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     }, getApplicationSchema)
 
 
-    .get("/search", async({ query, headers: { authorization } }) => {
+    .get("/search", async({ query, set, headers: { authorization } }) => {
         const { q } = query
 
         const claims = await getClaims(authorization!)
 
         const searchResults = await searchContent(q, claims.sub)
+
+        if(searchResults.length == 0) {
+            set.status = StatusCodes.NOT_FOUND
+            return
+        }
 
         return searchResults
         
@@ -162,7 +167,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
 
         set.status = StatusCodes.NO_CONTENT
 
-    }, putApplicationSchema)
+    }, patchApplicationSchema)
 
 
     .delete("/:id", async({ params, set, headers: { authorization } }) => {
