@@ -12,7 +12,7 @@ import { getClaims } from "../../utils/auth/getClaims"
 import { getApplication } from "../../utils/applications"
 import { Application } from "./types"
 import { StatusCodes } from "http-status-codes"
-import { uploadToR2, getFile, deleteFile, fileExists } from "../../utils/r2"
+import { uploadFile, getFile, deleteFile, fileExists } from "../../utils/r2"
 import { searchContent } from "../../utils/search-engine/searchContent"
 
 
@@ -212,7 +212,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         const file = body.file as File
         const buffer = await file.arrayBuffer()
         
-        const { key } = await uploadToR2({
+        const { key } = await uploadFile({
             buffer: buffer,
             name: file.name,
             applicationId: body.applicationId as string

@@ -16,6 +16,7 @@ export async function createAccessToken(params: CreateAccessTokenParams) {
     })
         .setProtectedHeader({ alg: "HS256" })
         .setIssuedAt()
+        .setExpirationTime("1 hour")
         .sign(new TextEncoder().encode(Bun.env.JWT_SECRET!))
 
     return {

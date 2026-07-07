@@ -13,7 +13,7 @@ interface UploadResponse {
 }
 
 
-export async function uploadToR2(params: UploadParams): Promise<UploadResponse> {
+export async function uploadFile(params: UploadParams): Promise<UploadResponse> {
     const { buffer, name, applicationId } = params
 
     const fileName = name.substring(0, name.lastIndexOf('.'))
