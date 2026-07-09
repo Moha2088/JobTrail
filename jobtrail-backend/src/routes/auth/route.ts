@@ -29,10 +29,17 @@ export const authRouter = new Elysia({ prefix :"/auth" })
 
         const user = await getUser(result[0].id)
 
+        if(!user) {
+            set.status = StatusCodes.NOT_FOUND
+            return
+        }
+
+        const { sub, name, email:userEmail } = user
+
         const value =  await jwt.sign({
-            sub: user?.sub,
-            name: user?.name,
-            email: user?.email
+            sub,
+            name,
+            email: userEmail
         })
 
         return {

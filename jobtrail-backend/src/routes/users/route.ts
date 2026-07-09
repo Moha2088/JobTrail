@@ -71,6 +71,7 @@ export const userRouter = new Elysia({ prefix: "/users" })
     .onBeforeHandle(async({ set, headers: { authorization } }) =>{
         if(!authorization) {
             set.status = StatusCodes.UNAUTHORIZED
+            return
         }
 
         const claims = await getClaims(authorization!)
@@ -163,7 +164,14 @@ export const userRouter = new Elysia({ prefix: "/users" })
             return
         }
 
-        const { email, pendingDeletion } = await getUser(id)
+        const user = await getUser(id)
+
+        if(!user) {
+            set.status = StatusCodes.NOT_FOUND
+            return
+        }
+        
+        const { email, pendingDeletion } = user
 
         if (!pendingDeletion) {
             set.status = StatusCodes.CONFLICT
@@ -193,7 +201,14 @@ export const userRouter = new Elysia({ prefix: "/users" })
             return
         }
 
-        const { email } = await getUser(id)
+        const user = await getUser(id)
+
+        if(!user) {
+            set.status = StatusCodes.NOT_FOUND
+            return
+        }
+
+        const { email } = user
 
 
         await requestDeleteUserJob(id)
