@@ -7,7 +7,7 @@ import { describe, expect, it } from "bun:test"
 describe("getFile.ts", () => {
     it("should throw error when key is missing", async() => {
         const key = ""
-        expect(getFile({ key })).rejects.toThrowError("Key is required")
+        await expect(getFile({ key })).rejects.toThrowError("Key is required")
     })
 
 
