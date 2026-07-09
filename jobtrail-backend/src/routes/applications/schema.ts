@@ -29,7 +29,7 @@ export const searchContentSchema = {
     })
 }
 
-export const putApplicationSchema = {
+export const patchApplicationSchema = {
     params: t.Object({
         id: t.Number()
     }),

@@ -10,6 +10,5 @@ export async function getClaims(accessToken: string) {
         email: claims.email as string,
         exp: claims.exp!,
         iat: claims.iat!,
-        userId: claims.userId as number,
     }
 }

@@ -8,6 +8,7 @@
     "gen": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate --config ./drizzle.config.ts",
     "start": "bun dev",
+    "test": "NODE_ENV=test bun test",
     "main": "src/index.ts"
   },
   "dependencies": {

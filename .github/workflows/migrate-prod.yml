@@ -1,0 +1,29 @@
+name: Migrate Production DB
+
+env:
+  BACKEND_PATH: jobtrail-backend
+  
+
+on:
+  push:
+     branches: ["main"]
+  workflow_dispatch:
+
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: cd ${{ env.BACKEND_PATH }} && bun ci
+
+      - name: Migrate database
+        run: cd ${{ env.BACKEND_PATH }} && bun run migrate
+        env:
+            NODE_ENV: CI
+            RAILWAY_PUBLIC_DATABASE_URL: ${{ secrets.RAILWAY_PUBLIC_DATABASE_URL }}

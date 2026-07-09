@@ -1,6 +1,6 @@
 import Elysia from "elysia"
 import {
-    postApplicationSchema, getApplicationSchema, putApplicationSchema, deleteApplicationsSchema,
+    postApplicationSchema, getApplicationSchema, patchApplicationSchema, deleteApplicationsSchema,
     getFileSchema, patchApplicationContentSchema,
     searchContentSchema,
     getApplicationsSchema
@@ -12,7 +12,7 @@ import { getClaims } from "../../utils/auth/getClaims"
 import { getApplication } from "../../utils/applications"
 import { Application } from "./types"
 import { StatusCodes } from "http-status-codes"
-import { uploadToR2, getFile, deleteFile, fileExists } from "../../utils/r2"
+import { uploadFile, getFile, deleteFile, fileExists } from "../../utils/r2"
 import { searchContent } from "../../utils/search-engine/searchContent"
 
 
@@ -22,10 +22,16 @@ const validate = async (
     set: { status?: number | string }
 ) => {
     const application = await getApplication(id)
+
+    if(!application) {
+        set.status = StatusCodes.NOT_FOUND
+        return
+    }
+
     const claims = await getClaims(authorization)
 
     if(claims.sub != application.userId) {
-        set.status = StatusCodes.UNAUTHORIZED
+        set.status = StatusCodes.FORBIDDEN
         throw "Unauthorized"
     }
 }
@@ -115,15 +121,10 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         const id = Number(params.id)
 
         await validate(id, authorization!, set)
-        
+
         const result = await db.select()
             .from(applicationsTable)
             .where(eq(applicationsTable.id, id))
-       
-        if(result.length == 0) {
-            set.status = StatusCodes.NOT_FOUND
-            throw `Application with id: ${id} not found`
-        }
 
         return {
             id: result[0].id,
@@ -139,12 +140,17 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     }, getApplicationSchema)
 
 
-    .get("/search", async({ query, headers: { authorization } }) => {
+    .get("/search", async({ query, set, headers: { authorization } }) => {
         const { q } = query
 
         const claims = await getClaims(authorization!)
 
         const searchResults = await searchContent(q, claims.sub)
+
+        if(searchResults.length == 0) {
+            set.status = StatusCodes.NOT_FOUND
+            return
+        }
 
         return searchResults
         
@@ -161,13 +167,20 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
 
         set.status = StatusCodes.NO_CONTENT
 
-    }, putApplicationSchema)
+    }, patchApplicationSchema)
 
 
     .delete("/:id", async({ params, set, headers: { authorization } }) => {
         const { id } = params
 
         const { sub } = await getClaims(authorization!)
+
+        const applicationToDelete =  await getApplication(id)
+
+        if(!applicationToDelete) {
+            set.status = StatusCodes.NOT_FOUND
+            return
+        }
 
         await validate(id, authorization!, set)
 
@@ -199,7 +212,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         const file = body.file as File
         const buffer = await file.arrayBuffer()
         
-        const { key } = await uploadToR2({
+        const { key } = await uploadFile({
             buffer: buffer,
             name: file.name,
             applicationId: body.applicationId as string

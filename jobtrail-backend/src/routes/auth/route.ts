@@ -27,12 +27,19 @@ export const authRouter = new Elysia({ prefix :"/auth" })
             return "Password is incorrect!"
         }
 
-        const { sub, name } = await getUser(result[0].id)
+        const user = await getUser(result[0].id)
+
+        if(!user) {
+            set.status = StatusCodes.NOT_FOUND
+            return
+        }
+
+        const { sub, name, email:userEmail } = user
 
         const value =  await jwt.sign({
             sub,
             name,
-            email
+            email: userEmail
         })
 
         return {
