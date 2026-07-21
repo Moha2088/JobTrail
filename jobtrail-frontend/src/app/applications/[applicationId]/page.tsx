@@ -324,7 +324,7 @@ export default function Page() {
                         
                         <div className="flex justify-center p-3">
                             <label className="font-bold pr-1">Position:</label>
-                            <p>{data?.position}</p>
+                            <p className="max-w-60">{data?.position}</p>
                         </div>
 
                         <div className="flex justify-center mb-5 p-3">
