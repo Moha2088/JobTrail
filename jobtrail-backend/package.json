@@ -9,6 +9,7 @@
     "migrate": "drizzle-kit migrate --config ./drizzle.config.ts",
     "start": "bun dev",
     "test": "NODE_ENV=test bun test",
+    "migrate-test": "NODE_ENV=test drizzle-kit migrate --config ./drizzle.config.ts",
     "main": "src/index.ts"
   },
   "dependencies": {
