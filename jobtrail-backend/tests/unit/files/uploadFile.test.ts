@@ -13,8 +13,7 @@ describe("uploadFile.ts", () => {
     it("returns correct key format when file is valid", async() => {
         const { key } = await uploadFile(params)
         const { applicationId, name } = params
-        const fileName = name.substring(0, name.lastIndexOf("."))
 
-        expect(key).toBe(`${applicationId}-${fileName}`)
+        expect(key).toBe(`${applicationId}/${name}`)
     })
 })
