@@ -16,8 +16,7 @@ interface UploadResponse {
 export async function uploadFile(params: UploadParams): Promise<UploadResponse> {
     const { buffer, name, applicationId } = params
 
-    const fileName = name.substring(0, name.lastIndexOf('.'))
-    const key = `${applicationId}-${fileName}`
+    const key = `${applicationId}/${name}`
 
     const putObjectCommand = new PutObjectCommand({
         Bucket: "resumes",
