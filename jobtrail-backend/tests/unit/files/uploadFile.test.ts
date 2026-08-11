@@ -1,4 +1,3 @@
-import "../../mocks/mockedR2"
 import { describe, expect, it } from "bun:test"
 import { uploadFile } from "../../../src/utils/r2"
 
