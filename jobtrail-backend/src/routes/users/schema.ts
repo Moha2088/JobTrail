@@ -14,7 +14,7 @@ export const getUserSchema = {
     })
 }
 
-export const putUserSchema = {
+export const patchUserSchema = {
     params: t.Object({
         id: t.Number()
     }),

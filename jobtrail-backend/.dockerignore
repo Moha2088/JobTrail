@@ -1,0 +1,14 @@
+node_modules
+tests
+bunfig.toml
+eslint.config.mjs
+.env
+.env.*
+!.env.example
+.git
+.github
+.idea
+README.md
+*.log
+Dockerfile
+.dockerignore

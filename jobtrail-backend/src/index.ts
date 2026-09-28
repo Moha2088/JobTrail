@@ -4,12 +4,14 @@ import { authRouter } from "./routes/auth/route"
 import openapi from "@elysiajs/openapi"
 import { cors } from "@elysiajs/cors"
 import { jwtConfig } from "./utils/auth/jwt"
-import { logger } from "./logger"
 import { healthRouter } from "./routes/health/route"
 import { handleNotFoundMiddleware } from "./middleware/handleNotFound.middleware"
 import { jobPostingRouter } from "./routes/jobPostings/route"
 import { workbench } from "@getworkbench/elysia"
 import { usersQueue } from "./messaging/queue"
+import { shutdownTelemetry } from "./instrumentation"
+import { logger } from "./logger"
+
 
 const app = new Elysia()
     .use(cors({
@@ -42,10 +44,32 @@ const app = new Elysia()
     .listen(3003)
 
 logger.info(
-    `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
+    `🦊 Elysia is running!`, {
+        hostName: app.server?.hostname,
+        port: app.server?.port
+    }
 )
 
 logger.info("Environment: " + Bun.env.NODE_ENV)
+
+let isShuttingDown = false
+
+async function gracefulShutdown(signal: string) {
+    if (isShuttingDown) return
+    isShuttingDown = true
+
+    logger.info(`Received shutdown signal. Shutting down`, {
+        signal
+    })
+
+    await app.stop()
+    await shutdownTelemetry()
+
+    process.exit(0)
+}
+
+process.once("SIGTERM", () => void gracefulShutdown("SIGTERM"))
+process.once("SIGINT", () => void gracefulShutdown("SIGINT"))
 
 
 export type App = typeof app

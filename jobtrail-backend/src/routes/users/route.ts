@@ -1,5 +1,5 @@
 import Elysia from "elysia"
-import { cancelUserDeletionSchema, createUserSchema, deleteUserSchema, getUserSchema, putUserSchema } from "./schema"
+import { cancelUserDeletionSchema, createUserSchema, deleteUserSchema, getUserSchema, patchUserSchema } from "./schema"
 import { db } from "../../db/db"
 import { applicationsTable, usersTable } from "../../db/schema"
 import { eq } from "drizzle-orm"
@@ -7,11 +7,16 @@ import { getClaims } from "../../utils/auth/getClaims"
 import { StatusCodes } from "http-status-codes"
 import { requestDeleteUserJob } from "../../messaging/events/users/deleteUser/requestDeleteUserJob"
 import { cancelUserDeletion } from "../../messaging/events/users/cancelUserDeletion/cancelUserDeletion"
-import { emailExists } from "../../utils/users/emailExists"
-import { DatabaseError } from "pg"
 import { sendDeleteRequestMail } from "../../utils/mail/sendDeleteRequestMail"
 import { sendDeletionCancelledMail } from "../../utils/mail/sendDeletionCancelledMail"
 import { getUser } from "../../utils/users/getUser"
+import { logger } from "../../logger"
+
+interface PatchUser {
+    name: string
+    email: string
+    password: string
+}
 
 const validate = async (
     id: number,
@@ -38,13 +43,6 @@ export const userRouter = new Elysia({ prefix: "/users" })
     .post("/", async({ body, set }) => {
         const UNIQUE_CONSTRAINT_VIOLATION_CODE = "23505"
         
-        if(await emailExists(body.email)) {
-            set.status = StatusCodes.CONFLICT
-            return {
-                message: "User with that email exists"
-            }
-        }
-        
         body.password = await Bun.password.hash(body.password, {
             algorithm: "argon2d"
         })
@@ -55,14 +53,21 @@ export const userRouter = new Elysia({ prefix: "/users" })
         }
 
         catch(error) {
-            if(error instanceof DatabaseError && error.code == UNIQUE_CONSTRAINT_VIOLATION_CODE) {
+            if(error.cause.code == UNIQUE_CONSTRAINT_VIOLATION_CODE) {
+                logger.error("Error creating user", {
+                    email: body.email,
+                    message: "User with that email alrady exists"
+                })
+
                 set.status = StatusCodes.CONFLICT
                 return {
                     message: "User with that email exists"
                 }
             }
 
-            throw error
+            return {
+                error
+            }
         }
 
         set.status = StatusCodes.CREATED
@@ -120,7 +125,7 @@ export const userRouter = new Elysia({ prefix: "/users" })
         }
     }, getUserSchema)
 
-    .put("/:id", async({ params, body, set }) => {
+    .patch("/:id", async({ params, body, set }) => {
         const id = Number(params.id)
 
         const result = await db.select()
@@ -136,17 +141,27 @@ export const userRouter = new Elysia({ prefix: "/users" })
             algorithm: "argon2d"
         })
 
+        const updates: Partial<PatchUser> = { }
+
+        if(body.name) updates.name = body.name
+        if(body.email) updates.email = body.email
+        if(body.password) updates.password = body.password
+
         const updateResult = await db.update(usersTable)
             .set(body)
             .where(eq(usersTable.id, id))
             .returning({ name: usersTable.name, email: usersTable.email })
+
+        logger.info("User updated!", {
+            userId: id,
+        })
 
         return {
             name: updateResult[0].name,
             email: updateResult[0].email,
         }
 
-    }, putUserSchema)
+    }, patchUserSchema)
 
     .post("/cancel-deletion/:id", async({ set, params, headers: { authorization } }) => {
         
@@ -220,8 +235,6 @@ export const userRouter = new Elysia({ prefix: "/users" })
         await db.update(usersTable)
             .set({ pendingDeletion: true })
             .where(eq(usersTable.id, id))
-
-        console.log(`User with id: ${id} is scheduled for deletion`)
 
         set.status = StatusCodes.NO_CONTENT
     }, deleteUserSchema)

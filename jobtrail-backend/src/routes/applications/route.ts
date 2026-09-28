@@ -14,7 +14,15 @@ import { Application } from "./types"
 import { StatusCodes } from "http-status-codes"
 import { uploadFile, getFile, deleteFile, fileExists } from "../../utils/r2"
 import { searchContent } from "../../utils/search-engine/searchContent"
+import { logger } from "../../logger"
 
+interface PatchApplication {
+    companyName: string
+    email: string
+    applicationStatus: string
+    position: string
+    content: string
+}
 
 const validate = async (
     id: number,
@@ -32,6 +40,9 @@ const validate = async (
 
     if(claims.sub != application.userId) {
         set.status = StatusCodes.FORBIDDEN
+        logger.error("Unauthorized request", {
+            userId: claims.sub
+        })
         throw "Unauthorized"
     }
 }
@@ -47,8 +58,9 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     .post("/", async({ body, set, headers: { authorization } }) => {
         const { companyName, email, applicationStatus, position, content } = body
 
-        console.log("Body: ")
-        console.log(body)
+        logger.info("Body", {
+            body
+        })
 
         const claims = await getClaims(authorization!)
 
@@ -63,6 +75,11 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
             })
 
         set.status = StatusCodes.CREATED
+        
+        logger.info("Application created!", {
+            body,
+            userId: claims.sub
+        })
 
     }, postApplicationSchema)
 
@@ -161,9 +178,21 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
 
         await validate(id, authorization!, set)
 
+        const updates: Partial<PatchApplication> = { }
+
+        if (body.companyName) updates.companyName = body.companyName
+        if (body.email) updates.email = body.email
+        if (body.applicationStatus) updates.applicationStatus = body.applicationStatus
+        if (body.position) updates.position = body.position
+        if (body.content) updates.content = body.content
+
         await db.update(applicationsTable)
             .set(body)
             .where(eq(applicationsTable.id, id))
+
+        logger.error("Application updated", {
+            applicationId: id,
+        })
 
         set.status = StatusCodes.NO_CONTENT
 
@@ -188,6 +217,12 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
             .where(eq(applicationsTable.id, id))
 
         set.status = StatusCodes.NO_CONTENT
+
+        logger.info("Application deleted!", {
+            applicationId: id,
+            userId: sub
+        })
+        
     }, deleteApplicationsSchema)
 
 
@@ -208,7 +243,7 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
     .post("/resume", async({ body, set, headers: { authorization } }) => {
         const claims = await getClaims(authorization!)
 
-        console.log("Received file upload request")
+        logger.info("Received file upload request")
         const file = body.file as File
         const buffer = await file.arrayBuffer()
         
@@ -293,6 +328,11 @@ export const applicationRouter = new Elysia({ prefix: "/applications" })
         await db.update(applicationsTable)
             .set({ key: null })
             .where(eq(applicationsTable.key, key) && eq(applicationsTable.id, Number(id)))
+
+        logger.info("Resume deleted", {
+            applicationId: id,
+            userId: sub
+        })
 
         set.status = StatusCodes.NO_CONTENT
     })

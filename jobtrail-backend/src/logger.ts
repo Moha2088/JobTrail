@@ -1,22 +1,28 @@
 import winston from "winston"
 
-type ColorKeys = "info" | "debug"
+type ColorKeys = "info" | "debug" | "error" | "warning"
 
 const colorOptions: Record<ColorKeys, string> = {
-    info: "blue",
-    debug: "green"
+    info: "cyan",
+    debug: "green",
+    error: "red",
+    warning: "yellow"
 }
 
 
+const isProduction = Bun.env.NODE_ENV === "production"
+
 export const logger: winston.Logger = winston.createLogger({
     level: "debug",
+    levels: winston.config.npm.levels,
 
-    format: winston.format.combine(
-        winston.format.timestamp({ format: "DD-MM-YYYY HH:mm:ss" }),
-        winston.format.json(),
-        winston.format.prettyPrint(),
-        winston.format.colorize({ all: true, colors: colorOptions }),
-    ),
+    format: isProduction
+        ? winston.format.json()
+        : winston.format.combine(
+            winston.format.timestamp({ format: "DD-MM-YYYY HH:mm:ss" }),
+            winston.format.json(),
+            winston.format.colorize({ all: true, colors: colorOptions }),
+        ),
 
     transports: [
         new winston.transports.Console()

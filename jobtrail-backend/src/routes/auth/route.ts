@@ -5,6 +5,7 @@ import { usersTable } from "../../db/schema"
 import { eq } from "drizzle-orm"
 import { getUser } from "../../utils/users/getUser"
 import { StatusCodes } from "http-status-codes"
+import { logger } from "../../logger"
 
 
 export const authRouter = new Elysia({ prefix :"/auth" })
@@ -24,6 +25,11 @@ export const authRouter = new Elysia({ prefix :"/auth" })
 
         if(!isMatch) {
             set.status = StatusCodes.UNAUTHORIZED
+            logger.error("Login failed", {
+                email,
+                message: "Email and Password doesn't match"
+
+            })
             return "Password is incorrect!"
         }
 
@@ -31,6 +37,10 @@ export const authRouter = new Elysia({ prefix :"/auth" })
 
         if(!user) {
             set.status = StatusCodes.NOT_FOUND
+            logger.error("User not found", {
+                email,
+                message: "No user with that email exists"
+            })
             return
         }
 
@@ -40,6 +50,11 @@ export const authRouter = new Elysia({ prefix :"/auth" })
             sub,
             name,
             email: userEmail
+        })
+
+        logger.info("User logged in successfully", {
+            userId: sub,
+            email,
         })
 
         return {
